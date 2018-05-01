@@ -5,22 +5,42 @@ import java.util.List;
 /**
  * Created by wijaya on 3/26/2018.
  */
-public class FieldDetail {
+public class ArisanField {
     String fieldType;
     String name;
-    String viewType;
+    int viewType;
     Object data;
+    Object value;
+    String error_message;
     boolean confirm;
 
-    public FieldDetail() {
+    public ArisanField() {
     }
 
-    public FieldDetail(String fieldType, String name, String viewType, List<Object> data, boolean confirm) {
+    public ArisanField(String fieldType, String name, int viewType, Object data, Object value, String error_message, boolean confirm) {
         this.fieldType = fieldType;
         this.name = name;
         this.viewType = viewType;
         this.data = data;
+        this.value = value;
+        this.error_message = error_message;
         this.confirm = confirm;
+    }
+
+    public String getError_message() {
+        return error_message;
+    }
+
+    public void setError_message(String error_message) {
+        this.error_message = error_message;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
     }
 
     public String getFieldType() {
@@ -39,11 +59,11 @@ public class FieldDetail {
         this.name = name;
     }
 
-    public String getViewType() {
+    public int getViewType() {
         return viewType;
     }
 
-    public void setViewType(String viewType) {
+    public void setViewType(int viewType) {
         this.viewType = viewType;
     }
 

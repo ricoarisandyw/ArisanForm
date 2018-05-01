@@ -11,14 +11,19 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD) //can use in method only.
 public @interface Form {
-    ViewType type() default ViewType.TEXT;
+    int type() default Form.TEXT;
     boolean confirm() default false;
     Relation relation() default Relation.ManyToMany;
     Mode mode() default Mode.Choice;
 
-    enum ViewType {
-        TEXT,PASSWORD,NUMBER,CHECKBOX,RADIO,DATE,TIME;
-    }
+    public static int TEXT = 171;
+    public static int PASSWORD = 172;
+    public static int NUMBER = 173;
+    public static int CHECKBOX = 174;
+    public static int RADIO = 175;
+    public static int DATE = 176;
+    public static int TIME = 177;
+    public static int BOOLEAN = 178;
 
     enum Relation {
         Single, Multi, ManyToMany;

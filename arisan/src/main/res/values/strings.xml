@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Arisan</string>
+    <dimen name="font_size">12dp</dimen>
 </resources>

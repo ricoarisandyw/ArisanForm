@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.javacreativeapps.arisan.helper.ObjectReader;
-import com.javacreativeapps.arisan.model.FieldDetail;
+import com.javacreativeapps.arisan.model.ArisanField;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -23,25 +23,25 @@ public class FormConverter {
     public static String toJson(Object object){
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
-        List<FieldDetail> fieldDetails = ObjectReader.getFieldName(object);
-        return gson.toJson(fieldDetails);
+        List<ArisanField> arisanFields = ObjectReader.getField(object);
+        return gson.toJson(arisanFields);
     }
 
-    public static List<FieldDetail> fromJson(Context context){
+    public static List<ArisanField> fromJson(Context context){
         Bundle bundle = ((Activity)context).getIntent().getExtras();
         String json;
-        List<FieldDetail> fieldDetails = new ArrayList<>();
+        List<ArisanField> arisanFields = new ArrayList<>();
         if(bundle.getString("data")!= null)
         {
             json = bundle.getString("data");
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
-            Type listType = new TypeToken<List<FieldDetail>>(){
+            Type listType = new TypeToken<List<ArisanField>>(){
 
             }.getType();
-            fieldDetails = gson.fromJson(json, listType);
+            arisanFields = gson.fromJson(json, listType);
         }
 
-        return fieldDetails;
+        return arisanFields;
     }
 }

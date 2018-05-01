@@ -1,40 +1,41 @@
 package com.javacreativeapps.arisan;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 
-
-import com.javacreativeapps.arisan.helper.ObjectReader;
-import com.javacreativeapps.arisan.helper.ObjectSetter;
-import com.javacreativeapps.arisan.model.FieldDetail;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.javacreativeapps.arisan.annotation.FormVar;
+import com.javacreativeapps.arisan.model.ArisanField;
 
 import java.util.List;
 
 /**
- * Created by wijaya on 3/26/2018.
+ * Created by wijaya on 4/22/2018.
  */
-public class ArisanForm<T>{
-    T t;
 
-    public void setObject(Object o,OnResponse onResponse){
-        ObjectSetter objectSetter;
-        String str = "example";
-        int ex = 17;
-
-        List<FieldDetail> fieldDetailList = ObjectReader.getFieldName(o);
-
-        for(FieldDetail f: fieldDetailList){
-            if(f.getFieldType().equals("java.lang.String")){
-                ObjectSetter.set(o,f.getName(),str);
-            }else if(f.getFieldType().equals("boolean")){
-                ObjectSetter.set(o,f.getName(),true);
-            }else {
-                ObjectSetter.set(o,f.getName(),1000);
-            }
-        }
-
-        onResponse.response(o);
+public class ArisanForm {
+    GsonBuilder gsonBuilder = new GsonBuilder();
+    Gson gson = gsonBuilder.create();
+    Context context;
+    Intent intent;
+    Class objectClass;
+    public void intent(Context context, Class targetActivity){
+        this.context = context;
+        intent = new Intent(context,targetActivity);
     }
 
-    public interface OnResponse<T>{
-        public void response(T response);
+    public void setTitle(String title){
+        intent.putExtra("title",title);
+    }
+
+    public void setData(List<ArisanField> data){
+        intent.putExtra("data",gson.toJson(data));
+        intent.putExtra("class",data.getClass().getCanonicalName());
+    }
+
+    public void run(){
+        ((Activity)context).startActivityForResult(intent, FormVar.REQUEST);
     }
 }

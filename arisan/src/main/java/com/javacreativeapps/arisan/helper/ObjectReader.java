@@ -1,11 +1,10 @@
 package com.javacreativeapps.arisan.helper;
 
 import com.javacreativeapps.arisan.annotation.Form;
-import com.javacreativeapps.arisan.model.FieldDetail;
+import com.javacreativeapps.arisan.model.ArisanField;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,37 +33,29 @@ public class ObjectReader {
             }
             result += "\nDeclared " + f.getType().getName() + " " + f.getName();
         }
-        /*Class<Object> objectClass = (Class<Object>) o.getClass();
-        Method[] method = objectClass.getDeclaredMethods();
-        for(Method m : method){
-            result += "\nMethod "+ m.getName();
-        }*/
         return result;
     }
 
-    public static List<FieldDetail> getFieldName(Object o) {
-
-        Class<Object> objectClass = (Class<Object>) o.getClass();
-        Method[] method = objectClass.getDeclaredMethods();
-        List<FieldDetail> detailList = new ArrayList<FieldDetail>();
+    public static List<ArisanField> getField(Object o) {
+        List<ArisanField> detailList = new ArrayList<ArisanField>();
         Field[] declaredField = o.getClass().getDeclaredFields();
         for (Field f : declaredField) {
             if (f.isAnnotationPresent(Form.class)) {
-                FieldDetail fieldDetail = new FieldDetail();
+                ArisanField arisanField = new ArisanField();
                 Annotation annotation = f.getAnnotation(Form.class);
                 Form form = (Form) annotation;
 
-                fieldDetail.setViewType(form.type().name());
-                fieldDetail.setConfirm(form.confirm());
+                arisanField.setViewType(form.type());
+                arisanField.setConfirm(form.confirm());
 
-                fieldDetail.setName(f.getName());
-                fieldDetail.setFieldType(f.getType().getName());
+                arisanField.setName(f.getName());
+                arisanField.setFieldType(f.getType().getName());
                 if(f.getType() == List.class){
                     ParameterizedType integerListType = (ParameterizedType) f.getGenericType();
                     Class<?> integerListClass = (Class<?>) integerListType.getActualTypeArguments()[0];
-                    fieldDetail.setFieldType("List of " + integerListType.getActualTypeArguments()[0]);
+                    arisanField.setFieldType("List of " + integerListType.getActualTypeArguments()[0]);
                 }
-                detailList.add(fieldDetail);
+                detailList.add(arisanField);
             }
         }
         return detailList;
