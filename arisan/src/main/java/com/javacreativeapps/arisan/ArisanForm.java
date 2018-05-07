@@ -35,7 +35,7 @@ public class ArisanForm {
         intent.putExtra("class",data.getClass().getCanonicalName());
     }
 
-    public void run(){
-        ((Activity)context).startActivityForResult(intent, FormVar.REQUEST);
+    public void run(int REQUEST){
+        ((Activity)context).startActivityForResult(intent, REQUEST);
     }
 }

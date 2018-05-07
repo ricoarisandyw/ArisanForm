@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     TodoAdapter adapter;
     List<Todo> todoList = new ArrayList<>();
 
+    int TODO = 1000;
+
     PreferenceHelper preference;
 
     @Override
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         arisanForm.setIntent(this, FormActivity.class);
         arisanForm.setData(ObjectReader.getField(todo));
         arisanForm.setTitle("Add Todo");
-        arisanForm.run();
+        arisanForm.run(TODO);
     }
 
     public void refreshTodoList() {
