@@ -20,8 +20,8 @@ public class ArisanForm {
     Gson gson = gsonBuilder.create();
     Context context;
     Intent intent;
-    Class objectClass;
-    public void intent(Context context, Class targetActivity){
+
+    public void setIntent(Context context, Class targetActivity){
         this.context = context;
         intent = new Intent(context,targetActivity);
     }

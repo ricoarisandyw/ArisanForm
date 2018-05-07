@@ -138,12 +138,14 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     ArisanClosing.submit(mContext,mList);
                 }
             });
-        }else if(data.getViewType()==Form.BOOLEAN) {
+        }else if(data.getViewType()==Form.BOOLEAN){
             holder.aSwitch.setText(data.getName());
-            if(data.getValue().toString().equals("true")){
-                holder.aSwitch.setChecked(true);
-            }else{
-                holder.aSwitch.setChecked(false);
+            if(data.getValue()!= null) {
+                if (data.getValue().toString().equals("true")) {
+                    holder.aSwitch.setChecked(true);
+                } else {
+                    holder.aSwitch.setChecked(false);
+                }
             }
             holder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -151,7 +153,6 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     mList.get(position).setValue(isChecked);
                 }
             });
-
         }else{
             //Edit Text
             holder.mInputTitle.setText(data.getName());
@@ -173,7 +174,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 }
             }
 
-            holder.mEditText.setHint(mList.get(position).getName());
+            //holder.mEditText.setHint(mList.get(position).getName());
             holder.mEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {

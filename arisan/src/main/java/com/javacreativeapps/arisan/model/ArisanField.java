@@ -1,7 +1,5 @@
 package com.javacreativeapps.arisan.model;
 
-import java.util.List;
-
 /**
  * Created by wijaya on 3/26/2018.
  */
@@ -9,22 +7,32 @@ public class ArisanField {
     String fieldType;
     String name;
     int viewType;
+    int position;
     Object data;
     Object value;
     String error_message;
-    boolean confirm;
+    boolean require;
 
     public ArisanField() {
     }
 
-    public ArisanField(String fieldType, String name, int viewType, Object data, Object value, String error_message, boolean confirm) {
+    public ArisanField(String fieldType, String name, int viewType, int position, Object data, Object value, String error_message, boolean require) {
         this.fieldType = fieldType;
         this.name = name;
         this.viewType = viewType;
+        this.position = position;
         this.data = data;
         this.value = value;
         this.error_message = error_message;
-        this.confirm = confirm;
+        this.require = require;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public String getError_message() {
@@ -75,11 +83,11 @@ public class ArisanField {
         this.data = data;
     }
 
-    public boolean isConfirm() {
-        return confirm;
+    public boolean isRequire() {
+        return require;
     }
 
-    public void setConfirm(boolean confirm) {
-        this.confirm = confirm;
+    public void setRequire(boolean require) {
+        this.require = require;
     }
 }

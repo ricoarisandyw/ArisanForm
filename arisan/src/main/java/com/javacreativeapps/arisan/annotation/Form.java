@@ -15,6 +15,7 @@ public @interface Form {
     boolean confirm() default false;
     Relation relation() default Relation.ManyToMany;
     Mode mode() default Mode.Choice;
+    int position() default -1;
 
     public static int TEXT = 171;
     public static int PASSWORD = 172;

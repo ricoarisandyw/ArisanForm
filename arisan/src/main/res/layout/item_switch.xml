@@ -6,7 +6,7 @@
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:padding="5dp"
+        android:padding="6dp"
         android:layout_height="wrap_content">
 
         <Switch

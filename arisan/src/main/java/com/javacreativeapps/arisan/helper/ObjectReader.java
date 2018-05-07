@@ -7,6 +7,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -46,16 +47,23 @@ public class ObjectReader {
                 Form form = (Form) annotation;
 
                 arisanField.setViewType(form.type());
-                arisanField.setConfirm(form.confirm());
+                arisanField.setRequire(form.confirm());
+                arisanField.setPosition(form.position());
 
-                arisanField.setName(f.getName());
+                arisanField.setName(f.getName().substring(0,1).toUpperCase() + f.getName().substring(1));
                 arisanField.setFieldType(f.getType().getName());
-                if(f.getType() == List.class){
+                if (f.getType() == List.class) {
                     ParameterizedType integerListType = (ParameterizedType) f.getGenericType();
                     Class<?> integerListClass = (Class<?>) integerListType.getActualTypeArguments()[0];
                     arisanField.setFieldType("List of " + integerListType.getActualTypeArguments()[0]);
                 }
                 detailList.add(arisanField);
+            }
+        }
+        //Sort
+        for (int i = 0; i < detailList.size(); i++) {
+            if (detailList.get(i).getPosition() != -1) {
+                Collections.swap(detailList, i, detailList.get(i).getPosition());
             }
         }
         return detailList;
