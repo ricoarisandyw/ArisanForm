@@ -10,10 +10,9 @@
         android:layout_height="wrap_content">
 
         <Switch
+            android:id="@+id/arisan_switch"
             android:text="Text"
-            android:textSize="18sp"
             android:layout_alignParentLeft="true"
-            android:id="@+id/arisan_input_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
