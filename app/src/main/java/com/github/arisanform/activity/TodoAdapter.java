@@ -1,4 +1,4 @@
-package com.github.arisanform.model;
+package com.github.arisanform.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,11 +10,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.github.arisanform.activity.FormActivity;
 import com.github.arisan.ArisanForm;
 import com.github.arisan.helper.ObjectReader;
 import com.github.arisanform.R;
 import com.github.arisanform.helper.PreferenceHelper;
+import com.github.arisanform.model.DataMaster;
+import com.github.arisanform.model.Todo;
 
 import java.util.List;
 
@@ -52,8 +53,9 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
                 ArisanForm arisanForm = new ArisanForm()
                         .setIntent(context, FormActivity.class)
                         .setModel(ObjectReader.getField(todo))
-                        .setTitle("Add Todo");
-                arisanForm.run(1000);
+                        .setTitle("Add Todo")
+                        .fillData("type",DataMaster.DUMMY_STRING_ARRAY);
+                arisanForm.run();
             }
         });
         holder.note.setText(todo.getNote());

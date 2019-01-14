@@ -16,6 +16,7 @@ public @interface Form {
     boolean confirm() default false;
     Relation relation() default Relation.ManyToMany;
     Mode mode() default Mode.Choice;
+    String dateFormat() default "dd-MM-yyyy";
     int position() default -1;
 
     public static int TEXT = 171;

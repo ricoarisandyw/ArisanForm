@@ -4,14 +4,11 @@ Arisan is library to generate Form using Model. You only need to setting form in
 Arisan is taken from Indonesian game name also creator last name "Arisandy Wijaya".
 Want to contribute?
 
-## Version 0.2-alpha
+## Version 0.3-alpha
 
 ### What's New?
-* Set Error Message in Edit Text
-* EditText for Number and Password
-* Add Default Value
-* Title and Submit button is generated in ArisanAdapter
-* Boolean type using Switch
+* Spinner form
+* Datepicker form
 
 ### TODO
 * Create Sample TODO List Apps

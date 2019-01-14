@@ -55,6 +55,7 @@ public class ObjectReader {
                 arisanField.setRequire(form.confirm());
                 arisanField.setPosition(form.position());
                 arisanField.setValue(objectGetter.runGetter(f.getName()));
+                arisanField.setDateFormat(form.dateFormat());
 
                 if(form.label()!="null")
                     arisanField.setLabel(form.label());

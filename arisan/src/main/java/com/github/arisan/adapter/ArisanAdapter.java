@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -31,6 +32,7 @@ import com.github.arisan.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -147,7 +149,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             holder.mTitle.setText(ArisanGetter.getTitle(mContext));
         }else if(position==mList.size()-1){
             //SUBMIT BUTTON
-            holder.mSubmit.setText("Submit");
+            holder.mSubmit.setText(ArisanGetter.getSubmitText(mContext));
             holder.mSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -179,31 +181,47 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             holder.mDateLabel.setText(data.getLabel());
             final Calendar calendar;
             if(data.getValue()!=null){
-                calendar = new DateConverter(data.getValue().toString()).from("dd-MM-yyyy").calendar;
-                holder.mDate.setText(data.getValue().toString());
+                calendar = new DateConverter(data.getValue().toString()).from("MMMM dd, yyyy").calendar;
+                holder.mDate.setText(new DateConverter(calendar).to(data.getDateFormat()));
             }else{
                 calendar = Calendar.getInstance();
-                holder.mDate.setText(new DateConverter(calendar).to("dd-MM-yyyy"));
+                holder.mDate.setText(new DateConverter(calendar).to(data.getDateFormat()));
             }
             holder.mDate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                            String result = TwoDigit.from(dayOfMonth)+"-" + TwoDigit.from(month+1) + "-" + year ;
-                            holder.mDate.setText(result);
-                        }
-                    }, calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MONTH),
-                            calendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        String result = TwoDigit.from(dayOfMonth)+"-" + TwoDigit.from(month+1) + "-" + year ;
+                        holder.mDate.setText(new DateConverter(result).from("dd-MM-yyyy").to(data.getDateFormat()));
+                        mList.get(position).setValue(result);
+                    }
+                }, calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)).show();
                 }
             });
         }else if(data.getViewType()== Form.SPINNER){
             holder.mSpinnerLabel.setText(data.getLabel());
             //ArrayAdapter mAdapter = new ArrayAdapter(mContext,android.R.layout.simple_spinner_item,(List)data.getData());
-            ArrayAdapter mAdapter = new ArrayAdapter<>(mContext,android.R.layout.simple_spinner_item,(ArrayList<String>) data.getData());
+            final ArrayList<String> dataArray = (ArrayList<String>) data.getData();
+            ArrayAdapter mAdapter = new ArrayAdapter<>(mContext,android.R.layout.simple_spinner_item,dataArray);
             holder.mSpinner.setAdapter(mAdapter);
+            holder.mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                    mList.get(position).setValue(dataArray.get(pos));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+            if(data.getValue()!=null||data.getValue()!=null){
+                holder.mSpinner.setSelection(dataArray.indexOf(data.getValue()));
+            }
         }else{
             //Edit Text
             holder.mInputTextLabel.setText(data.getLabel());

@@ -9,15 +9,15 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.github.arisanform.model.DataMaster;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.github.arisan.ArisanForm;
-import com.github.arisan.annotation.FormVar;
+import com.github.arisan.annotation.ArisanCode;
 import com.github.arisan.helper.ObjectReader;
 import com.github.arisanform.R;
 import com.github.arisanform.model.Todo;
-import com.github.arisanform.model.TodoAdapter;
 import com.github.arisanform.helper.PreferenceHelper;
 
 import java.lang.reflect.Type;
@@ -26,14 +26,14 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    GsonBuilder gsonBuilder = new GsonBuilder();
+    GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd-MM-yyyy");
     Gson gson = gsonBuilder.create();
 
     RecyclerView mTodo;
     TodoAdapter adapter;
     List<Todo> todoList = new ArrayList<>();
 
-    int TODO = 1000;
+    int REQUEST_CODE = 1000;
 
     PreferenceHelper preference;
 
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FormVar.REQUEST) {
+        if (requestCode == ArisanCode.REQUEST) {
             if (resultCode == RESULT_OK) {
                 Log.d("__RESULT DATA", data.getData().toString());
                 Todo todo = gson.fromJson(data.getData().toString(), Todo.class);
@@ -82,14 +82,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //BEGIN FORM
     public void addTodo(Todo todo) {
         ArisanForm arisanForm = new ArisanForm()
                 .setIntent(this, FormActivity.class)
                 .setModel(ObjectReader.getField(todo))
-                .setTitle("Add Todo");
-        String[] dummyku = {"Rico","Arisandy","Wijaya"};
-        arisanForm.fillData("type",dummyku);
-        arisanForm.run(TODO);
+                .setTitle("Add Todo")
+                .setSubmitText("Kirim");
+        arisanForm.fillData("type",DataMaster.DUMMY_STRING_ARRAY);
+        arisanForm.run();
     }
 
     public void refreshTodoList() {

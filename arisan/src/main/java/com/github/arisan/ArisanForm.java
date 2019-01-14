@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.github.arisan.annotation.ArisanCode;
 import com.github.arisan.model.ArisanFieldModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,6 +31,11 @@ public class ArisanForm {
 
     public ArisanForm setTitle(String title){
         intent.putExtra("title",title);
+        return this;
+    }
+
+    public ArisanForm setSubmitText(String submit){
+        intent.putExtra("submit",submit);
         return this;
     }
 
@@ -61,7 +67,7 @@ public class ArisanForm {
         return this;
     }
 
-    public void run(int REQUEST){
-        ((Activity)context).startActivityForResult(intent, REQUEST);
+    public void run(){
+        ((Activity)context).startActivityForResult(intent, ArisanCode.REQUEST);
     }
 }

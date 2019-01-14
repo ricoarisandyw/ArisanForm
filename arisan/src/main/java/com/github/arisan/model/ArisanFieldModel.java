@@ -12,9 +12,18 @@ public class ArisanFieldModel {
     Object data;
     Object value;
     String error_message;
+    String dateFormat;
     boolean require;
 
     public ArisanFieldModel() {
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
     }
 
     public ArisanFieldModel(String fieldType, String name, int viewType, int position, Object data, Object value, String error_message, boolean require) {

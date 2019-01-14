@@ -32,4 +32,13 @@ public class ArisanGetter {
         }
         return "Untitled";
     }
+
+    public static String getSubmitText(Context context){
+        Bundle bundle = ((Activity)context).getIntent().getExtras();
+        if(bundle.getString("submit")!= null)
+        {
+            return bundle.getString("submit");
+        }
+        return "Submit";
+    }
 }
