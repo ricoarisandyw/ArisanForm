@@ -32,16 +32,19 @@ public class Todo {
     @Form(type=Form.SPINNER)
     String type;
 ```
+
 List of @Form variable
+
 | Form Type  | Default | Note |
 | --------- | --------- | ------ |
 | type   | Form.TEXT | editText |
-| label  | field name
+| label  | field name | |
 | position  | -1 | it means random sequence |
-| dateFormat   | dd-MM-yyyy | use it just for Date type
-| required  | false | (WIP)
+| dateFormat | dd-MM-yyyy | use it just for Date type |
+| required  | false | (WIP) |
 
 List of @Form type
+
 | Form Type | Status |
 | --------- | ------ |
 | TEXT      | enable |
