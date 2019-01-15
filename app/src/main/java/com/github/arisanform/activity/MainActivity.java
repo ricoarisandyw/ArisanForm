@@ -9,16 +9,15 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.github.arisan.ArisanPreparation;
 import com.github.arisanform.model.DataMaster;
+import com.github.arisan.annotation.ArisanCode;
+import com.github.arisanform.R;
+import com.github.arisanform.model.Todo;
+import com.github.arisan.helper.PreferenceHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.github.arisan.ArisanForm;
-import com.github.arisan.annotation.ArisanCode;
-import com.github.arisan.helper.ObjectReader;
-import com.github.arisanform.R;
-import com.github.arisanform.model.Todo;
-import com.github.arisanform.helper.PreferenceHelper;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -33,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
     TodoAdapter adapter;
     List<Todo> todoList = new ArrayList<>();
 
-    int REQUEST_CODE = 1000;
-
     PreferenceHelper preference;
 
     @Override
@@ -47,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
         Type listType = new TypeToken<ArrayList<Todo>>(){}.getType();
 
-        if (preference.load("todo", listType) != null)
-            todoList = (List<Todo>) preference.load("todo", listType);
+        if (preference.loadObjList("todo", listType) != null)
+            todoList = (List) preference.loadObjList("todo", listType);
         else
             todoList = new ArrayList<>();
 
@@ -65,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 addTodo(new Todo());
             }
         });
+        new TypeToken<String>(){}.getType();
     }
 
     @Override
@@ -75,22 +73,28 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("__RESULT DATA", data.getData().toString());
                 Todo todo = gson.fromJson(data.getData().toString(), Todo.class);
                 todoList.add(todo);
-                preference.update("todo", todoList);
+                preference.saveObj("todo", todoList);
                 refreshTodoList();
                 Log.d("__MESSAGE", "Added New Todo");
             }
         }
     }
 
-    //BEGIN FORM
-    public void addTodo(Todo todo) {
-        ArisanForm arisanForm = new ArisanForm()
-                .setIntent(this, FormActivity.class)
-                .setModel(ObjectReader.getField(todo))
-                .setTitle("Add Todo")
-                .setSubmitText("Kirim");
-        arisanForm.fillData("type",DataMaster.DUMMY_STRING_ARRAY);
-        arisanForm.run();
+    public void addTodo(Todo todo){
+        //PREPARE DATA
+        ArisanPreparation preparation = new ArisanPreparation(this);
+        preparation.setModel(todo);
+        preparation.fillData("type",DataMaster.DUMMY_STRING_ARRAY);
+        if(todo.getTitle() == null){
+            preparation.setTitle("Create TODO");
+            preparation.setSubmit("INSERT");
+        }else{
+            preparation.setTitle("Update TODO");
+            preparation.setSubmit("UPDATE");
+        }
+
+        Intent intent = new Intent(this,FormActivity.class);
+        startActivityForResult(intent,ArisanCode.REQUEST);
     }
 
     public void refreshTodoList() {

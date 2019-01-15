@@ -4,16 +4,16 @@ package com.github.arisan.model;
  * Created by wijaya on 3/26/2018.
  */
 public class ArisanFieldModel {
-    String fieldType;
-    String label;
-    String name;
-    int viewType;
-    int position;
-    Object data;
-    Object value;
-    String error_message;
-    String dateFormat;
-    boolean require;
+    private String fieldType;
+    private String label;
+    private String name;
+    private String viewType;
+    private int position;
+    private Object data;
+    private Object value;
+    private String error_message;
+    private String dateFormat;
+    private boolean require;
 
     public ArisanFieldModel() {
     }
@@ -24,17 +24,6 @@ public class ArisanFieldModel {
 
     public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
-    }
-
-    public ArisanFieldModel(String fieldType, String name, int viewType, int position, Object data, Object value, String error_message, boolean require) {
-        this.fieldType = fieldType;
-        this.name = name;
-        this.viewType = viewType;
-        this.position = position;
-        this.data = data;
-        this.value = value;
-        this.error_message = error_message;
-        this.require = require;
     }
 
     public int getPosition() {
@@ -77,11 +66,11 @@ public class ArisanFieldModel {
         this.name = name;
     }
 
-    public int getViewType() {
+    public String getViewType() {
         return viewType;
     }
 
-    public void setViewType(int viewType) {
+    public void setViewType(String viewType) {
         this.viewType = viewType;
     }
 

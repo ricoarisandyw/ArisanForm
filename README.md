@@ -1,108 +1,99 @@
 # ArisanForm
 
-Arisan is library to generate Form using Model. You only need to setting form in your Model. 
-Arisan is taken from Indonesian game name also creator last name "Arisandy Wijaya".
-Want to contribute?
+Convert Model into Form
 
-## Version 0.3-alpha
+## Version 0.6-alpha
 
-### What's New?
-* Spinner form
-* Datepicker form
-
-### TODO
-* Create Sample TODO List Apps
-* Multiselect (First step is single data like String only or Integer only)
-  * checkbox
-  * radio
-* Send File
-
-### BUG. If you know, please help me
-* Unsorted Field (Booelan always on begining and Integer always on last)
-I can put priority/step variable in @Form. But, I think is better if we can sort field on model without set field priority.
-
-## DOWNLOAD
+## Download
 
 ```maven
-implementation 'com.github.ricoarisandyw:ArisanForm:0.2-alpha'
+implementation 'com.github.ricoarisandyw:ArisanForm:0.6'
 ```
 
-## HOW TO USE?
+## How to use?
 
-1. Create Model with @Form in the variable.
-example 
+### 1. Create Model with annotation @Form in the variable.
 ```java
-public class Student{@Form
-    private String name;
+public class Todo {
+    //Not generated in form
+    int id;
+    @Form(label="Insert Title *",position = 0)
+    String title;
+    @Form(position = 1)
+    String note;
+    @Form(type = Form.NUMBER)
+    int quantity;
+    @Form(type = Form.BOOLEAN,position = 3)
+    boolean urgent;
+    @Form(type = Form.BOOLEAN,position = 2)
+    boolean important;
+    @Form(type=Form.DATE,label = "Start Date",dateFormat="yyyy-MM-dd")
+    Date startDate;
+    @Form(type=Form.SPINNER)
+    String type;
+```
+List of @Form variable
+| Form Type  | Default | Note |
+| --------- | --------- | ------ |
+| type   | Form.TEXT | editText |
+| label  | field name
+| position  | -1 | it means random sequence |
+| dateFormat   | dd-MM-yyyy | use it just for Date type
+| required  | false | (WIP)
 
-    @Form(type = Form.PASSWORD)
-    private int password;
+List of @Form type
+| Form Type | Status |
+| --------- | ------ |
+| TEXT      | enable |
+| PASSWORD  | enable |
+| NUMBER    | enable |
+| SPINNER   | enable |
+| DATE      | enable |
+| BOOLEAN   | enable |
+| CHECKBOX  | wip |
+| TIME      | wip |
 
-    @Form(type = Form.BOOLEAN)
-    private boolean graduated;
-
-    int number;//Not Generated
-}
+### 2. Prepare the data
+```java
+//Prepare your model. example :
+Todo todo = new Todo();
+todo.title = "Create my first form";
+//ArisanPreparation will save your model data into local SharedPreference
+ArisanPreparation preparation = new ArisanPreparation(context);
+        preparation.setTitle("Create TODO");
+        preparation.setSubmit("ADD TODO");
+        preparation.setModel(todo);
+        //fill data with String[] for spinner
+        preparation.fillData("type",DataMaster.DUMMY_STRING_ARRAY);
 ```
 
-2. Create FormActivity with RecycleView Inside
-3. Create builder from activity that will send data to FormActivity
+### 3. Build your adapter and assign to your RecyclerView
 
 ```java
-//in MainActivity.java
-        /*INITIALIZE INTENT*/
-        ArisanForm addStudent = new ArisanForm();
-        addStudent.intent(MainActivity.this, FormActivity.class);
-        addStudent.setTitle("Add Student");
+    ArisanForm arisanForm = new ArisanForm(context);
+    arisanForm.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
+                @Override
+                public void onSubmit(String response) {
+                    //TODO: do something with your response here.
+                    //sorry, but response is still json type
+                }
+            });
+    //Build Adapter
+    ArisanAdapter adapter = arisanForm.buildAdapter();
 
-        /*MODIFY DATA*/
-        List<ArisanField> list = ObjectReader.getField(student);
-        //Set Default Data
-        // Noted : Not Handle NPE(Null Pointer Exception)
-        FieldFiller.fill(list,"name",student.getName());
-        FieldFiller.fill(list,"graduated",student.isGraduated());
-
-        /*ERROR CONDITION*/
-        if(student.getName()!=null&&student.getName().equalsIgnoreCase("rico"))
-            FieldFiller.setError(list,"name","already exist");
-        
-        /*LAST STEP*/
-        addStudent.setData(list);
-        addStudent.run();
+    recycler_view.setAdapter(adapter);
 ```
 
-4. Add this code in FormActivity to generate Form
-```java
-        //in FormActivity.java
-        //Create Adapter
-        final ArisanAdapter arisanAdapter = new ArisanAdapter(this);
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mForm.setLayoutManager(mLayoutManager);
-        mForm.setAdapter(arisanAdapter);
-```
-5. Get Result from FormActivity
-
-```java
-    //in MainActivity.java
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == FormVar.REQUEST){
-            if(resultCode==RESULT_OK) {
-                //Do something with result
-                Student student = gson.fromJson(data.getData().toString(), Student.class);
-                Toast.makeText(MainActivity.this, student.getName(), Toast.LENGTH_SHORT).show();
-                addStudent(student);
-            }
-        }
-    }
-```
+### TODO
+* Create Sample TODO List Apps (WIP)
+* Multiselect (data is array of string)
+  * radio
+* Send File. wow!!! can i do it?
+* Chapta
 
 ## LICENSE
 
-Copyright 2018 Rico Arisandy Wijaya
+Copyright 2019 Rico Arisandy Wijaya
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

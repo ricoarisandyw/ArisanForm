@@ -4,6 +4,7 @@ package com.github.arisan.helper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by wijaya on 11/26/2018.
@@ -33,6 +34,7 @@ public class DateConverter {
     };
 
     public DateConverter(String data){
+        calendar = Calendar.getInstance();
         this.data = data;
     }
 
@@ -40,9 +42,10 @@ public class DateConverter {
         this.calendar = calendar;
     }
 
+    public DateConverter(Date date){ this.calendar.setTime(date); }
+
     public DateConverter from(String pattern){
         SimpleDateFormat format = new SimpleDateFormat(pattern);
-        calendar = Calendar.getInstance();
         try {
             calendar.setTime(format.parse(data));
         } catch (ParseException e) {

@@ -19,20 +19,16 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.github.arisan.helper.DateConverter;
-import com.github.arisan.helper.TwoDigit;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.github.arisan.ArisanClosing;
-import com.github.arisan.ArisanGetter;
-import com.github.arisan.annotation.Form;
-import com.github.arisan.helper.ObjectSetter;
-import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.R;
+import com.github.arisan.annotation.Form;
+import com.github.arisan.helper.DateConverter;
+import com.github.arisan.helper.FieldAssembler;
+import com.github.arisan.helper.TwoDigit;
+import com.github.arisan.model.ArisanFieldModel;
+import com.github.arisan.model.TypeForm;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,14 +38,23 @@ import java.util.List;
 public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder> implements View.OnClickListener{
     List<ArisanFieldModel> mList = new ArrayList<>();
     Context mContext;
-    public Object mResult;
-    GsonBuilder gsonBuilder = new GsonBuilder();
-    Gson gson = gsonBuilder.create();
+    Object mResult;
+    OnSubmitListener onSubmitListener;
+    String title;
+    String submitText;
 
-    public ArisanAdapter(Context context) {
+    public void setSubmitText(String submitText) {
+        this.submitText = submitText;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public ArisanAdapter(Context context, List<ArisanFieldModel> fieldList) {
         this.mContext = context;
         mList.add(new ArisanFieldModel());//For Title
-        mList.addAll(ArisanGetter.getData(context));
+        mList.addAll(fieldList);
         mList.add(new ArisanFieldModel());//For Submit Button
         System.out.println("Form Adapter Constructor");
     }
@@ -57,17 +62,18 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     @Override
     public ArisanAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         System.out.println("On Create"+viewType);
+        TypeForm type = new TypeForm();
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v;
         if(viewType==0){
             v = inflater.inflate(com.github.arisan.R.layout.item_text, parent, false);
         }else if(viewType==mList.size()){
             v = inflater.inflate(com.github.arisan.R.layout.item_button, parent, false);
-        }else if(viewType==Form.BOOLEAN){
+        }else if(viewType==type.get(Form.BOOLEAN)){
             v = inflater.inflate(com.github.arisan.R.layout.item_switch, parent, false);
-        }else if(viewType==Form.DATE){
+        }else if(viewType==type.get(Form.DATE)){
             v = inflater.inflate(R.layout.item_date, parent, false);
-        }else if(viewType==Form.SPINNER){
+        }else if(viewType== type.get(Form.SPINNER)){
             v = inflater.inflate(R.layout.item_spinner, parent, false);
         }else{
             v = inflater.inflate(com.github.arisan.R.layout.item_edittext, parent, false);
@@ -103,10 +109,6 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         }
     }
 
-    public void setObject(List<ArisanFieldModel> arisanFieldList){
-        this.mList = arisanFieldList;
-    }
-
     @Override
     public void onClick(View v) {
 
@@ -114,30 +116,29 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
+        TypeForm type = new TypeForm();
         if(position==0){
             return 0;
         }else if(position==mList.size()-1){
             return mList.size();
-        }else if(mList.get(position).getViewType()==Form.DATE){
-            return Form.DATE;
-        }else if(mList.get(position).getViewType()==Form.PASSWORD){
-            return Form.PASSWORD;
-        }else if(mList.get(position).getViewType()==Form.CHECKBOX){
-            return Form.CHECKBOX;
-        }else if(mList.get(position).getViewType()==Form.NUMBER){
-            return Form.NUMBER;
-        }else if(mList.get(position).getViewType()==Form.SPINNER){
-            return Form.SPINNER;
-        }else if(mList.get(position).getViewType()==Form.TIME){
-            return Form.TIME;
-        }else if(mList.get(position).getViewType()==Form.BOOLEAN){
-            return Form.BOOLEAN;
+        }else if(mList.get(position).getViewType().equals(Form.DATE)){
+            return type.get(Form.DATE);
+        }else if(mList.get(position).getViewType().equals(Form.PASSWORD)){
+            return type.get(Form.PASSWORD);
+        }else if(mList.get(position).getViewType().equals(Form.CHECKBOX)){
+            return type.get(Form.CHECKBOX);
+        }else if(mList.get(position).getViewType().equals(Form.NUMBER)){
+            return type.get(Form.NUMBER);
+        }else if(mList.get(position).getViewType().equals(Form.SPINNER)){
+            return type.get(Form.SPINNER);
+        }else if(mList.get(position).getViewType().equals(Form.TIME)){
+            return type.get(Form.TIME);
+        }else if(mList.get(position).getViewType().equals(Form.BOOLEAN)){
+            return type.get(Form.BOOLEAN);
         }else{
-            return Form.TEXT;
+            return type.get(Form.TEXT);
         }
     }
-
-
 
     @Override
     public void onBindViewHolder(final ArisanAdapter.ViewHolder holder, final int position) {
@@ -146,19 +147,19 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 //        System.out.println("On Bind");
         if(position==0){
             //TITLE
-            holder.mTitle.setText(ArisanGetter.getTitle(mContext));
+            holder.mTitle.setText(title);
         }else if(position==mList.size()-1){
             //SUBMIT BUTTON
-            holder.mSubmit.setText(ArisanGetter.getSubmitText(mContext));
+            holder.mSubmit.setText(submitText);
             holder.mSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mList.remove(0);
                     mList.remove(mList.size()-1);
-                    ArisanClosing.submit(mContext,mList);
+                    onSubmitListener.onSubmit(FieldAssembler.toJson(mList));
                 }
             });
-        }else if(data.getViewType()==Form.BOOLEAN){
+        }else if(data.getViewType().equals(Form.BOOLEAN)){
             holder.aSwitch.setText(data.getLabel());
             if(data.getValue()!= null) {
                 if (data.getValue().toString().equals("true")) {
@@ -177,7 +178,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     mList.get(position).setValue(isChecked);
                 }
             });
-        }else if(data.getViewType()== Form.DATE){
+        }else if(data.getViewType().equals(Form.DATE)){
             holder.mDateLabel.setText(data.getLabel());
             final Calendar calendar;
             if(data.getValue()!=null){
@@ -202,7 +203,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                         calendar.get(Calendar.DAY_OF_MONTH)).show();
                 }
             });
-        }else if(data.getViewType()== Form.SPINNER){
+        }else if(data.getViewType().equals(Form.SPINNER)){
             holder.mSpinnerLabel.setText(data.getLabel());
             //ArrayAdapter mAdapter = new ArrayAdapter(mContext,android.R.layout.simple_spinner_item,(List)data.getData());
             final ArrayList<String> dataArray = (ArrayList<String>) data.getData();
@@ -219,16 +220,16 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
                 }
             });
-            if(data.getValue()!=null||data.getValue()!=null){
+            if(data.getValue() != null){
                 holder.mSpinner.setSelection(dataArray.indexOf(data.getValue()));
             }
         }else{
             //Edit Text
             holder.mInputTextLabel.setText(data.getLabel());
-            if(data.getViewType()==Form.PASSWORD){
+            if(data.getViewType().equals(Form.PASSWORD)){
                 holder.mEditText.setInputType(InputType.TYPE_CLASS_TEXT |
                         InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            }else if(data.getViewType()== Form.NUMBER){
+            }else if(data.getViewType().equals(Form.NUMBER)){
                 holder.mEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
                 if(data.getValue()!=null&&data.getValue()!=""){
                     holder.mEditText.setText(data.getValue().toString());
@@ -243,7 +244,6 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 }
             }
 
-            //holder.mEditText.setHint(mList.get(position).getName());
             holder.mEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -271,32 +271,12 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             return 0;
     }
 
-    public interface OnResponse<T>{
-        public void response(T response);
+    public ArisanAdapter setOnSubmitListener(OnSubmitListener onSubmitListener){
+        this.onSubmitListener = onSubmitListener;
+        return this;
     }
 
-    public void setOnResponse(OnResponse onResponse){
-
-    }
-
-    public void input(ArisanFieldModel f, Object value){
-            try {
-                if (f.getFieldType().equals(String.valueOf(String.class.getCanonicalName()))){
-                    ObjectSetter.set(mResult, f.getName(), value);
-                } else if (f.getFieldType().equals(String.valueOf(boolean.class))) {
-                    ObjectSetter.set(mResult, f.getName(), value);
-                } else if (f.getFieldType().equals(String.valueOf(int.class))) {
-                    ObjectSetter.set(mResult, f.getName(), value);
-                } else if (f.getFieldType().equals(String.valueOf(String.class))) {
-
-                }
-            }catch (Exception e){
-
-            }
-    }
-
-
-    public List<ArisanFieldModel> getResult(){
-        return mList;
+    public interface OnSubmitListener{
+        void onSubmit(String response);
     }
 }

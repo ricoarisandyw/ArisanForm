@@ -2,6 +2,7 @@ package com.github.arisanform.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +11,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.github.arisan.ArisanForm;
-import com.github.arisan.helper.ObjectReader;
+import com.github.arisan.ArisanPreparation;
+import com.github.arisan.helper.PreferenceHelper;
 import com.github.arisanform.R;
-import com.github.arisanform.helper.PreferenceHelper;
 import com.github.arisanform.model.DataMaster;
 import com.github.arisanform.model.Todo;
 
@@ -50,12 +50,10 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArisanForm arisanForm = new ArisanForm()
-                        .setIntent(context, FormActivity.class)
-                        .setModel(ObjectReader.getField(todo))
-                        .setTitle("Add Todo")
-                        .fillData("type",DataMaster.DUMMY_STRING_ARRAY);
-                arisanForm.run();
+                ArisanPreparation arisanPreparation = new ArisanPreparation(context);
+                arisanPreparation.setModel(todo);
+                arisanPreparation.fillData("type",DataMaster.DUMMY_STRING_ARRAY);
+                context.startActivity(new Intent(context,FormActivity.class));
             }
         });
         holder.note.setText(todo.getNote());
@@ -64,7 +62,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     todoList.remove(position);
-                    preference.update("todo",todoList);
+                    preference.saveObj("todo",todoList);
                     ((Activity)context).finish();
                     context.startActivity(((Activity) context).getIntent());
                 }

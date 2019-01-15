@@ -1,9 +1,5 @@
 package com.github.arisan.helper;
 
-import android.util.Log;
-
-import com.github.arisan.annotation.Form;
-import com.google.gson.Gson;
 import com.github.arisan.annotation.Form;
 import com.github.arisan.model.ArisanFieldModel;
 
@@ -52,7 +48,7 @@ public class ObjectReader {
                 Form form = (Form) annotation;
 
                 arisanField.setViewType(form.type());
-                arisanField.setRequire(form.confirm());
+                arisanField.setRequire(form.required());
                 arisanField.setPosition(form.position());
                 arisanField.setValue(objectGetter.runGetter(f.getName()));
                 arisanField.setDateFormat(form.dateFormat());
