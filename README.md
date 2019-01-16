@@ -2,7 +2,7 @@
 
 Convert Model into Form
 
-## Version 0.6-alpha
+## Version 0.7-alpha
 
 ## Download
 
@@ -31,6 +31,7 @@ public class Todo {
     Date startDate;
     @Form(type=Form.SPINNER)
     String type;
+}
 ```
 
 List of @Form variable

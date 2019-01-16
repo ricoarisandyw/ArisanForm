@@ -14,8 +14,8 @@ import java.util.Map;
  */
 
 public class PreferenceHelper {
-    Context context;
-    String MY_DB = "ARISAN_FORM";
+    private Context context;
+    private String MY_DB = "ARISAN_FORM";
 
     public PreferenceHelper(Context context){
         this.context = context;
@@ -25,7 +25,7 @@ public class PreferenceHelper {
         SharedPreferences sharedPref = context.getSharedPreferences(MY_DB, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     public void saveObj(String key, Object object){
@@ -34,36 +34,32 @@ public class PreferenceHelper {
         Gson gson = new Gson();
         String value = gson.toJson(object);
         editor.putString(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     public List<Object> loadObjList(String key, Type type){
         SharedPreferences sharedPref = context.getSharedPreferences(MY_DB, Context.MODE_PRIVATE);
         String result = sharedPref.getString(key, "");
         Gson gson = new Gson();
-        List<Object> object = gson.fromJson(result, type);
-        return object;
+        return gson.fromJson(result, type);
     }
 
     public Map<Object,Object> loadMap(String key, Type type){
         SharedPreferences sharedPref = context.getSharedPreferences(MY_DB, Context.MODE_PRIVATE);
         String result = sharedPref.getString(key, "");
         Gson gson = new Gson();
-        Map<Object,Object> object = gson.fromJson(result, type);
-        return object;
+        return gson.fromJson(result, type);
     }
 
     public Object loadObj(String key, Class c){
         SharedPreferences sharedPref = context.getSharedPreferences(MY_DB, Context.MODE_PRIVATE);
         String result = sharedPref.getString(key, "");
         Gson gson = new Gson();
-        Object object = gson.fromJson(result,c);
-        return object;
+        return gson.fromJson(result,c);
     }
 
     public String load(String key){
         SharedPreferences sharedPref = context.getSharedPreferences(MY_DB, Context.MODE_PRIVATE);
-        String result = sharedPref.getString(key, "");
-        return result;
+        return sharedPref.getString(key, "");
     }
 }
