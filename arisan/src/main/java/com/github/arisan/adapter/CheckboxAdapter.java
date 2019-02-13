@@ -46,7 +46,6 @@ public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.ViewHo
         final String value = mDataset.get(position);
         holder.vCheckbox.setText(value);
         if(checkedData.contains(value)){
-            Log.d("__Checkeed",value);
             holder.vCheckbox.setChecked(true);
         }
         holder.vCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
