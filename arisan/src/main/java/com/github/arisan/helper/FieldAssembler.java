@@ -1,9 +1,15 @@
 package com.github.arisan.helper;
 
-import com.github.arisan.model.ArisanFieldModel;
-import com.github.arisan.model.ArisanFieldModel;
+import android.util.Log;
 
+import com.github.arisan.model.ArisanFieldModel;
+import com.github.arisan.model.ArisanFieldModel;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wijaya on 4/22/2018.
@@ -11,21 +17,38 @@ import java.util.List;
 
 public class FieldAssembler {
     public static String toJson(List<ArisanFieldModel> f){
-        String result = "{";
+        StringBuilder result = new StringBuilder("{");
+        Gson gson = new Gson();
         for(int i = 0;i<f.size();i++){
-            result+="\""+ f.get(i).getName()+"\":";
-            if(f.get(i).getFieldType().equals(String.class.getCanonicalName())){
-                if(f.get(i).getValue()!=null)result+="\""+f.get(i).getValue()+"\"";
-                else result+="\"\"";
-            }else{
-                if(f.get(i).getValue()!=null)result+="\""+f.get(i).getValue()+"\"";
-                else result+=f.get(i).getValue();
-            }
+            ArisanFieldModel model = f.get(i);
+            result.append("\"").append(model.getName()).append("\":");
+            result.append(gson.toJson(model.getValue()));
+
             if(i!=f.size()-1){
-                result+=",";
+                result.append(",");
             }
         }
-        result+="}";
-        return result;
+        result.append("}");
+        Log.d("__Result",result.toString());
+        return result.toString();
+    }
+
+    public static String mapToJson(Map<String,Object> data){
+        StringBuilder result = new StringBuilder("{");
+        Gson gson = new Gson();
+        int i = 0;
+        for(Map.Entry<String, Object> entry: data.entrySet()){
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            result.append("\"").append(key).append("\":");
+            result.append(gson.toJson(value));
+            if(i<data.size()-1){
+                result.append(",");
+            }
+            i++;
+        }
+        result.append("}");
+        Log.d("__Result map",result.toString());
+        return result.toString();
     }
 }

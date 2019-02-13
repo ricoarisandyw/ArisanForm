@@ -13,11 +13,12 @@ import java.util.Map;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD) //can use in method only.
 public @interface Form {
-    String label() default "null";
+    String label() default "field name";
     String type() default Form.TEXT;
     boolean required() default false;
     String dateFormat() default "dd-MM-yyyy";
     int position() default -1;
+    String fileType() default FileType.ANYTHING;
 
     String TEXT = "TEXT";
     String PASSWORD = "PASSWORD";
@@ -27,4 +28,5 @@ public @interface Form {
     String DATE = "DATE";
     String TIME = "TIME";
     String BOOLEAN = "BOOLEAN";
+    String FILE = "FILE";
 }

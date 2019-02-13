@@ -13,9 +13,18 @@ public class ArisanFieldModel {
     private Object value;
     private String error_message;
     private String dateFormat;
+    private String fileType;
     private boolean require;
 
     public ArisanFieldModel() {
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 
     public String getDateFormat() {

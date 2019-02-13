@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:orientation="vertical"
-    android:background="#dddddd"
+    android:background="@android:color/holo_green_light"
+    android:elevation="3dp"
     android:padding="15dp"
     android:layout_margin="5dp"
     android:layout_height="wrap_content">
@@ -21,8 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <CheckBox
+    <ImageView
         android:id="@+id/todo_checkbox"
+        android:tint="@android:color/holo_red_dark"
+        android:src="@android:drawable/ic_delete"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

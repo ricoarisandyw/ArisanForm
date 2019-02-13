@@ -27,16 +27,6 @@ public class ArisanForm {
         return this;
     }
 
-    public ArisanForm setTitle(String title){
-        adapter.setTitle(title);
-        return this;
-    }
-
-    public ArisanForm setSubmitText(String submitText){
-        this.adapter.setSubmitText(submitText);
-        return this;
-    }
-
     public ArisanAdapter buildAdapter(){
         return adapter;
     }

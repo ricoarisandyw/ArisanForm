@@ -21,16 +21,16 @@ public class Todo {
     String title;
     @Form(position = 1)
     String note;
-    @Form(type = Form.NUMBER)
+    @Form(category = Form.NUMBER)
     int quantity;
-    @Form(type = Form.BOOLEAN,position = 3)
+    @Form(category = Form.BOOLEAN,position = 3)
     boolean urgent;
-    @Form(type = Form.BOOLEAN,position = 2)
+    @Form(category = Form.BOOLEAN,position = 2)
     boolean important;
-    @Form(type=Form.DATE,label = "Start Date",dateFormat="yyyy-MM-dd")
+    @Form(category=Form.DATE,label = "Start Date",dateFormat="yyyy-MM-dd")
     Date startDate;
-    @Form(type=Form.SPINNER)
-    String type;
+    @Form(category=Form.SPINNER)
+    String category;
 }
 ```
 
@@ -38,13 +38,13 @@ List of @Form variable
 
 | Form Type  | Default | Note |
 | --------- | --------- | ------ |
-| type   | Form.TEXT | editText |
+| category   | Form.TEXT | editText |
 | label  | field name | |
 | position  | -1 | it means random sequence |
-| dateFormat | dd-MM-yyyy | use it just for Date type |
+| dateFormat | dd-MM-yyyy | use it just for Date category |
 | required  | false | (WIP) |
 
-List of @Form type
+List of @Form category
 
 | Form Type | Status |
 | --------- | ------ |
@@ -68,7 +68,7 @@ ArisanPreparation preparation = new ArisanPreparation(context);
         preparation.setSubmit("ADD TODO");
         preparation.setModel(todo);
         //fill data with String[] for spinner
-        preparation.fillData("type",DataMaster.DUMMY_STRING_ARRAY);
+        preparation.fillData("category",DataMaster.DUMMY_STRING_ARRAY);
 ```
 
 ### 3. Build your adapter and assign to your RecyclerView
@@ -79,7 +79,7 @@ ArisanPreparation preparation = new ArisanPreparation(context);
                 @Override
                 public void onSubmit(String response) {
                     //TODO: do something with your response here.
-                    //sorry, but response is still json type
+                    //sorry, but response is still json category
                 }
             });
     //Build Adapter

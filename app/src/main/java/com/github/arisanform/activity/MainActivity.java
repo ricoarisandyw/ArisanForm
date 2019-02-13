@@ -9,17 +9,20 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.github.arisan.ArisanForm;
 import com.github.arisan.ArisanPreparation;
+import com.github.arisan.adapter.ArisanAdapter;
+import com.github.arisan.helper.ValueUpdater;
+import com.github.arisanform.model.DB;
 import com.github.arisanform.model.DataMaster;
 import com.github.arisan.annotation.ArisanCode;
 import com.github.arisanform.R;
-import com.github.arisanform.model.Todo;
+import com.github.arisanform.model.Order;
 import com.github.arisan.helper.PreferenceHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +31,10 @@ public class MainActivity extends AppCompatActivity {
     GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd-MM-yyyy");
     Gson gson = gsonBuilder.create();
 
-    RecyclerView mTodo;
-    TodoAdapter adapter;
-    List<Todo> todoList = new ArrayList<>();
+    RecyclerView vList;
+    RecyclerView vForm;
+    MyAdapter adapter;
+    List<Order> orderList = new ArrayList<>();
 
     PreferenceHelper preference;
 
@@ -40,65 +44,73 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         preference = new PreferenceHelper(this);
 
-        mTodo = findViewById(R.id.todo_list);
+        vList = findViewById(R.id.data_list);
+        vForm = findViewById(R.id.data_form);
 
-        Type listType = new TypeToken<ArrayList<Todo>>(){}.getType();
+        vForm.setLayoutManager(new LinearLayoutManager(this));
+        //Get Stored Data
+        orderList = (List) preference.loadObjList(DB.ORDER, new TypeToken<ArrayList<Order>>(){}.getType());
+        if(orderList ==null)
+            orderList = new ArrayList<>();
 
-        if (preference.loadObjList("todo", listType) != null)
-            todoList = (List) preference.loadObjList("todo", listType);
-        else
-            todoList = new ArrayList<>();
-
-        adapter = new TodoAdapter(this, todoList);
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mTodo.setLayoutManager(mLayoutManager);
-        mTodo.setAdapter(adapter);
-
-        FloatingActionButton vAddTodo = findViewById(R.id.add_todo);
-        vAddTodo.setOnClickListener(new View.OnClickListener() {
+        adapter = new MyAdapter(this, orderList);
+        adapter.setOnEditListener(new MyAdapter.OnEditListener() {
             @Override
-            public void onClick(View v) {
-                addTodo(new Todo());
+            public void onEdit(Order order) {
+                addData(order);
             }
         });
-        new TypeToken<String>(){}.getType();
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ArisanCode.REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Log.d("__RESULT DATA", data.getData().toString());
-                Todo todo = gson.fromJson(data.getData().toString(), Todo.class);
-                todoList.add(todo);
-                preference.saveObj("todo", todoList);
-                refreshTodoList();
-                Log.d("__MESSAGE", "Added New Todo");
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        vList.setLayoutManager(mLayoutManager);
+        vList.setAdapter(adapter);
+
+        FloatingActionButton vAdd = findViewById(R.id.add_todo);
+        vAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { addData(new Order());
             }
-        }
+        });
     }
 
-    public void addTodo(Todo todo){
+    public void addData(Order order){
+        vForm.setVisibility(View.VISIBLE);
         //PREPARE DATA
         ArisanPreparation preparation = new ArisanPreparation(this);
-        preparation.setModel(todo);
-        preparation.fillData("type",DataMaster.DUMMY_STRING_ARRAY);
-        if(todo.getTitle() == null){
-            preparation.setTitle("Create TODO");
+        preparation.setModel(order);
+        preparation.fillData("menu",DataMaster.MENU);
+        preparation.fillData("topping",DataMaster.TOPPING);
+
+        if(order.getId() == 0){
+            preparation.setTitle("New Order");
             preparation.setSubmit("INSERT");
         }else{
-            preparation.setTitle("Update TODO");
-            preparation.setSubmit("UPDATE");
+            preparation.setTitle("Copy Order");
+            preparation.setSubmit("COPY");
         }
 
-        Intent intent = new Intent(this,FormActivity.class);
-        startActivityForResult(intent,ArisanCode.REQUEST);
+        ArisanForm arisanForm = new ArisanForm(this).setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
+            @Override
+            public void onSubmit(String response) {
+                Order newOrder = new Gson().fromJson(response,Order.class);
+
+                Order order = new Order();
+                order.setId(orderList.size()+1);
+                order.setOrderer("Mio");
+
+                order = new ValueUpdater<Order>().update(order,newOrder,Order.class);
+                orderList.add(order);
+                preference.saveObj(DB.ORDER, orderList);
+                refreshList();
+                vForm.setVisibility(View.GONE);
+            }
+        });
+        vForm.setAdapter(arisanForm.buildAdapter());
     }
 
-    public void refreshTodoList() {
-        adapter = new TodoAdapter(this,todoList);
-        mTodo.setAdapter(adapter);
+    public void refreshList() {
+        adapter.notifyDataSetChanged();
+//        adapter = new MyAdapter(this, orderList);
+//        vList.setAdapter(adapter);
     }
 }

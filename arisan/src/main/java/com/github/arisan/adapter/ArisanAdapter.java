@@ -1,7 +1,10 @@
 package com.github.arisan.adapter;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
@@ -20,6 +23,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.github.arisan.R;
+import com.github.arisan.annotation.ArisanCode;
 import com.github.arisan.annotation.Form;
 import com.github.arisan.helper.DateConverter;
 import com.github.arisan.helper.FieldAssembler;
@@ -61,8 +65,8 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     @Override
     public ArisanAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        System.out.println("On Create"+viewType);
         TypeForm type = new TypeForm();
+        System.out.println("On Create"+ viewType);
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v;
         if(viewType==0){
@@ -75,6 +79,10 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             v = inflater.inflate(R.layout.item_date, parent, false);
         }else if(viewType== type.get(Form.SPINNER)){
             v = inflater.inflate(R.layout.item_spinner, parent, false);
+        }else if(viewType== type.get(Form.CHECKBOX)){
+            v = inflater.inflate(R.layout.item_checkbox_parent, parent, false);
+        }else if(viewType== type.get(Form.FILE)){
+            v = inflater.inflate(R.layout.item_file, parent, false);
         }else{
             v = inflater.inflate(com.github.arisan.R.layout.item_edittext, parent, false);
         }
@@ -93,10 +101,13 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         Switch aSwitch;
         Button mDate;
         Spinner mSpinner;
+        Button mFile;
+        TextView mFileLabel;
+        TextView mFileName;
+        RecyclerView mCheckboxParent;
 
         public ViewHolder(View v) {
             super(v);
-            System.out.println("ViewHolder");
             mInputTextLabel = v.findViewById(com.github.arisan.R.id.arisan_text_label);
             mEditText = v.findViewById(com.github.arisan.R.id.arisan_text);
             mDateLabel = v.findViewById(R.id.arisan_date_label);
@@ -106,6 +117,10 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             mTitle = v.findViewById(com.github.arisan.R.id.arisan_title);
             mSubmit = v.findViewById(com.github.arisan.R.id.arisan_button);
             aSwitch = v.findViewById(com.github.arisan.R.id.arisan_switch);
+            mFile = v.findViewById(R.id.arisan_upload);
+            mFileLabel = v.findViewById(R.id.arisan_file_label);
+            mFileName = v.findViewById(R.id.arisan_file_name);
+            mCheckboxParent = v.findViewById(R.id.arisan_checkbox_list);
         }
     }
 
@@ -119,30 +134,15 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         TypeForm type = new TypeForm();
         if(position==0){
             return 0;
-        }else if(position==mList.size()-1){
+        }else if(position==mList.size()-1) {
             return mList.size();
-        }else if(mList.get(position).getViewType().equals(Form.DATE)){
-            return type.get(Form.DATE);
-        }else if(mList.get(position).getViewType().equals(Form.PASSWORD)){
-            return type.get(Form.PASSWORD);
-        }else if(mList.get(position).getViewType().equals(Form.CHECKBOX)){
-            return type.get(Form.CHECKBOX);
-        }else if(mList.get(position).getViewType().equals(Form.NUMBER)){
-            return type.get(Form.NUMBER);
-        }else if(mList.get(position).getViewType().equals(Form.SPINNER)){
-            return type.get(Form.SPINNER);
-        }else if(mList.get(position).getViewType().equals(Form.TIME)){
-            return type.get(Form.TIME);
-        }else if(mList.get(position).getViewType().equals(Form.BOOLEAN)){
-            return type.get(Form.BOOLEAN);
         }else{
-            return type.get(Form.TEXT);
+            return type.get(mList.get(position).getViewType());
         }
     }
 
     @Override
     public void onBindViewHolder(final ArisanAdapter.ViewHolder holder, final int position) {
-
         final ArisanFieldModel data = mList.get(position);
 //        System.out.println("On Bind");
         if(position==0){
@@ -223,42 +223,68 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             if(data.getValue() != null){
                 holder.mSpinner.setSelection(dataArray.indexOf(data.getValue()));
             }
+        }else if(data.getViewType().equals(Form.FILE)){
+            holder.mFileLabel.setText(data.getLabel());
+            if(data.getData()!=null)
+                holder.mFileName.setText((String)data.getData());
+            holder.mFile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("file/*");
+                    ((Activity)mContext).startActivityForResult(intent, ArisanCode.REQUEST_FILE);
+                }
+            });
+        }else if(data.getViewType().equals(Form.CHECKBOX)){
+            final ArrayList<String> dataList = (ArrayList<String>) data.getData();
+            final ArrayList<String> valueList = (ArrayList<String>) data.getValue();
+            holder.mCheckboxParent.setLayoutManager(new LinearLayoutManager(mContext));
+            CheckboxAdapter adapter = new CheckboxAdapter(dataList,valueList);
+            adapter.setOnCheckedListener(new CheckboxAdapter.OnCheckedListener() {
+                @Override
+                public void onChecked(List<String> checked) {
+                    mList.get(position).setValue(checked);
+                }
+            });
+            holder.mCheckboxParent.setAdapter(adapter);
         }else{
             //Edit Text
             holder.mInputTextLabel.setText(data.getLabel());
-            if(data.getViewType().equals(Form.PASSWORD)){
-                holder.mEditText.setInputType(InputType.TYPE_CLASS_TEXT |
-                        InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            }else if(data.getViewType().equals(Form.NUMBER)){
-                holder.mEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                if(data.getValue()!=null&&data.getValue()!=""){
-                    holder.mEditText.setText(data.getValue().toString());
-                }
-            }else{
-                //Input Type Text
-                if(data.getValue()!=null&&data.getValue()!=""){
-                    holder.mEditText.setText(data.getValue().toString());
-                }
-                if(data.getError_message()!=null&&data.getValue()!=""){
-                    holder.mEditText.setError(data.getError_message());
-                }
+            switch (data.getViewType()) {
+                case Form.PASSWORD:
+                    holder.mEditText.setInputType(InputType.TYPE_CLASS_TEXT |
+                            InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    break;
+                case Form.NUMBER:
+                    holder.mEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    if(data.getValue().toString().equals("0.0")){
+                        holder.mEditText.setText("0");
+                    } else if (data.getValue() != null) {
+                        holder.mEditText.setText(data.getValue().toString());
+                    }
+                    break;
+                default:
+                    //Input Type Text
+                    if (data.getValue() != null && data.getValue() != "") {
+                        holder.mEditText.setText(data.getValue().toString());
+                    }
+                    if (data.getError_message() != null && data.getValue() != "") {
+                        holder.mEditText.setError(data.getError_message());
+                    }
+                    break;
             }
 
             holder.mEditText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     mList.get(position).setValue(holder.mEditText.getText().toString());
                 }
 
                 @Override
-                public void afterTextChanged(Editable s) {
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
-                }
+                @Override
+                public void afterTextChanged(Editable s) { }
             });
         }
     }
@@ -271,12 +297,21 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             return 0;
     }
 
-    public ArisanAdapter setOnSubmitListener(OnSubmitListener onSubmitListener){
+    public void setOnSubmitListener(OnSubmitListener onSubmitListener){
         this.onSubmitListener = onSubmitListener;
-        return this;
     }
 
     public interface OnSubmitListener{
         void onSubmit(String response);
+    }
+
+    public void updateFile(String fieldName,String value){
+        for(ArisanFieldModel a:mList) {
+            if(a.getName()!=null)
+                if(a.getName().equals(fieldName)){
+                    a.setData(value);
+                    this.notifyDataSetChanged();
+                }
+        }
     }
 }

@@ -10,9 +10,9 @@ import java.util.Date;
 
 public class Todo {
 
-    @Form(label="Masukan Judul *",position = 0)
+    @Form(label="Masukan Judul *",position = 1)
     String title;
-    @Form(position = 1)
+    @Form()
     String note;
     @Form(type = Form.NUMBER)
     int quantity;
@@ -23,7 +23,33 @@ public class Todo {
     @Form(type=Form.DATE,label = "Start Date")
     Date startDate;
     @Form(type=Form.SPINNER)
-    String type;
+    String category;
+    @Form(type = Form.FILE,position = 0)
+    String attachment;
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(String attachment) {
+        this.attachment = attachment;
+    }
 
     public String getTitle() {
         return title;

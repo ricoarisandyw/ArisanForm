@@ -6,5 +6,6 @@ package com.github.arisan.annotation;
 
 public class ArisanCode {
     public static int REQUEST = 4158;
+    public static int REQUEST_FILE = 4158;
     public static int RESULT = 500;
 }

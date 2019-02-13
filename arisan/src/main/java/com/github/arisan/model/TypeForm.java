@@ -15,6 +15,7 @@ public class TypeForm {
         type.put(Form.CHECKBOX,176);
         type.put(Form.PASSWORD,177);
         type.put(Form.TIME,178);
+        type.put(Form.FILE,179);
     }
     public int get(String name){
         return type.get(name);

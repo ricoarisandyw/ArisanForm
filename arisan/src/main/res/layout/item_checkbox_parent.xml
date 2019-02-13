@@ -3,20 +3,25 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:padding="6dp"
         android:layout_height="wrap_content">
 
-        <Switch
-            android:id="@+id/arisan_switch"
-            android:text="Text"
+        <TextView
+            android:id="@+id/arisan_label_checkbox"
+            android:text="label here"
             android:textStyle="bold"
-            android:layout_alignParentLeft="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/arisan_checkbox_list"
+            android:text="Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 </LinearLayout>

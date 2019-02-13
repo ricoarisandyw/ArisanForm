@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:padding="6dp"
         android:layout_height="wrap_content">
 
-        <Switch
-            android:id="@+id/arisan_switch"
+        <CheckBox
+            android:id="@+id/arisan_checkbox"
             android:text="Text"
-            android:textStyle="bold"
-            android:layout_alignParentLeft="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

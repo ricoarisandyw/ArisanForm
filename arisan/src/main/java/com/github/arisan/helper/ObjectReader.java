@@ -14,29 +14,6 @@ import java.util.List;
  * Created by wijaya on 3/24/2018.
  */
 public class ObjectReader {
-    public String read(Object o) {
-        String result = "";
-        result += o.getClass().toString();
-        Field[] fields = o.getClass().getFields();
-        for (Field f : fields) {
-            result += "\nFields " + f.getName();
-            if (f.isAnnotationPresent(Form.class)) {
-
-            }
-        }
-        Field[] declaredField = o.getClass().getDeclaredFields();
-        for (Field f : declaredField) {
-            if (f.isAnnotationPresent(Form.class)) {
-                Annotation annotation = f.getAnnotation(Form.class);
-                Form form = (Form) annotation;
-
-                result += "\nAnnotation Data ViewType : " + form.type();
-            }
-            result += "\nDeclared " + f.getType().getName() + " " + f.getName();
-        }
-        return result;
-    }
-
     public static List<ArisanFieldModel> getField(Object o) {
         List<ArisanFieldModel> detailList = new ArrayList<ArisanFieldModel>();
         Field[] declaredField = o.getClass().getDeclaredFields();
@@ -52,8 +29,9 @@ public class ObjectReader {
                 arisanField.setPosition(form.position());
                 arisanField.setValue(objectGetter.runGetter(f.getName()));
                 arisanField.setDateFormat(form.dateFormat());
+                arisanField.setFileType(form.fileType());
 
-                if(form.label()!="null")
+                if(!form.label().equals("field name"))
                     arisanField.setLabel(form.label());
                 else
                     arisanField.setLabel(f.getName().substring(0,1).toUpperCase() + f.getName().substring(1));
