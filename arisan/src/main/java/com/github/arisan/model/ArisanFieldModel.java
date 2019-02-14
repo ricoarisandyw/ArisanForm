@@ -1,5 +1,7 @@
 package com.github.arisan.model;
 
+import java.util.Comparator;
+
 /**
  * Created by wijaya on 3/26/2018.
  */

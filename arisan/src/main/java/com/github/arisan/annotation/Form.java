@@ -17,7 +17,7 @@ public @interface Form {
     String type() default Form.TEXT;
     boolean required() default false;
     String dateFormat() default "dd-MM-yyyy";
-    int position() default -1;
+    int position() default 100;
     String fileType() default FileType.ANYTHING;
 
     String TEXT = "TEXT";

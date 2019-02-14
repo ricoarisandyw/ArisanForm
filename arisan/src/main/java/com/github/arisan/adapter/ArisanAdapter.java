@@ -27,12 +27,14 @@ import com.github.arisan.annotation.ArisanCode;
 import com.github.arisan.annotation.Form;
 import com.github.arisan.helper.DateConverter;
 import com.github.arisan.helper.FieldAssembler;
+import com.github.arisan.helper.SortField;
 import com.github.arisan.helper.TwoDigit;
 import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.TypeForm;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -56,6 +58,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     public ArisanAdapter(Context context, List<ArisanFieldModel> fieldList) {
         this.mContext = context;
+        Collections.sort(fieldList,new SortField());
         mList.add(new ArisanFieldModel());//For Title
         mList.addAll(fieldList);
         mList.add(new ArisanFieldModel());//For Submit Button

@@ -47,11 +47,7 @@ public class ObjectReader {
             }
         }
         //Sort
-        for (int i = 0; i < detailList.size(); i++) {
-            if (detailList.get(i).getPosition() != -1) {
-                Collections.swap(detailList, i, detailList.get(i).getPosition());
-            }
-        }
+        Collections.sort(detailList,new SortField());
         return detailList;
     }
 }

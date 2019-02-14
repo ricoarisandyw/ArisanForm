@@ -8,11 +8,11 @@ public class Order {
     int id;
     @Form
     String orderer;
-    @Form(type=Form.SPINNER)
+    @Form(type=Form.SPINNER, position = 0)
     String menu;
     @Form(type=Form.NUMBER)
     int quantity;
-    @Form(type=Form.CHECKBOX)
+    @Form(type=Form.CHECKBOX, position = 1)
     List<String> topping;
     @Form(type=Form.BOOLEAN)
     boolean hot;
