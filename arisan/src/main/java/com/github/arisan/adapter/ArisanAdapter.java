@@ -262,6 +262,12 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                         holder.mEditText.setText(data.getValue().toString());
                     }
                     break;
+                case Form.EMAIL:
+                    holder.mEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                    if (data.getValue() != null) {
+                        holder.mEditText.setText(data.getValue().toString());
+                    }
+                    break;
                 default:
                     //Input Type Text
                     if (data.getValue() != null && data.getValue() != "") {

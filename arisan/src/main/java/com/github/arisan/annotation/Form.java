@@ -23,6 +23,7 @@ public @interface Form {
     String TEXT = "TEXT";
     String PASSWORD = "PASSWORD";
     String NUMBER = "NUMBER";
+    String EMAIL = "EMAIL";
     String CHECKBOX = "CHECKBOX";
     String SPINNER = "SPINNER";
     String DATE = "DATE";
