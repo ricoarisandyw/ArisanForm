@@ -42,7 +42,6 @@ import java.util.List;
 public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder> implements View.OnClickListener{
     List<ArisanFieldModel> mList = new ArrayList<>();
     Context mContext;
-    Object mResult;
     OnSubmitListener onSubmitListener;
     String title;
     String submitText;
@@ -257,7 +256,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     break;
                 case Form.NUMBER:
                     holder.mEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    if(data.getValue().toString().equals("0.0")){
+                    if(data.getValue()!=null&&data.getValue().toString().equals("0.0")){
                         holder.mEditText.setText("0");
                     } else if (data.getValue() != null) {
                         holder.mEditText.setText(data.getValue().toString());
