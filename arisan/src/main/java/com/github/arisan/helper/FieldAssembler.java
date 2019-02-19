@@ -16,16 +16,17 @@ import java.util.Map;
  */
 
 public class FieldAssembler {
-    public static String toJson(List<ArisanFieldModel> f){
+    public static String toJson(List<ArisanFieldModel> data){
         StringBuilder result = new StringBuilder("{");
         Gson gson = new Gson();
-        for(int i = 0;i<f.size();i++){
-            ArisanFieldModel model = f.get(i);
-            result.append("\"").append(model.getName()).append("\":");
-            result.append(gson.toJson(model.getValue()));
-
-            if(i!=f.size()-1){
-                result.append(",");
+        for(int i = 0;i<data.size();i++){
+            ArisanFieldModel model = data.get(i);
+            if(model.getValue()!=null){
+                result.append("\"").append(model.getName()).append("\":");
+                result.append(gson.toJson(model.getValue()));
+                if(i<data.size()-1){
+                    result.append(",");
+                }
             }
         }
         result.append("}");
@@ -40,10 +41,12 @@ public class FieldAssembler {
         for(Map.Entry<String, Object> entry: data.entrySet()){
             String key = entry.getKey();
             Object value = entry.getValue();
-            result.append("\"").append(key).append("\":");
-            result.append(gson.toJson(value));
-            if(i<data.size()-1){
-                result.append(",");
+            if(entry.getValue()!=null){
+                result.append("\"").append(key).append("\":");
+                result.append(gson.toJson(value));
+                if(i<data.size()-1){
+                    result.append(",");
+                }
             }
             i++;
         }

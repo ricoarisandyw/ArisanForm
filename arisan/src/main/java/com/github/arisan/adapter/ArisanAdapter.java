@@ -2,6 +2,7 @@ package com.github.arisan.adapter;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.github.arisan.R;
 import com.github.arisan.annotation.ArisanCode;
@@ -83,6 +86,8 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             v = inflater.inflate(R.layout.item_spinner, parent, false);
         }else if(viewType== type.get(Form.CHECKBOX)){
             v = inflater.inflate(R.layout.item_checkbox_parent, parent, false);
+        }else if(viewType== type.get(Form.TIME)){
+            v = inflater.inflate(R.layout.item_date, parent, false);
         }else if(viewType== type.get(Form.FILE)){
             v = inflater.inflate(R.layout.item_file, parent, false);
         }else{
@@ -180,29 +185,53 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     mList.get(position).setValue(isChecked);
                 }
             });
-        }else if(data.getViewType().equals(Form.DATE)){
+        }else if(data.getViewType().equals(Form.DATE)) {
             holder.mDateLabel.setText(data.getLabel());
             final Calendar calendar;
-            if(data.getValue()!=null){
+            if (data.getValue() != null) {
                 calendar = new DateConverter(data.getValue().toString()).from("MMMM dd, yyyy").calendar;
                 holder.mDate.setText(new DateConverter(calendar).to(data.getDateFormat()));
-            }else{
+            } else {
                 calendar = Calendar.getInstance();
                 holder.mDate.setText(new DateConverter(calendar).to(data.getDateFormat()));
             }
             holder.mDate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        String result = TwoDigit.from(dayOfMonth)+"-" + TwoDigit.from(month+1) + "-" + year ;
-                        holder.mDate.setText(new DateConverter(result).from("dd-MM-yyyy").to(data.getDateFormat()));
-                        mList.get(position).setValue(result);
-                    }
-                }, calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)).show();
+                    new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                            String result = TwoDigit.from(dayOfMonth) + "-" + TwoDigit.from(month + 1) + "-" + year;
+                            holder.mDate.setText(new DateConverter(result).from("dd-MM-yyyy").to(data.getDateFormat()));
+                            mList.get(position).setValue(new DateConverter(result).from("dd-MM-yyyy").to(data.getDateFormat()));
+                        }
+                    }, calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+            });
+        }else if(data.getViewType().equals(Form.TIME)){
+            final Calendar calendar;
+            if (data.getValue() != null) {
+                calendar = new DateConverter(data.getValue().toString()).from("MMMM dd, yyyy HH:mm:ss").calendar;
+                holder.mDate.setText(new DateConverter(calendar).to(data.getDateFormat()));
+            } else {
+                calendar = Calendar.getInstance();
+                holder.mDate.setText("12:34");
+            }
+            holder.mDateLabel.setText(data.getLabel());
+            holder.mDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            String result = TwoDigit.from(hourOfDay)+":"+TwoDigit.from(minute);
+                            String convertedResult = new DateConverter(result).from("HH:mm").to(data.getDateFormat());
+                            holder.mDate.setText(convertedResult);
+                            mList.get(position).setValue(convertedResult);
+                        }
+                    },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),DateFormat.is24HourFormat(mContext)).show();
                 }
             });
         }else if(data.getViewType().equals(Form.SPINNER)){
@@ -262,7 +291,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     if(data.getValue()!=null&&data.getValue().toString().equals("0.0")){
                         holder.mEditText.setText("0");
                     } else if (data.getValue() != null) {
-                        holder.mEditText.setText(data.getValue().toString());
+                        holder.mEditText.setText(data.getValue().toString().replace(".0",""));
                     }
                     break;
                 case Form.EMAIL:

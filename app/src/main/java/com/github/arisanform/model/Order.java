@@ -2,20 +2,25 @@ package com.github.arisanform.model;
 
 import com.github.arisan.annotation.Form;
 
+import java.util.Date;
 import java.util.List;
 
 public class Order {
-    int id;
+    private int id;
     @Form
-    String orderer;
+    private String orderer;
     @Form(type=Form.SPINNER, position = 0)
-    String menu;
+    private String menu;
     @Form(type=Form.NUMBER)
-    int quantity;
+    private int quantity;
     @Form(type=Form.CHECKBOX, position = 1)
-    List<String> topping;
+    private List<String> topping;
     @Form(type=Form.BOOLEAN)
-    boolean hot;
+    private boolean hot;
+    @Form(type=Form.TIME,dateFormat = "HH:mm")
+    Date time;
+    @Form(type=Form.DATE,dateFormat = "dd-MM-yyyy")
+    Date created_at;
 
     public Order() {
     }
