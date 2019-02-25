@@ -9,7 +9,7 @@ Convert Model into Form
 use jitpack.io
 
 ```maven
-implementation 'com.github.ricoarisandyw:ArisanForm:0.6'
+implementation 'com.github.ricoarisandyw:ArisanForm:0.11'
 ```
 
 ## How to use?
