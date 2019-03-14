@@ -2,14 +2,14 @@
 
 Convert Model into Form
 
-## Version 0.11
+## Version 0.12
 
 ## Download
 
 use jitpack.io
 
 ```maven
-implementation 'com.github.ricoarisandyw:ArisanForm:0.11'
+implementation 'com.github.ricoarisandyw:ArisanForm:0.12'
 ```
 
 ## How to use?
