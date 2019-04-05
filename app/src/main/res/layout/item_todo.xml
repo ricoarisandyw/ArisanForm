@@ -1,33 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/holo_green_light"
+    android:background="@drawable/gradient"
     android:elevation="3dp"
     android:padding="15dp"
     android:layout_margin="5dp"
     android:layout_height="wrap_content">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
     <TextView
         android:text="TITLE"
+        android:textColor="@android:color/white"
         android:id="@+id/todo_title"
-        android:textStyle="bold"
+        android:textSize="14sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <TextView
         android:layout_below="@id/todo_title"
+        android:textColor="@android:color/white"
         android:text="Description"
+        android:textSize="12sp"
         android:id="@+id/todo_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <ImageView
         android:id="@+id/todo_checkbox"
-        android:tint="@android:color/holo_red_dark"
+        android:tint="@android:color/holo_red_light"
         android:src="@android:drawable/ic_delete"
         android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
+        android:layout_width="10pt"
         android:layout_height="wrap_content" />
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

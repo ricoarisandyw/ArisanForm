@@ -16,6 +16,7 @@ public class TypeForm {
         type.put(Form.PASSWORD,177);
         type.put(Form.TIME,178);
         type.put(Form.FILE,179);
+        type.put(Form.DATETIME,180);
     }
     public int get(String name){
         return type.get(name);

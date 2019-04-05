@@ -1,26 +1,27 @@
 package com.github.arisanform.model;
 
 import com.github.arisan.annotation.Form;
+import com.github.arisanform.R;
 
 import java.util.Date;
 import java.util.List;
 
 public class Order {
     private int id;
-    @Form
+    @Form(position = 0)
     private String orderer;
-    @Form(type=Form.SPINNER, position = 0)
+    @Form(type=Form.SPINNER, position = 1)
     private String menu;
     @Form(type=Form.NUMBER)
     private int quantity;
-    @Form(type=Form.CHECKBOX, position = 1)
+    @Form(type=Form.CHECKBOX, position = 2)
     private List<String> topping;
     @Form(type=Form.BOOLEAN)
     private boolean hot;
-    @Form(type=Form.TIME,dateFormat = "HH:mm")
-    Date time;
-    @Form(type=Form.DATE,dateFormat = "dd-MM-yyyy")
-    Date created_at;
+    @Form(type=Form.DATETIME, format = "dd-MM-yyyy HH:mm",background=R.drawable.gradient)
+    private Date time;
+    @Form(type=Form.DATE)
+    private Date send_at;
 
     public Order() {
     }
@@ -32,6 +33,22 @@ public class Order {
         this.quantity = quantity;
         this.topping = topping;
         this.hot = hot;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public Date getSend_at() {
+        return send_at;
+    }
+
+    public void setSend_at(Date send_at) {
+        this.send_at = send_at;
     }
 
     public int getId() {

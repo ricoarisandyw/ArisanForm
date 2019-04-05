@@ -20,6 +20,7 @@ public class ArisanForm {
         adapter = new ArisanAdapter(context, fieldData);
         adapter.setTitle(preparation.getTitle());
         adapter.setSubmitText(preparation.getSubmit());
+        adapter.setSubmitBackground(preparation.getSubmitBackground());
     }
 
     public ArisanForm setOnSubmitListener(ArisanAdapter.OnSubmitListener onSubmitListener){

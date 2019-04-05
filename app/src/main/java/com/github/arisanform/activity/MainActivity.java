@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         preparation.setModel(order);
         preparation.fillData("menu",DataMaster.MENU);
         preparation.fillData("topping",DataMaster.TOPPING);
+        preparation.setSubmitBackground(R.drawable.gradient);
 
         if(order.getId() == 0){
             preparation.setTitle("New Order");

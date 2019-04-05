@@ -6,10 +6,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:fontFamily">@font/raleway</item>
     </style>
 
     <style name="AppTheme.Arisan" parent="AppTheme">
-        <item name="android:textColor">#CCCC00</item>
+        <item name="android:fontFamily">@font/raleway</item>
+        <item name="android:buttonTint">@drawable/gradient</item>
     </style>
 
 </resources>

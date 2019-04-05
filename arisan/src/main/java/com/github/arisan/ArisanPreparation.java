@@ -18,6 +18,7 @@ public class ArisanPreparation {
     private String MY_MODEL = "MY_MODEL";
     private String MY_TITLE = "TITLE";
     private String MY_SUBMIT = "SUBMIT";
+    private String MY_BACKGROUND = "BACKGROUND";
 
     public ArisanPreparation(Context context){
         preferenceHelper = new PreferenceHelper(context);
@@ -26,6 +27,10 @@ public class ArisanPreparation {
     public void setModel(Object t){
         fieldModels = ObjectReader.getField(t);
         preferenceHelper.saveObj(MY_MODEL,fieldModels);
+    }
+
+    public int getSubmitBackground() {
+        return Integer.parseInt(preferenceHelper.load(MY_BACKGROUND));
     }
 
     public void setTitle(String title){
@@ -42,6 +47,10 @@ public class ArisanPreparation {
 
     public void setSubmit(String submit){
         preferenceHelper.save(MY_SUBMIT,submit);
+    }
+
+    public void setSubmitBackground(int button_background){
+        preferenceHelper.save(MY_BACKGROUND,String.valueOf(button_background));
     }
 
     public List<ArisanFieldModel> getModel(){

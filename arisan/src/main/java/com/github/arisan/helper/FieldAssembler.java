@@ -24,7 +24,7 @@ public class FieldAssembler {
             if(model.getValue()!=null){
                 result.append("\"").append(model.getName()).append("\":");
                 result.append(gson.toJson(model.getValue()));
-                if(i<data.size()-1){
+                if(i<data.size()-2){
                     result.append(",");
                 }
             }

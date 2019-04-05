@@ -17,8 +17,17 @@ public class ArisanFieldModel {
     private String dateFormat;
     private String fileType;
     private boolean require;
+    private int background;
 
     public ArisanFieldModel() {
+    }
+
+    public int getBackground() {
+        return background;
+    }
+
+    public void setBackground(int background) {
+        this.background = background;
     }
 
     public String getFileType() {

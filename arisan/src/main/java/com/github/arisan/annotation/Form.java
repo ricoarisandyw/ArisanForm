@@ -16,9 +16,10 @@ public @interface Form {
     String label() default "field name";
     String type() default Form.TEXT;
     boolean required() default false;
-    String dateFormat() default "dd-MM-yyyy";
+    String format() default "dd-MM-yyyy";
     int position() default 100;
     String fileType() default FileType.ANYTHING;
+    int background() default 0;
 
     String TEXT = "TEXT";
     String PASSWORD = "PASSWORD";
@@ -27,6 +28,7 @@ public @interface Form {
     String CHECKBOX = "CHECKBOX";
     String SPINNER = "SPINNER";
     String DATE = "DATE";
+    String DATETIME = "DATETIME";
     String TIME = "TIME";
     String BOOLEAN = "BOOLEAN";
     String FILE = "FILE";

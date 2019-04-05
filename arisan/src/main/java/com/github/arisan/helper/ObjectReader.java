@@ -28,8 +28,9 @@ public class ObjectReader {
                 arisanField.setRequire(form.required());
                 arisanField.setPosition(form.position());
                 arisanField.setValue(objectGetter.runGetter(f.getName()));
-                arisanField.setDateFormat(form.dateFormat());
+                arisanField.setDateFormat(form.format());
                 arisanField.setFileType(form.fileType());
+                arisanField.setBackground(form.background());
 
                 if(!form.label().equals("field name"))
                     arisanField.setLabel(form.label());

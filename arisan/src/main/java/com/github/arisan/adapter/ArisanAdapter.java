@@ -50,6 +50,11 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     OnSubmitListener onSubmitListener;
     String title;
     String submitText;
+    int submitBackground;
+
+    public void setSubmitBackground(int submitBackground) {
+        mList.get(mList.size()-1).setBackground(submitBackground);
+    }
 
     public void setSubmitText(String submitText) {
         this.submitText = submitText;
@@ -81,6 +86,8 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         }else if(viewType==type.get(Form.BOOLEAN)){
             v = inflater.inflate(com.github.arisan.R.layout.item_switch, parent, false);
         }else if(viewType==type.get(Form.DATE)){
+            v = inflater.inflate(R.layout.item_date, parent, false);
+        }else if(viewType==type.get(Form.DATETIME)){
             v = inflater.inflate(R.layout.item_date, parent, false);
         }else if(viewType== type.get(Form.SPINNER)){
             v = inflater.inflate(R.layout.item_spinner, parent, false);
@@ -157,6 +164,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             holder.mTitle.setText(title);
         }else if(position==mList.size()-1){
             //SUBMIT BUTTON
+            if(data.getBackground()!=0){
+                holder.mSubmit.setBackgroundResource(data.getBackground());
+            }
             holder.mSubmit.setText(submitText);
             holder.mSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -210,6 +220,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                             calendar.get(Calendar.DAY_OF_MONTH)).show();
                 }
             });
+            if(data.getBackground()!=0){
+                holder.mDate.setBackgroundResource(data.getBackground());
+            }
         }else if(data.getViewType().equals(Form.TIME)){
             final Calendar calendar;
             if (data.getValue() != null) {
@@ -234,6 +247,46 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),DateFormat.is24HourFormat(mContext)).show();
                 }
             });
+            if(data.getBackground()!=0){
+                holder.mDate.setBackgroundResource(data.getBackground());
+            }
+        }else if(data.getViewType().equals(Form.DATETIME)) {
+            holder.mDateLabel.setText(data.getLabel());
+            final Calendar calendar;
+            if (data.getValue() != null) {
+                calendar = new DateConverter(data.getValue().toString()).from("MMMM dd, yyyy").calendar;
+                holder.mDate.setText(new DateConverter(calendar).to(data.getDateFormat()));
+            } else {
+                calendar = Calendar.getInstance();
+                holder.mDate.setText(new DateConverter(calendar).to(data.getDateFormat()));
+            }
+            String result = "";
+            holder.mDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                            String result = TwoDigit.from(dayOfMonth) + "-" + TwoDigit.from(month + 1) + "-" + year;
+                            mList.get(position).setValue(new DateConverter(result).from("dd-MM-yyyy").to("dd-MM-yyyy"));
+                            new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                    String result = mList.get(position).getValue()+" "+TwoDigit.from(hourOfDay)+":"+TwoDigit.from(minute);
+                                    String convertedResult = new DateConverter(result).from("dd-MM-yyyy HH:mm").to(data.getDateFormat());
+                                    holder.mDate.setText(convertedResult);
+                                    mList.get(position).setValue(convertedResult);
+                                }
+                            },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),DateFormat.is24HourFormat(mContext)).show();
+                        }
+                    }, calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+            });
+            if(data.getBackground()!=0){
+                holder.mDate.setBackgroundResource(data.getBackground());
+            }
         }else if(data.getViewType().equals(Form.SPINNER)){
             holder.mSpinnerLabel.setText(data.getLabel());
             //ArrayAdapter mAdapter = new ArrayAdapter(mContext,android.R.layout.simple_spinner_item,(List)data.getData());
@@ -266,6 +319,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     ((Activity)mContext).startActivityForResult(intent, ArisanCode.REQUEST_FILE);
                 }
             });
+            if(data.getBackground()!=0){
+                holder.mFileLabel.setBackgroundResource(data.getBackground());
+            }
         }else if(data.getViewType().equals(Form.CHECKBOX)){
             final ArrayList<String> dataList = (ArrayList<String>) data.getData();
             final ArrayList<String> valueList = (ArrayList<String>) data.getValue();
@@ -290,6 +346,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     holder.mEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
                     if(data.getValue()!=null&&data.getValue().toString().equals("0.0")){
                         holder.mEditText.setText("0");
+                        mList.get(position).setValue(0);
                     } else if (data.getValue() != null) {
                         holder.mEditText.setText(data.getValue().toString().replace(".0",""));
                     }
