@@ -13,12 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArisanPreparation {
+
     private PreferenceHelper preferenceHelper;
     private List<ArisanFieldModel> fieldModels;
     private String MY_MODEL = "MY_MODEL";
     private String MY_TITLE = "TITLE";
     private String MY_SUBMIT = "SUBMIT";
     private String MY_BACKGROUND = "BACKGROUND";
+    private String MY_COLOR = "COLOR";
 
     public ArisanPreparation(Context context){
         preferenceHelper = new PreferenceHelper(context);
@@ -30,7 +32,11 @@ public class ArisanPreparation {
     }
 
     public int getSubmitBackground() {
-        return Integer.parseInt(preferenceHelper.load(MY_BACKGROUND));
+        try{
+            return Integer.parseInt(preferenceHelper.load(MY_BACKGROUND));
+        } catch (Exception e){
+            return 0;
+        }
     }
 
     public void setTitle(String title){
@@ -45,12 +51,24 @@ public class ArisanPreparation {
         return preferenceHelper.load(MY_SUBMIT);
     }
 
+    public int getColor(){
+        try{
+            return Integer.parseInt(preferenceHelper.load(MY_COLOR)); }
+        catch (Exception e){
+            return 0;
+        }
+    }
+
     public void setSubmit(String submit){
         preferenceHelper.save(MY_SUBMIT,submit);
     }
 
     public void setSubmitBackground(int button_background){
         preferenceHelper.save(MY_BACKGROUND,String.valueOf(button_background));
+    }
+
+    public void setColor(int color){
+        preferenceHelper.save(MY_COLOR,String.valueOf(color));
     }
 
     public List<ArisanFieldModel> getModel(){

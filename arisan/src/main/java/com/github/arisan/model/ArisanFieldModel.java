@@ -18,6 +18,15 @@ public class ArisanFieldModel {
     private String fileType;
     private boolean require;
     private int background;
+    private int color;
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
 
     public ArisanFieldModel() {
     }

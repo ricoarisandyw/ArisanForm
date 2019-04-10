@@ -20,6 +20,7 @@ public @interface Form {
     int position() default 100;
     String fileType() default FileType.ANYTHING;
     int background() default 0;
+    int color() default 0;
 
     String TEXT = "TEXT";
     String PASSWORD = "PASSWORD";

@@ -1,5 +1,7 @@
 package com.github.arisanform.model;
 
+import android.graphics.Color;
+
 import com.github.arisan.annotation.Form;
 import com.github.arisanform.R;
 
@@ -8,17 +10,17 @@ import java.util.List;
 
 public class Order {
     private int id;
-    @Form(position = 0)
+    @Form(position = 0,color = R.color.white)
     private String orderer;
-    @Form(type=Form.SPINNER, position = 1)
+    @Form(type=Form.SPINNER, position = 1,color = R.color.white)
     private String menu;
-    @Form(type=Form.NUMBER)
+    @Form(type=Form.NUMBER,color = R.color.white)
     private int quantity;
     @Form(type=Form.CHECKBOX, position = 2)
     private List<String> topping;
     @Form(type=Form.BOOLEAN)
     private boolean hot;
-    @Form(type=Form.DATETIME, format = "dd-MM-yyyy HH:mm",background=R.drawable.gradient)
+    @Form(type=Form.DATETIME, format = "dd-MM-yyyy HH:mm",background=R.drawable.gradient, color = R.color.white)
     private Date time;
     @Form(type=Form.DATE)
     private Date send_at;

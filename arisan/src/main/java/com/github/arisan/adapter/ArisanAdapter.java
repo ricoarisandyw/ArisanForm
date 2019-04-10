@@ -50,7 +50,6 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     OnSubmitListener onSubmitListener;
     String title;
     String submitText;
-    int submitBackground;
 
     public void setSubmitBackground(int submitBackground) {
         mList.get(mList.size()-1).setBackground(submitBackground);
@@ -158,10 +157,14 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final ArisanAdapter.ViewHolder holder, final int position) {
         final ArisanFieldModel data = mList.get(position);
+        int color = data.getColor();
 //        System.out.println("On Bind");
         if(position==0){
             //TITLE
             holder.mTitle.setText(title);
+            if(data.getColor()!=0) {
+                holder.mTitle.setTextColor(color);
+            }
         }else if(position==mList.size()-1){
             //SUBMIT BUTTON
             if(data.getBackground()!=0){
@@ -176,6 +179,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     onSubmitListener.onSubmit(FieldAssembler.toJson(mList));
                 }
             });
+            if(data.getColor()!=0) {
+                holder.mSubmit.setTextColor(color);
+            }
         }else if(data.getViewType().equals(Form.BOOLEAN)){
             holder.aSwitch.setText(data.getLabel());
             if(data.getValue()!= null) {
@@ -195,6 +201,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     mList.get(position).setValue(isChecked);
                 }
             });
+            if(data.getColor()!=0) {
+                holder.aSwitch.setTextColor(color);
+            }
         }else if(data.getViewType().equals(Form.DATE)) {
             holder.mDateLabel.setText(data.getLabel());
             final Calendar calendar;
@@ -223,6 +232,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             if(data.getBackground()!=0){
                 holder.mDate.setBackgroundResource(data.getBackground());
             }
+            if(data.getColor()!=0) {
+                holder.mDate.setTextColor(color);
+            }
         }else if(data.getViewType().equals(Form.TIME)){
             final Calendar calendar;
             if (data.getValue() != null) {
@@ -249,6 +261,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             });
             if(data.getBackground()!=0){
                 holder.mDate.setBackgroundResource(data.getBackground());
+            }
+            if(data.getColor()!=0) {
+                holder.mDate.setTextColor(color);
             }
         }else if(data.getViewType().equals(Form.DATETIME)) {
             holder.mDateLabel.setText(data.getLabel());
@@ -287,6 +302,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             if(data.getBackground()!=0){
                 holder.mDate.setBackgroundResource(data.getBackground());
             }
+            if(data.getColor()!=0) {
+                holder.mDate.setTextColor(color);
+            }
         }else if(data.getViewType().equals(Form.SPINNER)){
             holder.mSpinnerLabel.setText(data.getLabel());
             //ArrayAdapter mAdapter = new ArrayAdapter(mContext,android.R.layout.simple_spinner_item,(List)data.getData());
@@ -320,7 +338,10 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 }
             });
             if(data.getBackground()!=0){
-                holder.mFileLabel.setBackgroundResource(data.getBackground());
+                holder.mFileName.setBackgroundResource(data.getBackground());
+            }
+            if(data.getColor()!=0) {
+                holder.mFileName.setTextColor(color);
             }
         }else if(data.getViewType().equals(Form.CHECKBOX)){
             final ArrayList<String> dataList = (ArrayList<String>) data.getData();
@@ -337,6 +358,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         }else{
             //Edit Text
             holder.mInputTextLabel.setText(data.getLabel());
+            if(data.getBackground()!=0) {
+                holder.mInputTextLabel.setTextColor(color);
+            }
             switch (data.getViewType()) {
                 case Form.PASSWORD:
                     holder.mEditText.setInputType(InputType.TYPE_CLASS_TEXT |

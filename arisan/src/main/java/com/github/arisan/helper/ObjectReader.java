@@ -31,6 +31,7 @@ public class ObjectReader {
                 arisanField.setDateFormat(form.format());
                 arisanField.setFileType(form.fileType());
                 arisanField.setBackground(form.background());
+                arisanField.setColor(form.color());
 
                 if(!form.label().equals("field name"))
                     arisanField.setLabel(form.label());
