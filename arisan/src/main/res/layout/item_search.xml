@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="6dp">
+
+        <TextView
+            android:id="@+id/arisan_search_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Label"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/arisan_search_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/arisan_search_label"
+            android:layout_toLeftOf="@id/arisan_search_button"
+            android:hint="Search here . . ." />
+
+        <Button
+            android:id="@+id/arisan_search_button"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/arisan_search_label"
+            android:drawableRight="@android:drawable/ic_menu_search"
+            android:drawableTint="@android:color/black"
+            android:text="SEARCH" />
+
+    </RelativeLayout>
+
+</LinearLayout>

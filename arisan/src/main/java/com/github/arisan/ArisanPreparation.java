@@ -20,80 +20,126 @@ public class ArisanPreparation {
     private String MY_TITLE = "TITLE";
     private String MY_SUBMIT = "SUBMIT";
     private String MY_BACKGROUND = "BACKGROUND";
+    private String MY_SUBMIT_COLOR = "SUBMIT_COLOR";
     private String MY_COLOR = "COLOR";
+    private String USE_TITLE = "USE_TITLE";
+    private String USE_SUBMIT_BUTTON = "USE_SUBMIT_BUTTON";
 
-    public ArisanPreparation(Context context){
+    public ArisanPreparation(Context context) {
         preferenceHelper = new PreferenceHelper(context);
     }
 
-    public void setModel(Object t){
+    public void setModel(Object t) {
         fieldModels = ObjectReader.getField(t);
-        preferenceHelper.saveObj(MY_MODEL,fieldModels);
+        preferenceHelper.saveObj(MY_MODEL, fieldModels);
     }
 
     public int getSubmitBackground() {
-        try{
+        try {
             return Integer.parseInt(preferenceHelper.load(MY_BACKGROUND));
-        } catch (Exception e){
+        } catch (Exception e) {
             return 0;
         }
     }
 
-    public void setTitle(String title){
-        preferenceHelper.save(MY_TITLE,title);
+    public void useTitle(boolean use) {
+        preferenceHelper.save(USE_TITLE, String.valueOf(use));
     }
 
-    public String getTitle(){
+    public boolean isUseTitle() {
+        try {
+            return Boolean.valueOf(preferenceHelper.load(USE_TITLE)).booleanValue();
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    public void useSubmitButton(boolean use) {
+        preferenceHelper.save(USE_SUBMIT_BUTTON, String.valueOf(use));
+    }
+
+    public boolean isUseSubmitButton() {
+        try {
+            return Boolean.valueOf(preferenceHelper.load(USE_SUBMIT_BUTTON)).booleanValue();
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    public void setTitle(String title) {
+        preferenceHelper.save(MY_TITLE, title);
+    }
+
+    public String getTitle() {
         return preferenceHelper.load(MY_TITLE);
     }
 
-    public String getSubmit(){
+    public String getSubmit() {
         return preferenceHelper.load(MY_SUBMIT);
     }
 
-    public int getColor(){
-        try{
-            return Integer.parseInt(preferenceHelper.load(MY_COLOR)); }
-        catch (Exception e){
+    public String getSubmitColor() {
+        return preferenceHelper.load(MY_SUBMIT_COLOR);
+    }
+
+    public int getColor() {
+        try {
+            return Integer.parseInt(preferenceHelper.load(MY_COLOR));
+        } catch (Exception e) {
             return 0;
         }
     }
 
-    public void setSubmit(String submit){
-        preferenceHelper.save(MY_SUBMIT,submit);
+    public void setSubmit(String submit) {
+        preferenceHelper.save(MY_SUBMIT, submit);
     }
 
-    public void setSubmitBackground(int button_background){
-        preferenceHelper.save(MY_BACKGROUND,String.valueOf(button_background));
+    public void setSubmitBackground(int button_background) {
+        preferenceHelper.save(MY_BACKGROUND, String.valueOf(button_background));
     }
 
-    public void setColor(int color){
-        preferenceHelper.save(MY_COLOR,String.valueOf(color));
+    public void setSubmitColor(int color) {
+        preferenceHelper.save(MY_SUBMIT_COLOR, String.valueOf(color));
     }
 
-    public List<ArisanFieldModel> getModel(){
-        Type token = new TypeToken<ArrayList<ArisanFieldModel>>(){}.getType();
-        List<ArisanFieldModel> models = (List) preferenceHelper.loadObjList(MY_MODEL,token);
+    public void setColor(int color) {
+        preferenceHelper.save(MY_COLOR, String.valueOf(color));
+    }
+
+    public List<ArisanFieldModel> getModel() {
+        Type token = new TypeToken<ArrayList<ArisanFieldModel>>() {
+        }.getType();
+        List<ArisanFieldModel> models = (List) preferenceHelper.loadObjList(MY_MODEL, token);
         return models;
     }
 
-    public void fillData(final String fieldName, String[] data){
+    public void fillData(final String fieldName, String[] data) {
         ArisanFieldModel foundModel = new ArisanFieldModel();
         boolean found = false;
-        for(ArisanFieldModel afm : fieldModels){
-            if(afm.getName().equals(fieldName)){
+        for (ArisanFieldModel afm : fieldModels) {
+            if (afm.getName().equals(fieldName)) {
                 foundModel = afm;
                 found = true;
                 break;
             }
         }
-        if(found) {
+        if (found) {
             fieldModels.remove(foundModel);
             foundModel.setData(data);
             fieldModels.add(foundModel);
-            preferenceHelper.saveObj(MY_MODEL,fieldModels);
-        }else{
-            Log.e("__Arisan Error","Fill Field with name "+fieldName+" not found!!!");
+            preferenceHelper.saveObj(MY_MODEL, fieldModels);
+        } else {
+            Log.e("__Arisan Error", "Fill Field with name " + fieldName + " not found!!!");
         }
+    }
+
+    public void clearData(){
+        preferenceHelper.save(USE_TITLE,null);
+        preferenceHelper.save(USE_SUBMIT_BUTTON,null);
+        preferenceHelper.save(MY_BACKGROUND,null);
+        preferenceHelper.save(MY_COLOR,null);
+        preferenceHelper.save(MY_MODEL,null);
+        preferenceHelper.save(MY_SUBMIT,null);
+        preferenceHelper.save(MY_TITLE,null);
     }
 }

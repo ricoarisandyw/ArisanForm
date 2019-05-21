@@ -8,18 +8,27 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.arisan.ArisanForm;
+import com.github.arisan.ArisanListener;
 import com.github.arisan.ArisanPreparation;
 import com.github.arisan.adapter.ArisanAdapter;
 import com.github.arisan.helper.DateDeserializer;
+import com.github.arisan.helper.ObjectReader;
 import com.github.arisan.helper.ValueUpdater;
+import com.github.arisan.model.ArisanFieldModel;
+import com.github.arisan.model.ArisanListenerModel;
+import com.github.arisanform.model.Additional;
 import com.github.arisanform.model.DB;
 import com.github.arisanform.model.DataMaster;
 import com.github.arisan.annotation.ArisanCode;
 import com.github.arisanform.R;
 import com.github.arisanform.model.Order;
 import com.github.arisan.helper.PreferenceHelper;
+import com.github.arisanform.model.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -36,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView vList;
     RecyclerView vForm;
+    TextView vDummyText;
     MyAdapter adapter;
     List<Order> orderList = new ArrayList<>();
 
@@ -52,10 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
         vList = findViewById(R.id.data_list);
         vForm = findViewById(R.id.data_form);
+        vDummyText = findViewById(R.id.dummy_text);
 
         vForm.setLayoutManager(new LinearLayoutManager(this));
         //Get Stored Data
-        orderList = (List) preference.loadObjList(DB.ORDER, new TypeToken<ArrayList<Order>>(){}.getType());
+        /*orderList = (List) preference.loadObjList(DB.ORDER, new TypeToken<ArrayList<Order>>(){}.getType());
         if(orderList ==null)
             orderList = new ArrayList<>();
 
@@ -69,33 +80,61 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         vList.setLayoutManager(mLayoutManager);
-        vList.setAdapter(adapter);
+        vList.setAdapter(adapter);*/
 
+        //FLOATING ADD
         FloatingActionButton vAdd = findViewById(R.id.add_todo);
         vAdd.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { addData(new Order());
+            public void onClick(View v) { addDataBook(new User());
             }
         });
 
-        gsonTest();
+        /*TESTING COLOR*/
+        vDummyText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+        vDummyText.setVisibility(View.GONE);
     }
 
-    public void gsonTest(){
-        Date a;
-        String myDate = "\"01-01-2015\"";
-        String myHour = "\"12:34\"";
+    public void addDataBook(User user){
+        vForm.setVisibility(View.VISIBLE);
+        //PREPARE DATA
+        ArisanPreparation preparation = new ArisanPreparation(this);
+        preparation.clearData();
+        preparation.setModel(user);
+        preparation.setSubmit("SUBMIT");
+        preparation.setSubmitBackground(R.drawable.gradient);
+        preparation.useSubmitButton(true);
 
-        //Test 1
-        a = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeserializer("dd-MM-yyyy","HH:mm")).create().fromJson(myDate,Date.class);
-        Log.d("__Test 1",a.toString());
-        //Test2
-        a = new GsonBuilder().setDateFormat("dd-MM-yyyy").create().fromJson(myDate,Date.class);
-        Log.d("__Test 2",a.toString());
-
+        ArisanForm arisanForm = new ArisanForm(this);
+        arisanForm.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
+            @Override
+            public void onSubmit(String response) {
+                Toast.makeText(MainActivity.this,response,Toast.LENGTH_SHORT).show();
+                Log.d("__RESPONE",response);
+//                User newOrder = gson.fromJson(response,User.class);
+//
+//                Order order = new Order();
+//                order.setId(orderList.size()+1);
+//                order.setOrderer("Mio");
+//
+//                order = new ValueUpdater<Order>().update(order,newOrder,Order.class);
+//                orderList.add(order);
+//                preference.saveObj(DB.ORDER, orderList);
+//                refreshList();
+                vForm.setVisibility(View.GONE);
+            }
+        });
+        vForm.setAdapter(arisanForm.buildAdapter());
     }
 
     public void addData(Order order){
+        List<Additional> additionals = new ArrayList<>();
+        Additional additional = new Additional();
+        additional.setName("Misis");
+        additional.setQuantity(3);
+        additionals.add(additional);
+        order.setAdditionals(additionals);
+
         vForm.setVisibility(View.VISIBLE);
         //PREPARE DATA
         ArisanPreparation preparation = new ArisanPreparation(this);
@@ -112,7 +151,29 @@ public class MainActivity extends AppCompatActivity {
             preparation.setSubmit("COPY");
         }
 
-        ArisanForm arisanForm = new ArisanForm(this).setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
+        ArisanForm arisanForm = new ArisanForm(this);
+        arisanForm.addViewMod("location", new ArisanListener.ViewMod() {
+            @Override
+            public Object modding(Object view) {
+                EditText editText = (EditText)view;
+                editText.setText("Anone");
+                return editText;
+            }
+        });
+        arisanForm.addErrorListener("location", new ArisanListener.ErrorCondition() {
+            @Override
+            public ArisanListenerModel onError(String value) {
+                ArisanListenerModel model = new ArisanListenerModel();
+                if(value.equals("rico")){
+                    model.setMessage("username found");
+                    model.setCondition(true);
+                }else{
+                    model.setMessage("username not found");
+                    model.setCondition(false);
+                }
+                return model;
+            }
+        }).setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
             @Override
             public void onSubmit(String response) {
                 Order newOrder = gson.fromJson(response,Order.class);
@@ -131,9 +192,11 @@ public class MainActivity extends AppCompatActivity {
         vForm.setAdapter(arisanForm.buildAdapter());
     }
 
+    interface ArisanCallback{
+        public void onSomething(String text);
+    }
+
     public void refreshList() {
         adapter.notifyDataSetChanged();
-//        adapter = new MyAdapter(this, orderList);
-//        vList.setAdapter(adapter);
     }
 }

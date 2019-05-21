@@ -4,8 +4,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by wijaya on 3/24/2018.
@@ -21,6 +19,7 @@ public @interface Form {
     String fileType() default FileType.ANYTHING;
     int background() default 0;
     int color() default 0;
+    Class relation() default String.class;
 
     String TEXT = "TEXT";
     String PASSWORD = "PASSWORD";
@@ -33,4 +32,6 @@ public @interface Form {
     String TIME = "TIME";
     String BOOLEAN = "BOOLEAN";
     String FILE = "FILE";
+    String SEARCH = "SEARCH";
+    String ONETOMANY = "ONETOMANY";
 }

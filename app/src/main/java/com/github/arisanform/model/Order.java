@@ -18,14 +18,26 @@ public class Order {
     private int quantity;
     @Form(type=Form.CHECKBOX, position = 2)
     private List<String> topping;
+    @Form(type=Form.SEARCH, position = 2)
+    private String location;
     @Form(type=Form.BOOLEAN)
     private boolean hot;
     @Form(type=Form.DATETIME, format = "dd-MM-yyyy HH:mm",background=R.drawable.gradient, color = R.color.white)
     private Date time;
     @Form(type=Form.DATE)
     private Date send_at;
+    @Form(type = Form.ONETOMANY, label = "Tambahan", relation = Additional.class)
+    private List<Additional> additionals;
 
     public Order() {
+    }
+
+    public List<Additional> getAdditionals() {
+        return additionals;
+    }
+
+    public void setAdditionals(List<Additional> additionals) {
+        this.additionals = additionals;
     }
 
     public Order(int id, String orderer, String menu, int quantity, List<String> topping, boolean hot) {

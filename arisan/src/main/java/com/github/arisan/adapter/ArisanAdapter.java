@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,20 +26,30 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.github.arisan.ArisanForm;
+import com.github.arisan.ArisanPreparation;
 import com.github.arisan.R;
 import com.github.arisan.annotation.ArisanCode;
 import com.github.arisan.annotation.Form;
+import com.github.arisan.helper.ChildUtils;
 import com.github.arisan.helper.DateConverter;
 import com.github.arisan.helper.FieldAssembler;
+import com.github.arisan.helper.ObjectGetter;
+import com.github.arisan.helper.ObjectReader;
 import com.github.arisan.helper.SortField;
 import com.github.arisan.helper.TwoDigit;
 import com.github.arisan.model.ArisanFieldModel;
+import com.github.arisan.model.ArisanListenerModel;
 import com.github.arisan.model.TypeForm;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wijaya on 3/27/2018.
@@ -50,6 +61,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     OnSubmitListener onSubmitListener;
     String title;
     String submitText;
+
+    boolean useTitle;
+    boolean useSubmit;
 
     public void setSubmitBackground(int submitBackground) {
         mList.get(mList.size()-1).setBackground(submitBackground);
@@ -66,9 +80,16 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     public ArisanAdapter(Context context, List<ArisanFieldModel> fieldList) {
         this.mContext = context;
         Collections.sort(fieldList,new SortField());
-        mList.add(new ArisanFieldModel());//For Title
+        ArisanPreparation preparation = new ArisanPreparation(mContext);
+        useTitle = preparation.isUseTitle();
+        useSubmit = preparation.isUseSubmitButton();
+        if(preparation.isUseTitle()){
+            mList.add(new ArisanFieldModel());//For Title
+        }
         mList.addAll(fieldList);
-        mList.add(new ArisanFieldModel());//For Submit Button
+        if(preparation.isUseSubmitButton()){
+            mList.add(new ArisanFieldModel());//For Submit Button
+        }
         System.out.println("Form Adapter Constructor");
     }
 
@@ -96,8 +117,12 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             v = inflater.inflate(R.layout.item_date, parent, false);
         }else if(viewType== type.get(Form.FILE)){
             v = inflater.inflate(R.layout.item_file, parent, false);
+        }else if(viewType== type.get(Form.SEARCH)){
+            v = inflater.inflate(R.layout.item_search, parent, false);
+        }else if(viewType== type.get(Form.ONETOMANY)){
+            v = inflater.inflate(R.layout.item_onetomany, parent, false);
         }else{
-            v = inflater.inflate(com.github.arisan.R.layout.item_edittext, parent, false);
+            v = inflater.inflate(R.layout.item_edittext, parent, false);
         }
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -105,19 +130,34 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
+        //COMMON
+        TextView mTitle;
+        Button mSubmit;
+        //TEXT
         TextView mInputTextLabel;
         TextView mDateLabel;
         TextView mSpinnerLabel;
         EditText mEditText;
-        TextView mTitle;
-        Button mSubmit;
+        //SEARCH
+        EditText mEditTextSearch;
+        TextView mSearchLabel;
+        Button mSearchButton;
+        //BOOLEAN
         Switch aSwitch;
-        Button mDate;
+        //SPINNER
         Spinner mSpinner;
+        //FILE
         Button mFile;
-        TextView mFileLabel;
         TextView mFileName;
+        TextView mFileLabel;
+        //DATETIME
+        Button mDate;
+        //CHECKBOX
         RecyclerView mCheckboxParent;
+        //ONETOMANY
+        RecyclerView mOnetoManyList;
+        TextView mOnetoManyLabel;
+        Button mOnetoManyAdd;
 
         public ViewHolder(View v) {
             super(v);
@@ -134,6 +174,12 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             mFileLabel = v.findViewById(R.id.arisan_file_label);
             mFileName = v.findViewById(R.id.arisan_file_name);
             mCheckboxParent = v.findViewById(R.id.arisan_checkbox_list);
+            mEditTextSearch = v.findViewById(R.id.arisan_search_name);
+            mSearchButton = v.findViewById(R.id.arisan_search_button);
+            mSearchLabel = v.findViewById(R.id.arisan_search_label);
+            mOnetoManyAdd = v.findViewById(R.id.arisan_onetomany_add);
+            mOnetoManyLabel = v.findViewById(R.id.arisan_onetomany_label);
+            mOnetoManyList = v.findViewById(R.id.arisan_onetomany_list);
         }
     }
 
@@ -145,9 +191,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     @Override
     public int getItemViewType(int position) {
         TypeForm type = new TypeForm();
-        if(position==0){
+        if(position==0&&useTitle){
             return 0;
-        }else if(position==mList.size()-1) {
+        }else if(position==mList.size()-1&&useSubmit) {
             return mList.size();
         }else{
             return type.get(mList.get(position).getViewType());
@@ -159,28 +205,30 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         final ArisanFieldModel data = mList.get(position);
         int color = data.getColor();
 //        System.out.println("On Bind");
-        if(position==0){
+        if(position==0&&useTitle){
             //TITLE
             holder.mTitle.setText(title);
             if(data.getColor()!=0) {
-                holder.mTitle.setTextColor(color);
+                holder.mTitle.setTextColor(mContext.getResources().getColor(color));
             }
-        }else if(position==mList.size()-1){
+        }else if(position==mList.size()-1&&useSubmit){
             //SUBMIT BUTTON
-            if(data.getBackground()!=0){
-                holder.mSubmit.setBackgroundResource(data.getBackground());
+            if(data.getSubmit_color()!=0){
+                holder.mSubmit.setBackgroundResource(data.getSubmit_color());
             }
             holder.mSubmit.setText(submitText);
             holder.mSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mList.remove(0);
-                    mList.remove(mList.size()-1);
-                    onSubmitListener.onSubmit(FieldAssembler.toJson(mList));
+                    if (useTitle) mList.remove(0);
+                    if (useSubmit) mList.remove(mList.size()-1);
+                    String json = FieldAssembler.toJson(mList);
+                    Log.d("__Result ",json);
+                    onSubmitListener.onSubmit(json);
                 }
             });
             if(data.getColor()!=0) {
-                holder.mSubmit.setTextColor(color);
+                holder.mSubmit.setTextColor(mContext.getResources().getColor(color));
             }
         }else if(data.getViewType().equals(Form.BOOLEAN)){
             holder.aSwitch.setText(data.getLabel());
@@ -202,7 +250,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 }
             });
             if(data.getColor()!=0) {
-                holder.aSwitch.setTextColor(color);
+                holder.aSwitch.setTextColor(mContext.getResources().getColor(color));
             }
         }else if(data.getViewType().equals(Form.DATE)) {
             holder.mDateLabel.setText(data.getLabel());
@@ -233,7 +281,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 holder.mDate.setBackgroundResource(data.getBackground());
             }
             if(data.getColor()!=0) {
-                holder.mDate.setTextColor(color);
+                holder.mDate.setTextColor(mContext.getResources().getColor(color));
             }
         }else if(data.getViewType().equals(Form.TIME)){
             final Calendar calendar;
@@ -263,7 +311,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 holder.mDate.setBackgroundResource(data.getBackground());
             }
             if(data.getColor()!=0) {
-                holder.mDate.setTextColor(color);
+                holder.mDate.setTextColor(mContext.getResources().getColor(color));
             }
         }else if(data.getViewType().equals(Form.DATETIME)) {
             holder.mDateLabel.setText(data.getLabel());
@@ -303,7 +351,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 holder.mDate.setBackgroundResource(data.getBackground());
             }
             if(data.getColor()!=0) {
-                holder.mDate.setTextColor(color);
+                holder.mDate.setTextColor(mContext.getResources().getColor(color));
             }
         }else if(data.getViewType().equals(Form.SPINNER)){
             holder.mSpinnerLabel.setText(data.getLabel());
@@ -341,13 +389,13 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 holder.mFileName.setBackgroundResource(data.getBackground());
             }
             if(data.getColor()!=0) {
-                holder.mFileName.setTextColor(color);
+                holder.mFileName.setTextColor(mContext.getResources().getColor(color));
             }
-        }else if(data.getViewType().equals(Form.CHECKBOX)){
+        }else if(data.getViewType().equals(Form.CHECKBOX)) {
             final ArrayList<String> dataList = (ArrayList<String>) data.getData();
             final ArrayList<String> valueList = (ArrayList<String>) data.getValue();
             holder.mCheckboxParent.setLayoutManager(new LinearLayoutManager(mContext));
-            CheckboxAdapter adapter = new CheckboxAdapter(dataList,valueList);
+            CheckboxAdapter adapter = new CheckboxAdapter(dataList, valueList);
             adapter.setOnCheckedListener(new CheckboxAdapter.OnCheckedListener() {
                 @Override
                 public void onChecked(List<String> checked) {
@@ -355,11 +403,60 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 }
             });
             holder.mCheckboxParent.setAdapter(adapter);
+        }else if(data.getViewType().equals(Form.ONETOMANY)){
+            holder.mOnetoManyLabel.setText(mList.get(position).getLabel());
+            final ChildAdapter childAdapter = new ChildAdapter(mList.get(position).getChildFieldModel(),mContext);
+            holder.mOnetoManyList.setLayoutManager(new LinearLayoutManager(mContext));
+            holder.mOnetoManyList.setAdapter(childAdapter);
+            holder.mOnetoManyAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Add blank child to adapter
+//                    Log.d("__Child Data Before ",new Gson().toJson(childAdapter.mList));
+                    childAdapter.mList.add(ChildUtils.listValueRemover(childAdapter.mList));
+                    childAdapter.notifyDataSetChanged();
+//                    Log.d("__Child Data After ",new Gson().toJson(childAdapter.mList));
+                }
+            });
+        }else if(data.getViewType().equals(Form.SEARCH)){
+            holder.mSearchLabel.setText(data.getLabel());
+            try {
+                holder.mEditTextSearch = (EditText) mList.get(position).doViewMod(holder.mEditTextSearch);
+            }catch (Exception e){ }
+
+            holder.mEditTextSearch.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    String value = holder.mEditTextSearch.getText().toString();
+                    mList.get(position).setValue(value);
+                    //ERROR CONDITION
+                    try{
+                        ArisanListenerModel listenerModel = mList.get(position).doListener(value);
+                        if(!listenerModel.isCondition()){
+                            holder.mEditTextSearch.setError(listenerModel.message);
+                        }
+                    }catch (Exception e){ }
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                @Override
+                public void afterTextChanged(Editable s) { }
+            });
+
         }else{
             //Edit Text
             holder.mInputTextLabel.setText(data.getLabel());
-            if(data.getBackground()!=0) {
-                holder.mInputTextLabel.setTextColor(color);
+            try{
+                holder.mEditTextSearch = (EditText) mList.get(position).doViewMod(holder.mEditTextSearch);
+            }catch (Exception e){ }
+
+//            if(data.getBackground()!= 0) {
+//                holder.mInputTextLabel.setTextColor(mContext.getResources().getColor(data.getBackground()));
+//            }
+            if(data.getColor()!=0) {
+                holder.mEditText.setTextColor(mContext.getResources().getColor(color));
             }
             switch (data.getViewType()) {
                 case Form.PASSWORD:
@@ -395,7 +492,8 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             holder.mEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    mList.get(position).setValue(holder.mEditText.getText().toString());
+                    String value = holder.mEditText.getText().toString();
+                    mList.get(position).setValue(value);
                 }
 
                 @Override
@@ -405,6 +503,10 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 public void afterTextChanged(Editable s) { }
             });
         }
+    }
+
+    public String getResult(){
+        return FieldAssembler.toJson(mList);
     }
 
     @Override

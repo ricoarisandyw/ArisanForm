@@ -21,16 +21,40 @@ public class FieldAssembler {
         Gson gson = new Gson();
         for(int i = 0;i<data.size();i++){
             ArisanFieldModel model = data.get(i);
-            if(model.getValue()!=null){
-                result.append("\"").append(model.getName()).append("\":");
-                result.append(gson.toJson(model.getValue()));
-                if(i<data.size()-2){
-                    result.append(",");
-                }
+            //For model type List
+            if(model.getChildFieldModel()!=null){
+                result.append(convertListToJson(model.getChildFieldModel()));
+            }else
+                result.append(convertModelToJson(model));
+
+            if(i<data.size()-1){
+                result.append(",");
             }
         }
         result.append("}");
         Log.d("__Result",result.toString());
+        return result.toString();
+    }
+
+    public static String convertModelToJson(ArisanFieldModel model){
+        Gson gson = new Gson();
+        StringBuilder result = new StringBuilder();
+        if(model.getValue()!=null){
+            result.append("\"").append(model.getName()).append("\":");
+            result.append(gson.toJson(model.getValue()));
+        }
+        return result.toString();
+    }
+
+    public static String convertListToJson(List<List<ArisanFieldModel>> data){
+        StringBuilder result = new StringBuilder("[");
+        for(int i=0;i<data.size();i++){
+            result.append(toJson(data.get(i)));
+            if(i<data.size()-1){
+                result.append(",");
+            }
+        }
+        result.append("]");
         return result.toString();
     }
 
