@@ -1,6 +1,7 @@
 package com.github.arisanform.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +18,11 @@ import com.github.arisan.ArisanListener;
 import com.github.arisan.ArisanPreparation;
 import com.github.arisan.adapter.ArisanAdapter;
 import com.github.arisan.helper.DateDeserializer;
-import com.github.arisan.helper.ObjectReader;
 import com.github.arisan.helper.ValueUpdater;
-import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.ArisanListenerModel;
+import com.github.arisan.helper.UriUtils;
 import com.github.arisanform.model.Additional;
+import com.github.arisanform.model.Book;
 import com.github.arisanform.model.DB;
 import com.github.arisanform.model.DataMaster;
 import com.github.arisan.annotation.ArisanCode;
@@ -31,12 +32,13 @@ import com.github.arisan.helper.PreferenceHelper;
 import com.github.arisanform.model.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
     TextView vDummyText;
     MyAdapter adapter;
     List<Order> orderList = new ArrayList<>();
+    ArisanAdapter arisanAdapter;
 
     PreferenceHelper preference;
+    Realm realm = Realm.getDefaultInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         vDummyText = findViewById(R.id.dummy_text);
 
         vForm.setLayoutManager(new LinearLayoutManager(this));
+
         //Get Stored Data
         /*orderList = (List) preference.loadObjList(DB.ORDER, new TypeToken<ArrayList<Order>>(){}.getType());
         if(orderList ==null)
@@ -86,17 +91,23 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton vAdd = findViewById(R.id.add_todo);
         vAdd.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { addDataBook(new User());
+            public void onClick(View v) {
+                addDataBook(new User());
             }
         });
 
         /*TESTING COLOR*/
         vDummyText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
         vDummyText.setVisibility(View.GONE);
+
     }
 
     public void addDataBook(User user){
         vForm.setVisibility(View.VISIBLE);
+
+        //SUCCESS null
+        Log.d("__TO JSON",new Gson().toJson(user));
+
         //PREPARE DATA
         ArisanPreparation preparation = new ArisanPreparation(this);
         preparation.clearData();
@@ -124,7 +135,24 @@ public class MainActivity extends AppCompatActivity {
                 vForm.setVisibility(View.GONE);
             }
         });
-        vForm.setAdapter(arisanForm.buildAdapter());
+        arisanAdapter = arisanForm.buildAdapter();
+        vForm.setAdapter(arisanAdapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==ArisanCode.REQUEST_FILE){
+            Uri uri = data.getData();
+            if (uri != null) {
+                UriUtils utils = new UriUtils(this,uri);
+                String path = utils.getPath();
+                Log.d("__Uri Path", utils.getUri().getPath());
+                arisanAdapter.updateFile("photo",uri);
+            }else{
+                Log.d("__Uri", "Uri is null");
+            }
+        }
     }
 
     public void addData(Order order){

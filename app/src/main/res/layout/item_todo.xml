@@ -14,7 +14,7 @@
 
     <TextView
         android:text="TITLE"
-        android:textColor="@android:color/white"
+        android:textColor="#FFFFFF"
         android:id="@+id/todo_title"
         android:textSize="14sp"
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
 
     <TextView
         android:layout_below="@id/todo_title"
-        android:textColor="@android:color/white"
+        android:textColor="#FFFFFF"
         android:text="Description"
         android:textSize="12sp"
         android:id="@+id/todo_description"
@@ -31,8 +31,8 @@
 
     <ImageView
         android:id="@+id/todo_checkbox"
-        android:tint="@android:color/holo_red_light"
-        android:src="@android:drawable/ic_delete"
+        android:tint="#FFFFFF"
+        android:src="@drawable/ic_close_black"
         android:layout_alignParentRight="true"
         android:layout_width="10pt"
         android:layout_height="wrap_content" />

@@ -59,7 +59,7 @@ public class ObjectReader {
 
                 ArisanFieldModel arisanField = extractField(objectGetter,f,form);
 
-                if (f.getType() == List.class && form.type().equals(Form.ONETOMANY)) {
+                if (f.getGenericType().toString().contains("List") && form.type().equals(Form.ONETOMANY)) {
                     Field[] my_fields = form.relation().getDeclaredFields();
                     List<List<ArisanFieldModel>> childFields = new ArrayList<>();
                     Object listValue = objectGetter.runGetter(f.getName());

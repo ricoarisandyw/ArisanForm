@@ -74,10 +74,6 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder> 
         arisanPreparation.clearData();
     }
 
-    public String getResult(){
-        return FieldAssembler.convertListToJson(mList);
-    }
-
     @Override
     public int getItemCount() {
         if (mList != null)

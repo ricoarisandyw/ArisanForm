@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -26,7 +27,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.github.arisan.ArisanForm;
 import com.github.arisan.ArisanPreparation;
 import com.github.arisan.R;
 import com.github.arisan.annotation.ArisanCode;
@@ -34,22 +34,17 @@ import com.github.arisan.annotation.Form;
 import com.github.arisan.helper.ChildUtils;
 import com.github.arisan.helper.DateConverter;
 import com.github.arisan.helper.FieldAssembler;
-import com.github.arisan.helper.ObjectGetter;
-import com.github.arisan.helper.ObjectReader;
 import com.github.arisan.helper.SortField;
 import com.github.arisan.helper.TwoDigit;
+import com.github.arisan.helper.UriUtils;
 import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.ArisanListenerModel;
 import com.github.arisan.model.TypeForm;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by wijaya on 3/27/2018.
@@ -525,12 +520,15 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         void onSubmit(String response);
     }
 
-    public void updateFile(String fieldName,String value){
+    public void updateFile(String fieldName, Uri uri){
+        UriUtils utils = new UriUtils(mContext,uri);
         for(ArisanFieldModel a:mList) {
             if(a.getName()!=null)
                 if(a.getName().equals(fieldName)){
-                    a.setData(value);
+                    a.setData(utils.getFilename());
+                    a.setValue(utils.getPath());
                     this.notifyDataSetChanged();
+                    break;
                 }
         }
     }

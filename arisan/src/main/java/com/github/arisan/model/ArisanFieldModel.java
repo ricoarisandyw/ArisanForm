@@ -4,6 +4,7 @@ import android.view.View;
 
 import com.github.arisan.ArisanListener;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**

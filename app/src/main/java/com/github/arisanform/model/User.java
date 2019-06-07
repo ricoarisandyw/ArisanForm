@@ -1,22 +1,32 @@
 package com.github.arisanform.model;
 
+import com.github.arisan.annotation.AnnotationProcessor;
 import com.github.arisan.annotation.Form;
 
 import java.util.List;
 
-public class User {
-    @Form(label = "Nama Peminjam")
+import io.realm.RealmList;
+import io.realm.RealmObject;
+
+public class User extends RealmObject {
+    @Form(label = "Nama Peminjam",position = 1)
     private String name;
 
+    @Form(label = "Foto Peminjam",position = 2,type = Form.FILE)
+    private String photo;
+
     @Form(label = "Daftar Buku",type = Form.ONETOMANY, relation = Book.class)
-    private List<Book> books;
+    private RealmList<Book> books;
 
     public User() {
     }
 
-    public User(String name, List<Book> books) {
-        this.name = name;
-        this.books = books;
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public String getName() {
@@ -27,11 +37,11 @@ public class User {
         this.name = name;
     }
 
-    public List<Book> getBooks() {
+    public RealmList<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(List<Book> books) {
+    public void setBooks(RealmList<Book> books) {
         this.books = books;
     }
 }
