@@ -17,4 +17,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <EditText
+        android:id="@+id/arisan_radio_others"
+        android:visibility="gone"
+        android:hint="others"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

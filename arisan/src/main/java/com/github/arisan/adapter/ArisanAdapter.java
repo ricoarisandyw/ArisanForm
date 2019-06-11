@@ -35,17 +35,22 @@ import com.github.arisan.ArisanPreparation;
 import com.github.arisan.R;
 import com.github.arisan.annotation.ArisanCode;
 import com.github.arisan.annotation.Form;
+import com.github.arisan.annotation.Model;
 import com.github.arisan.helper.ChildUtils;
 import com.github.arisan.helper.DateConverter;
 import com.github.arisan.helper.FieldAssembler;
+import com.github.arisan.helper.FieldUtils;
 import com.github.arisan.helper.SortField;
 import com.github.arisan.helper.TwoDigit;
 import com.github.arisan.helper.UriUtils;
 import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.ListenerModel;
 import com.github.arisan.model.TypeForm;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -164,6 +169,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         //RADIO BUTTON
         RadioGroup mRadioGroup;
         TextView mRadioLabel;
+        EditText mRadioText;
         //SLIDER
         TextView mSlideLabel;
         SeekBar mSlide;
@@ -193,6 +199,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             mRadioLabel = v.findViewById(R.id.arisan_radio_label);
             mSlideLabel = v.findViewById(R.id.arisan_slide_label);
             mSlide = v.findViewById(R.id.arisan_slide);
+            mRadioText = v.findViewById(R.id.arisan_radio_others);
         }
     }
 
@@ -292,7 +299,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             });
         }else if(data.getViewType().equals(Form.RADIO)){
             String value = (String) data.getValue();
-            final ArrayList<String> dataList = (ArrayList<String>) data.getData();
+            List<String> dataList = FieldUtils.convertArrayToList(data.getData());
             for(String mData:dataList){
                 RadioButton btn = new RadioButton(mContext);
                 btn.setId(View.generateViewId());
@@ -307,15 +314,30 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     //ERROR CONDITION
+                    RadioButton radioButton = holder.mRadioGroup.findViewById(checkedId);
                     try{
-                        RadioButton radioButton = holder.mRadioGroup.findViewById(checkedId);
                         mList.get(position).setValue(radioButton.getText().toString());
                         ListenerModel listenerModel = mList.get(position).doListener(radioButton.getText().toString());
-                        if(!listenerModel.isCondition()){
-//                            Toast.makeText(mContext,listenerModel.message,Toast.LENGTH_SHORT).show();
-                        }
-                    }catch (Exception e){
+                    }catch (Exception ignored){ }
+                    //OTHER CONDITION
+                    if(radioButton.getText().toString().equals(Model.OTHERS)){
+                        holder.mRadioText.setVisibility(View.VISIBLE);
+                        mList.get(position).setValue(radioButton.getText().toString());
+                        holder.mRadioText.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                String value = holder.mRadioText.getText().toString();
+                                mList.get(position).setValue(value);
+                            }
 
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                            @Override
+                            public void afterTextChanged(Editable s) { }
+                        });
+                    }else{
+                        holder.mRadioText.setVisibility(View.GONE);
                     }
                 }
             });
@@ -460,8 +482,8 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 holder.mFileName.setTextColor(mContext.getResources().getColor(color));
             }
         }else if(data.getViewType().equals(Form.CHECKBOX)) {
-            final ArrayList<String> dataList = (ArrayList<String>) data.getData();
-            final ArrayList<String> valueList = (ArrayList<String>) data.getValue();
+            List<String> dataList = FieldUtils.convertArrayToList(data.getData());
+            List<String> valueList = FieldUtils.convertArrayToList(data.getValue());
             holder.mCheckboxParent.setLayoutManager(new LinearLayoutManager(mContext));
             CheckboxAdapter adapter = new CheckboxAdapter(dataList, valueList);
             adapter.setOnCheckedListener(new CheckboxAdapter.OnCheckedListener() {
@@ -503,7 +525,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                         if(!listenerModel.isCondition()){
                             holder.mEditTextSearch.setError(listenerModel.message);
                         }
-                    }catch (Exception e){ }
+                    }catch (Exception ignored){ }
                 }
 
                 @Override

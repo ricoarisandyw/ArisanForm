@@ -17,8 +17,10 @@ import com.github.arisan.ArisanForm;
 import com.github.arisan.ArisanListener;
 import com.github.arisan.ArisanPreparation;
 import com.github.arisan.adapter.ArisanAdapter;
+import com.github.arisan.annotation.Model;
 import com.github.arisan.helper.DateDeserializer;
 import com.github.arisan.helper.ValueUpdater;
+import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.ListenerModel;
 import com.github.arisan.helper.UriUtils;
 import com.github.arisanform.helper.DBUtils;
@@ -29,6 +31,7 @@ import com.github.arisan.annotation.ArisanCode;
 import com.github.arisanform.R;
 import com.github.arisanform.model.Order;
 import com.github.arisan.helper.PreferenceHelper;
+import com.github.arisanform.model.Radio;
 import com.github.arisanform.model.Survey;
 import com.github.arisanform.model.User;
 import com.google.gson.Gson;
@@ -89,34 +92,25 @@ public class MainActivity extends AppCompatActivity {
     public void addSurvey(Survey survey){
         vForm.setVisibility(View.VISIBLE);
 
-        ArisanPreparation preparation = new ArisanPreparation(this);
-        preparation.setModel(survey);
-        preparation.fillData("data1",Survey.yesNo);
+//        ArisanPreparation preparation = new ArisanPreparation(this);
+//        preparation.setModel(survey);
+//        preparation.fillData("data1",Survey.yesNo);
 
-        String[] kawin = {"Belum pernah kawin","Kawin","Duda/Janda"};
+        List<ArisanFieldModel> list = new ArrayList<>();
+        String[] kawin = {"Belum pernah kawin","Kawin","Duda/Janda", Model.OTHERS};
 
-        preparation.fillData("data0",kawin);
+        ArisanFieldModel model = Radio.getField();
+        model.setData(kawin);
 
-        preparation.setSubmit("Submit");
-        preparation.useSubmitButton(true);
+        list.add(model);
+
+//        preparation.fillData("data0",kawin);
+//
+//        preparation.setSubmit("Submit");
+//        preparation.useSubmitButton(true);
 
         final ArisanForm form = new ArisanForm(this);
-        form.addListener("data1", new ArisanListener.Condition() {
-            @Override
-            public ListenerModel onValue(String value) {
-                ListenerModel model = new ListenerModel();
-                if(value.equals(Survey.yesNo[1])){
-                    model.setCondition(false);
-                    Toast.makeText(MainActivity.this,"Kok tidak?",Toast.LENGTH_SHORT).show();
-                    form.setFieldData(DBUtils.removeField("data0",form.getFieldData()));
-                    arisanAdapter = form.buildAdapter();
-                    vForm.setAdapter(arisanAdapter);
-                }else{
-                    model.setCondition(true);
-                }
-                return model;
-            }
-        });
+        form.setFieldData(list);
         form.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
             @Override
             public void onSubmit(String response) {
