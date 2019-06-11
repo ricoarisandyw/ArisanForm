@@ -312,10 +312,10 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                         mList.get(position).setValue(radioButton.getText().toString());
                         ListenerModel listenerModel = mList.get(position).doListener(radioButton.getText().toString());
                         if(!listenerModel.isCondition()){
-                            Toast.makeText(mContext,listenerModel.message,Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(mContext,listenerModel.message,Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e){
-                        Toast.makeText(mContext,"Error radio listener",Toast.LENGTH_SHORT).show();
+
                     }
                 }
             });
@@ -604,5 +604,19 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     break;
                 }
         }
+    }
+
+    public List<ArisanFieldModel> getListModel() {
+        if(useSubmit){
+            mList.remove(mList.size()-1);
+        }
+        if(useTitle){
+            mList.remove(0);
+        }
+        return mList;
+    }
+
+    public void setmList(List<ArisanFieldModel> mList) {
+        this.mList = mList;
     }
 }

@@ -9,7 +9,7 @@ public class Survey {
     @Form(label = "Status Perkawinan",type = Form.RADIO)
     private String data0;
 
-    @Form(label = " Apakah jenjang pendidikan?", type = Form.CHECKBOX)
+    @Form(label = " Apakah jenjang pendidikan?", type = Form.RADIO)
     private String data1;
 
     @Form(label = "Seberapa kuat anda?", type = Form.SLIDER)

@@ -3,6 +3,7 @@ package com.github.arisanform.helper;
 import android.content.Context;
 
 import com.github.arisan.helper.PreferenceHelper;
+import com.github.arisan.model.ArisanFieldModel;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -12,6 +13,16 @@ import java.util.List;
 public class DBUtils {
     PreferenceHelper db;
     Context context;
+
+    public static List<ArisanFieldModel> removeField(String fieldName,List<ArisanFieldModel> list){
+        for(ArisanFieldModel model:list){
+            if (model.getName().equals(fieldName)){
+                list.remove(model);
+                break;
+            }
+        }
+        return list;
+    }
 
     public DBUtils(Context context) {
         db = new PreferenceHelper(context);

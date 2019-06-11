@@ -21,6 +21,7 @@ import com.github.arisan.helper.DateDeserializer;
 import com.github.arisan.helper.ValueUpdater;
 import com.github.arisan.model.ListenerModel;
 import com.github.arisan.helper.UriUtils;
+import com.github.arisanform.helper.DBUtils;
 import com.github.arisanform.model.Additional;
 import com.github.arisanform.model.DB;
 import com.github.arisanform.model.DataMaster;
@@ -49,10 +50,11 @@ public class MainActivity extends AppCompatActivity {
     TextView vDummyText;
     MyAdapter adapter;
     List<Order> orderList = new ArrayList<>();
-    ArisanAdapter arisanAdapter;
 
     PreferenceHelper preference;
     Realm realm = Realm.getDefaultInstance();
+
+    ArisanAdapter arisanAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,15 +100,17 @@ public class MainActivity extends AppCompatActivity {
         preparation.setSubmit("Submit");
         preparation.useSubmitButton(true);
 
-        ArisanForm form = new ArisanForm(this);
+        final ArisanForm form = new ArisanForm(this);
         form.addListener("data1", new ArisanListener.Condition() {
             @Override
             public ListenerModel onValue(String value) {
-                Toast.makeText(MainActivity.this,value,Toast.LENGTH_SHORT).show();
                 ListenerModel model = new ListenerModel();
-                if(value==Survey.yesNo[1]){
+                if(value.equals(Survey.yesNo[1])){
                     model.setCondition(false);
-                    model.setMessage("Kenapa milih tidak?");
+                    Toast.makeText(MainActivity.this,"Kok tidak?",Toast.LENGTH_SHORT).show();
+                    form.setFieldData(DBUtils.removeField("data0",form.getFieldData()));
+                    arisanAdapter = form.buildAdapter();
+                    vForm.setAdapter(arisanAdapter);
                 }else{
                     model.setCondition(true);
                 }
@@ -119,7 +123,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this,response,Toast.LENGTH_SHORT).show();
             }
         });
-        vForm.setAdapter(form.buildAdapter());
+        arisanAdapter = form.buildAdapter();
+        vForm.setAdapter(arisanAdapter);
     }
 
     public void addDataBook(User user){
