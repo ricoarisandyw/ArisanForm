@@ -1,10 +1,7 @@
 package com.github.arisan.model;
 
-import android.view.View;
-
 import com.github.arisan.ArisanListener;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -26,7 +23,7 @@ public class ArisanFieldModel {
     private int submit_color;
     private int color;
     private List<List<ArisanFieldModel>> childFieldModel;
-    private ArisanListener.ErrorCondition arisanListener;
+    private ArisanListener.Condition arisanListener;
     private ArisanListener.ViewMod viewMod;
 
     public List<List<ArisanFieldModel>> getChildFieldModel() {
@@ -45,7 +42,7 @@ public class ArisanFieldModel {
         this.childFieldModel = childFieldModel;
     }
 
-    public void addCondition(ArisanListener.ErrorCondition arisanListener) {
+    public void addCondition(ArisanListener.Condition arisanListener) {
         this.arisanListener = arisanListener;
     }
 
@@ -57,8 +54,8 @@ public class ArisanFieldModel {
         return viewMod.modding(view);
     }
 
-    public ArisanListenerModel doListener(String value){
-        return arisanListener.onError(value);
+    public ListenerModel doListener(String value){
+        return arisanListener.onValue(value);
     }
 
     public int getColor() {

@@ -1,13 +1,13 @@
 package com.github.arisan.model;
 
-public class ArisanListenerModel {
+public class ListenerModel {
     public String message;
     public boolean condition;
 
-    public ArisanListenerModel() {
+    public ListenerModel() {
     }
 
-    public ArisanListenerModel(String message, boolean condition) {
+    public ListenerModel(String message, boolean condition) {
         this.message = message;
         this.condition = condition;
     }

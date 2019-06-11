@@ -19,6 +19,8 @@ public class TypeForm {
         type.put(Form.DATETIME,180);
         type.put(Form.SEARCH,181);
         type.put(Form.ONETOMANY,182);
+        type.put(Form.RADIO,183);
+        type.put(Form.SLIDER,184);
     }
     public int get(String name){
         return type.get(name);

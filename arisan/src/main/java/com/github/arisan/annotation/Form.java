@@ -34,4 +34,6 @@ public @interface Form {
     String FILE = "FILE";
     String SEARCH = "SEARCH";
     String ONETOMANY = "ONETOMANY";
+    String RADIO = "RADIO";
+    String SLIDER = "SLIDER";
 }

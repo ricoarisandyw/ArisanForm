@@ -32,7 +32,7 @@ public class ArisanForm {
         this.fieldData = fieldData;
     }
 
-    public ArisanForm addErrorListener(String field_name, ArisanListener.ErrorCondition onSomething){
+    public ArisanForm addListener(String field_name, ArisanListener.Condition onSomething){
         for(ArisanFieldModel model : fieldData){
             if(model.getName().equals(field_name)){
                 model.addCondition(onSomething);

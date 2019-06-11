@@ -22,10 +22,14 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.github.arisan.ArisanPreparation;
 import com.github.arisan.R;
@@ -38,7 +42,7 @@ import com.github.arisan.helper.SortField;
 import com.github.arisan.helper.TwoDigit;
 import com.github.arisan.helper.UriUtils;
 import com.github.arisan.model.ArisanFieldModel;
-import com.github.arisan.model.ArisanListenerModel;
+import com.github.arisan.model.ListenerModel;
 import com.github.arisan.model.TypeForm;
 
 import java.util.ArrayList;
@@ -116,6 +120,10 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             v = inflater.inflate(R.layout.item_search, parent, false);
         }else if(viewType== type.get(Form.ONETOMANY)){
             v = inflater.inflate(R.layout.item_onetomany, parent, false);
+        }else if(viewType== type.get(Form.RADIO)){
+            v = inflater.inflate(R.layout.item_radio, parent, false);
+        }else if(viewType== type.get(Form.SLIDER)){
+            v = inflater.inflate(R.layout.item_slide, parent, false);
         }else{
             v = inflater.inflate(R.layout.item_edittext, parent, false);
         }
@@ -153,6 +161,12 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         RecyclerView mOnetoManyList;
         TextView mOnetoManyLabel;
         Button mOnetoManyAdd;
+        //RADIO BUTTON
+        RadioGroup mRadioGroup;
+        TextView mRadioLabel;
+        //SLIDER
+        TextView mSlideLabel;
+        SeekBar mSlide;
 
         public ViewHolder(View v) {
             super(v);
@@ -175,6 +189,10 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             mOnetoManyAdd = v.findViewById(R.id.arisan_onetomany_add);
             mOnetoManyLabel = v.findViewById(R.id.arisan_onetomany_label);
             mOnetoManyList = v.findViewById(R.id.arisan_onetomany_list);
+            mRadioGroup = v.findViewById(R.id.arisan_radio);
+            mRadioLabel = v.findViewById(R.id.arisan_radio_label);
+            mSlideLabel = v.findViewById(R.id.arisan_slide_label);
+            mSlide = v.findViewById(R.id.arisan_slide);
         }
     }
 
@@ -225,9 +243,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             if(data.getColor()!=0) {
                 holder.mSubmit.setTextColor(mContext.getResources().getColor(color));
             }
-        }else if(data.getViewType().equals(Form.BOOLEAN)){
+        }else if(data.getViewType().equals(Form.BOOLEAN)) {
             holder.aSwitch.setText(data.getLabel());
-            if(data.getValue()!= null) {
+            if (data.getValue() != null) {
                 if (data.getValue().toString().equals("true")) {
                     holder.aSwitch.setChecked(true);
                     mList.get(position).setValue(true);
@@ -235,7 +253,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     holder.aSwitch.setChecked(false);
                     mList.get(position).setValue(false);
                 }
-            }else{
+            } else {
                 holder.aSwitch.setChecked(false);
             }
             holder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -244,9 +262,64 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     mList.get(position).setValue(isChecked);
                 }
             });
-            if(data.getColor()!=0) {
+            if (data.getColor() != 0) {
                 holder.aSwitch.setTextColor(mContext.getResources().getColor(color));
             }
+        }else if(data.getViewType().equals(Form.SLIDER)){
+            Double dbl = (Double) data.getValue();
+            int value = (int) Math.round(dbl);
+
+            holder.mSlideLabel.setText(data.getLabel());
+
+            if(value!=0)
+                holder.mSlide.setProgress(value);
+
+            holder.mSlide.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    mList.get(position).setValue(progress);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+        }else if(data.getViewType().equals(Form.RADIO)){
+            String value = (String) data.getValue();
+            final ArrayList<String> dataList = (ArrayList<String>) data.getData();
+            for(String mData:dataList){
+                RadioButton btn = new RadioButton(mContext);
+                btn.setId(View.generateViewId());
+                btn.setText(mData);
+                if(mData.equals(value)){
+                    btn.setChecked(true);
+                }
+                holder.mRadioGroup.addView(btn);
+            }
+            holder.mRadioLabel.setText(data.getLabel());
+            holder.mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    //ERROR CONDITION
+                    try{
+                        RadioButton radioButton = holder.mRadioGroup.findViewById(checkedId);
+                        mList.get(position).setValue(radioButton.getText().toString());
+                        ListenerModel listenerModel = mList.get(position).doListener(radioButton.getText().toString());
+                        if(!listenerModel.isCondition()){
+                            Toast.makeText(mContext,listenerModel.message,Toast.LENGTH_SHORT).show();
+                        }
+                    }catch (Exception e){
+                        Toast.makeText(mContext,"Error radio listener",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
         }else if(data.getViewType().equals(Form.DATE)) {
             holder.mDateLabel.setText(data.getLabel());
             final Calendar calendar;
@@ -426,7 +499,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     mList.get(position).setValue(value);
                     //ERROR CONDITION
                     try{
-                        ArisanListenerModel listenerModel = mList.get(position).doListener(value);
+                        ListenerModel listenerModel = mList.get(position).doListener(value);
                         if(!listenerModel.isCondition()){
                             holder.mEditTextSearch.setError(listenerModel.message);
                         }

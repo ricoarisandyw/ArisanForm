@@ -1,15 +1,13 @@
 package com.github.arisan;
 
-import android.view.View;
-
-import com.github.arisan.model.ArisanListenerModel;
+import com.github.arisan.model.ListenerModel;
 
 public class ArisanListener {
-    public static interface ErrorCondition{
-        public ArisanListenerModel onError(String value);
+    public static interface Condition {
+        public ListenerModel onValue(String value);
     }
     public static interface SearchCondition{
-        public ArisanListenerModel onSearch(String value);
+        public ListenerModel onSearch(String value);
     }
 
     public static interface ViewMod{

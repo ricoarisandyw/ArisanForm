@@ -19,16 +19,16 @@ import com.github.arisan.ArisanPreparation;
 import com.github.arisan.adapter.ArisanAdapter;
 import com.github.arisan.helper.DateDeserializer;
 import com.github.arisan.helper.ValueUpdater;
-import com.github.arisan.model.ArisanListenerModel;
+import com.github.arisan.model.ListenerModel;
 import com.github.arisan.helper.UriUtils;
 import com.github.arisanform.model.Additional;
-import com.github.arisanform.model.Book;
 import com.github.arisanform.model.DB;
 import com.github.arisanform.model.DataMaster;
 import com.github.arisan.annotation.ArisanCode;
 import com.github.arisanform.R;
 import com.github.arisanform.model.Order;
 import com.github.arisan.helper.PreferenceHelper;
+import com.github.arisanform.model.Survey;
 import com.github.arisanform.model.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,7 +38,6 @@ import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,35 +70,56 @@ public class MainActivity extends AppCompatActivity {
         vForm.setLayoutManager(new LinearLayoutManager(this));
 
         //Get Stored Data
-        /*orderList = (List) preference.loadObjList(DB.ORDER, new TypeToken<ArrayList<Order>>(){}.getType());
-        if(orderList ==null)
-            orderList = new ArrayList<>();
-
-        adapter = new MyAdapter(this, orderList);
-        adapter.setOnEditListener(new MyAdapter.OnEditListener() {
-            @Override
-            public void onEdit(Order order) {
-                addData(order);
-            }
-        });
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        vList.setLayoutManager(mLayoutManager);
-        vList.setAdapter(adapter);*/
-
         //FLOATING ADD
         FloatingActionButton vAdd = findViewById(R.id.add_todo);
         vAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDataBook(new User());
+                addSurvey(new Survey());
             }
         });
 
         /*TESTING COLOR*/
         vDummyText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
         vDummyText.setVisibility(View.GONE);
+    }
 
+    public void addSurvey(Survey survey){
+        vForm.setVisibility(View.VISIBLE);
+
+        ArisanPreparation preparation = new ArisanPreparation(this);
+        preparation.setModel(survey);
+        preparation.fillData("data1",Survey.yesNo);
+
+        String[] kawin = {"Belum pernah kawin","Kawin","Duda/Janda"};
+
+        preparation.fillData("data0",kawin);
+
+        preparation.setSubmit("Submit");
+        preparation.useSubmitButton(true);
+
+        ArisanForm form = new ArisanForm(this);
+        form.addListener("data1", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                Toast.makeText(MainActivity.this,value,Toast.LENGTH_SHORT).show();
+                ListenerModel model = new ListenerModel();
+                if(value==Survey.yesNo[1]){
+                    model.setCondition(false);
+                    model.setMessage("Kenapa milih tidak?");
+                }else{
+                    model.setCondition(true);
+                }
+                return model;
+            }
+        });
+        form.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
+            @Override
+            public void onSubmit(String response) {
+                Toast.makeText(MainActivity.this,response,Toast.LENGTH_SHORT).show();
+            }
+        });
+        vForm.setAdapter(form.buildAdapter());
     }
 
     public void addDataBook(User user){
@@ -116,22 +136,26 @@ public class MainActivity extends AppCompatActivity {
         preparation.setSubmitBackground(R.drawable.gradient);
         preparation.useSubmitButton(true);
 
+        //Make builder
         ArisanForm arisanForm = new ArisanForm(this);
+
+        arisanForm.addListener("data1", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                ListenerModel arisanListener = new ListenerModel();
+                arisanListener.setCondition(true);
+                if(value.contains("hallo")){
+                    arisanListener.setCondition(false);
+                    arisanListener.setMessage("Jangan pakai hallo");
+                }
+                return arisanListener;
+            }
+        });
         arisanForm.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
             @Override
             public void onSubmit(String response) {
                 Toast.makeText(MainActivity.this,response,Toast.LENGTH_SHORT).show();
                 Log.d("__RESPONE",response);
-//                User newOrder = gson.fromJson(response,User.class);
-//
-//                Order order = new Order();
-//                order.setId(orderList.size()+1);
-//                order.setOrderer("Mio");
-//
-//                order = new ValueUpdater<Order>().update(order,newOrder,Order.class);
-//                orderList.add(order);
-//                preference.saveObj(DB.ORDER, orderList);
-//                refreshList();
                 vForm.setVisibility(View.GONE);
             }
         });
@@ -188,10 +212,10 @@ public class MainActivity extends AppCompatActivity {
                 return editText;
             }
         });
-        arisanForm.addErrorListener("location", new ArisanListener.ErrorCondition() {
+        arisanForm.addListener("location", new ArisanListener.Condition() {
             @Override
-            public ArisanListenerModel onError(String value) {
-                ArisanListenerModel model = new ArisanListenerModel();
+            public ListenerModel onValue(String value) {
+                ListenerModel model = new ListenerModel();
                 if(value.equals("rico")){
                     model.setMessage("username found");
                     model.setCondition(true);
