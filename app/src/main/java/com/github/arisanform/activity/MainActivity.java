@@ -19,12 +19,14 @@ import com.github.arisan.ArisanPreparation;
 import com.github.arisan.adapter.ArisanAdapter;
 import com.github.arisan.annotation.Model;
 import com.github.arisan.helper.DateDeserializer;
+import com.github.arisan.helper.FieldUtils;
+import com.github.arisan.helper.RadioUtils;
 import com.github.arisan.helper.ValueUpdater;
 import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.ListenerModel;
 import com.github.arisan.helper.UriUtils;
-import com.github.arisanform.helper.DBUtils;
 import com.github.arisanform.model.Additional;
+import com.github.arisanform.model.ArisanText;
 import com.github.arisanform.model.DB;
 import com.github.arisanform.model.DataMaster;
 import com.github.arisan.annotation.ArisanCode;
@@ -32,7 +34,6 @@ import com.github.arisanform.R;
 import com.github.arisanform.model.Order;
 import com.github.arisan.helper.PreferenceHelper;
 import com.github.arisanform.model.Radio;
-import com.github.arisanform.model.Survey;
 import com.github.arisanform.model.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         vAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addSurvey(new Survey());
+                showForm();
             }
         });
 
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         vDummyText.setVisibility(View.GONE);
     }
 
-    public void addSurvey(Survey survey){
+    public void showForm(){
         vForm.setVisibility(View.VISIBLE);
 
 //        ArisanPreparation preparation = new ArisanPreparation(this);
@@ -97,10 +98,43 @@ public class MainActivity extends AppCompatActivity {
 //        preparation.fillData("data1",Survey.yesNo);
 
         List<ArisanFieldModel> list = new ArrayList<>();
-        String[] kawin = {"Belum pernah kawin","Kawin","Duda/Janda", Model.OTHERS};
+        final String[] kawin = {"Belum pernah kawin","Kawin","Duda/Janda", Model.OTHERS};
 
         ArisanFieldModel model = Radio.getField();
-        model.setData(kawin);
+        model.setData(RadioUtils.convertToRadio(kawin));
+        model.setArisanListener(new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                if(value.equals("Kawin")){
+                    //not show
+//                    arisanAdapter.addModel(ArisanText.getField());
+//                    arisanAdapter.notifyDataSetChanged();
+
+                    //'int java.lang.Integer.intValue()' on a null object reference
+//                    arisanAdapter.mList.add(ArisanText.getField());
+//                    arisanAdapter.notifyDataSetChanged();
+
+                    //'int java.lang.Integer.intValue()' on a null object reference
+                    ArisanForm form = new ArisanForm(getBaseContext());
+                    form.copyAdapterFrom(arisanAdapter);
+
+                    ArisanFieldModel new_field = ArisanText.getField();
+                    new_field.setName("New Field");
+                    FieldUtils.insertOrUpdateField(new_field,form.getFieldData());
+
+                    arisanAdapter = form.buildAdapter();
+                    vForm.setAdapter(arisanAdapter);
+                }else{
+                    ArisanForm form = new ArisanForm(getBaseContext());
+                    form.copyAdapterFrom(arisanAdapter);
+                    FieldUtils.removeField("New Field",form.getFieldData());
+
+                    arisanAdapter = form.buildAdapter();
+                    vForm.setAdapter(arisanAdapter);
+                }
+                return new ListenerModel();
+            }
+        });
 
         list.add(model);
 
@@ -109,12 +143,13 @@ public class MainActivity extends AppCompatActivity {
 //        preparation.setSubmit("Submit");
 //        preparation.useSubmitButton(true);
 
-        final ArisanForm form = new ArisanForm(this);
+        ArisanForm form = new ArisanForm(this);
         form.setFieldData(list);
         form.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
             @Override
             public void onSubmit(String response) {
                 Toast.makeText(MainActivity.this,response,Toast.LENGTH_SHORT).show();
+
             }
         });
         arisanAdapter = form.buildAdapter();

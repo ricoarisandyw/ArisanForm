@@ -70,4 +70,8 @@ public class ArisanForm {
         adapter.setOnSubmitListener(this.onSubmitListener);
         return adapter;
     }
+
+    public void copyAdapterFrom(ArisanAdapter arisanAdapter){
+        setFieldData(arisanAdapter.getListModel());
+    }
 }

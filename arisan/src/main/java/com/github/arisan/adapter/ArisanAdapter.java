@@ -45,6 +45,7 @@ import com.github.arisan.helper.TwoDigit;
 import com.github.arisan.helper.UriUtils;
 import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.ListenerModel;
+import com.github.arisan.model.RadioModel;
 import com.github.arisan.model.TypeForm;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -60,26 +61,14 @@ import java.util.List;
  */
 
 public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder> implements View.OnClickListener{
-    List<ArisanFieldModel> mList = new ArrayList<>();
+    public List<ArisanFieldModel> mList = new ArrayList<>();
     Context mContext;
     OnSubmitListener onSubmitListener;
     String title;
     String submitText;
 
-    boolean useTitle;
-    boolean useSubmit;
-
-    public void setSubmitBackground(int submitBackground) {
-        mList.get(mList.size()-1).setBackground(submitBackground);
-    }
-
-    public void setSubmitText(String submitText) {
-        this.submitText = submitText;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    boolean useTitle = true;
+    boolean useSubmit = true;
 
     public ArisanAdapter(Context context, List<ArisanFieldModel> fieldList) {
         this.mContext = context;
@@ -299,48 +288,71 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             });
         }else if(data.getViewType().equals(Form.RADIO)){
             String value = (String) data.getValue();
-            List<String> dataList = FieldUtils.convertArrayToList(data.getData());
-            for(String mData:dataList){
+            List<RadioModel> dataList = FieldUtils.convertDataToRadio(data.getData());
+            holder.mRadioGroup.removeAllViews();
+            for(RadioModel mData:dataList){
                 RadioButton btn = new RadioButton(mContext);
-                btn.setId(View.generateViewId());
-                btn.setText(mData);
-                if(mData.equals(value)){
+                btn.setId(mData.getId());
+                Log.d("__ID",String.valueOf(mData.getId()));
+                btn.setText(mData.getValue());
+                Log.d("__VAL",mData.getValue());
+                if(mData.getValue().equals(value)){
                     btn.setChecked(true);
                 }
+                btn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) {
+                            String result = buttonView.getText().toString();
+                            Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                            if (result.equals(Model.OTHERS)) {
+                                holder.mRadioText.setVisibility(View.VISIBLE);
+
+                                mList.get(position).setValue(result);
+                                holder.mRadioText.addTextChangedListener(new TextWatcher() {
+                                    @Override
+                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                        String value = holder.mRadioText.getText().toString();
+                                        mList.get(position).setValue(value);
+                                    }
+
+                                    @Override
+                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                    }
+
+                                    @Override
+                                    public void afterTextChanged(Editable s) {
+                                    }
+                                });
+                            } else {
+                                holder.mRadioText.setVisibility(View.GONE);
+                            }
+                            //CONDITION
+                            try {
+                                mList.get(position).setValue(result);
+                                mList.get(position).doListener(result);
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                });
                 holder.mRadioGroup.addView(btn);
             }
             holder.mRadioLabel.setText(data.getLabel());
-            holder.mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            /*holder.mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    Log.d("__STATUS","Radio tertekan");
                     //ERROR CONDITION
-                    RadioButton radioButton = holder.mRadioGroup.findViewById(checkedId);
-                    try{
-                        mList.get(position).setValue(radioButton.getText().toString());
-                        ListenerModel listenerModel = mList.get(position).doListener(radioButton.getText().toString());
-                    }catch (Exception ignored){ }
+                    RadioButton radioButton = holder.mRadioGroup.findViewById(checkedId);//wtf is this
+                    String result = radioButton.getText().toString(); //er
+
+                    Log.d("__ID terpilih",String.valueOf(checkedId));
                     //OTHER CONDITION
-                    if(radioButton.getText().toString().equals(Model.OTHERS)){
-                        holder.mRadioText.setVisibility(View.VISIBLE);
-                        mList.get(position).setValue(radioButton.getText().toString());
-                        holder.mRadioText.addTextChangedListener(new TextWatcher() {
-                            @Override
-                            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                String value = holder.mRadioText.getText().toString();
-                                mList.get(position).setValue(value);
-                            }
+                    Log.d("__Radio",result);//Error disini
 
-                            @Override
-                            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-                            @Override
-                            public void afterTextChanged(Editable s) { }
-                        });
-                    }else{
-                        holder.mRadioText.setVisibility(View.GONE);
-                    }
                 }
-            });
+            });*/
 
         }else if(data.getViewType().equals(Form.DATE)) {
             holder.mDateLabel.setText(data.getLabel());
@@ -638,7 +650,29 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         return mList;
     }
 
+    public void addModel(ArisanFieldModel add_model){
+        List<ArisanFieldModel> new_model = new ArrayList<>(getListModel());
+        new_model.add(add_model);
+        setmList(new_model);
+    }
+
+    public void removeModel(String name){
+        FieldUtils.removeField(name,mList);
+    }
+
     public void setmList(List<ArisanFieldModel> mList) {
         this.mList = mList;
+    }
+
+    public void setSubmitBackground(int submitBackground) {
+        mList.get(mList.size()-1).setBackground(submitBackground);
+    }
+
+    public void setSubmitText(String submitText) {
+        this.submitText = submitText;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

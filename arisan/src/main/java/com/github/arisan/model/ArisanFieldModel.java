@@ -26,6 +26,22 @@ public class ArisanFieldModel {
     private ArisanListener.Condition arisanListener;
     private ArisanListener.ViewMod viewMod;
 
+    public ArisanListener.Condition getArisanListener() {
+        return arisanListener;
+    }
+
+    public void setArisanListener(ArisanListener.Condition arisanListener) {
+        this.arisanListener = arisanListener;
+    }
+
+    public ArisanListener.ViewMod getViewMod() {
+        return viewMod;
+    }
+
+    public void setViewMod(ArisanListener.ViewMod viewMod) {
+        this.viewMod = viewMod;
+    }
+
     public List<List<ArisanFieldModel>> getChildFieldModel() {
         return childFieldModel;
     }
