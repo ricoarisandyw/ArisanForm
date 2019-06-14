@@ -3,13 +3,8 @@ package com.github.arisan.helper;
 import android.util.Log;
 
 import com.github.arisan.model.ArisanFieldModel;
-import com.github.arisan.model.ArisanFieldModel;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

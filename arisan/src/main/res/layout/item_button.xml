@@ -12,6 +12,8 @@
         <Button
             android:id="@+id/arisan_button"
             android:text="SUBMIT"
+            android:elevation="5dp"
+            android:background="@drawable/btn_primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

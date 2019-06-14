@@ -25,6 +25,9 @@ import com.github.arisan.helper.ValueUpdater;
 import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.ListenerModel;
 import com.github.arisan.helper.UriUtils;
+import com.github.arisan.model.template.FormCheckbox;
+import com.github.arisan.model.template.FormDate;
+import com.github.arisan.model.template.FormSlider;
 import com.github.arisanform.model.Additional;
 import com.github.arisanform.model.ArisanText;
 import com.github.arisanform.model.DB;
@@ -86,16 +89,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /*TESTING COLOR*/
-        vDummyText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
         vDummyText.setVisibility(View.GONE);
     }
 
     public void showForm(){
         vForm.setVisibility(View.VISIBLE);
-
-//        ArisanPreparation preparation = new ArisanPreparation(this);
-//        preparation.setModel(survey);
-//        preparation.fillData("data1",Survey.yesNo);
 
         List<ArisanFieldModel> list = new ArrayList<>();
         final String[] kawin = {"Belum pernah kawin","Kawin","Duda/Janda", Model.OTHERS};
@@ -106,21 +104,30 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public ListenerModel onValue(String value) {
                 if(value.equals("Kawin")){
-                    //not show
-//                    arisanAdapter.addModel(ArisanText.getField());
-//                    arisanAdapter.notifyDataSetChanged();
-
-                    //'int java.lang.Integer.intValue()' on a null object reference
-//                    arisanAdapter.mList.add(ArisanText.getField());
-//                    arisanAdapter.notifyDataSetChanged();
-
-                    //'int java.lang.Integer.intValue()' on a null object reference
                     ArisanForm form = new ArisanForm(getBaseContext());
                     form.copyAdapterFrom(arisanAdapter);
 
-                    ArisanFieldModel new_field = ArisanText.getField();
-                    new_field.setName("New Field");
+                    ArisanFieldModel new_field = FormDate.getModel();
+                    new_field.setName("slider");
+                    new_field.setLabel("Berapakah jumlah makanan anda yang biasanya anda makan ?");
                     FieldUtils.insertOrUpdateField(new_field,form.getFieldData());
+
+                    ArisanFieldModel new_field2 = FormCheckbox.getModel();
+                    new_field2.setName("New Field 2");
+                    new_field2.setLabel("Berapakah makanan yang anda makan?");
+                    new_field2.setData(kawin);
+                    new_field2.setCheckboxListener(new ArisanListener.CheckboxCondition() {
+                        @Override
+                        public ListenerModel onChecked(String checked, List<String> all_checked) {
+                            if(all_checked.contains("Kawin")){
+                                Toast.makeText(MainActivity.this, "Kamu kawin", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(MainActivity.this, "Kamu belum kawin", Toast.LENGTH_SHORT).show();
+                            }
+                            return null;
+                        }
+                    });
+                    FieldUtils.insertOrUpdateField(new_field2,form.getFieldData());
 
                     arisanAdapter = form.buildAdapter();
                     vForm.setAdapter(arisanAdapter);
@@ -128,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     ArisanForm form = new ArisanForm(getBaseContext());
                     form.copyAdapterFrom(arisanAdapter);
                     FieldUtils.removeField("New Field",form.getFieldData());
+                    FieldUtils.removeField("New Field 2",form.getFieldData());
 
                     arisanAdapter = form.buildAdapter();
                     vForm.setAdapter(arisanAdapter);
@@ -137,65 +145,25 @@ public class MainActivity extends AppCompatActivity {
         });
 
         list.add(model);
-
-//        preparation.fillData("data0",kawin);
-//
-//        preparation.setSubmit("Submit");
-//        preparation.useSubmitButton(true);
+        list.add(FormDate.getModel());
 
         ArisanForm form = new ArisanForm(this);
         form.setFieldData(list);
-        form.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
-            @Override
-            public void onSubmit(String response) {
-                Toast.makeText(MainActivity.this,response,Toast.LENGTH_SHORT).show();
-
-            }
-        });
+        form.setOnSubmitListener(submitListener);
         arisanAdapter = form.buildAdapter();
         vForm.setAdapter(arisanAdapter);
     }
 
-    public void addDataBook(User user){
-        vForm.setVisibility(View.VISIBLE);
-
-        //SUCCESS null
-        Log.d("__TO JSON",new Gson().toJson(user));
-
-        //PREPARE DATA
-        ArisanPreparation preparation = new ArisanPreparation(this);
-        preparation.clearData();
-        preparation.setModel(user);
-        preparation.setSubmit("SUBMIT");
-        preparation.setSubmitBackground(R.drawable.gradient);
-        preparation.useSubmitButton(true);
-
-        //Make builder
-        ArisanForm arisanForm = new ArisanForm(this);
-
-        arisanForm.addListener("data1", new ArisanListener.Condition() {
-            @Override
-            public ListenerModel onValue(String value) {
-                ListenerModel arisanListener = new ListenerModel();
-                arisanListener.setCondition(true);
-                if(value.contains("hallo")){
-                    arisanListener.setCondition(false);
-                    arisanListener.setMessage("Jangan pakai hallo");
-                }
-                return arisanListener;
-            }
-        });
-        arisanForm.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
-            @Override
-            public void onSubmit(String response) {
-                Toast.makeText(MainActivity.this,response,Toast.LENGTH_SHORT).show();
-                Log.d("__RESPONE",response);
-                vForm.setVisibility(View.GONE);
-            }
-        });
-        arisanAdapter = arisanForm.buildAdapter();
-        vForm.setAdapter(arisanAdapter);
-    }
+    ArisanAdapter.OnSubmitListener submitListener = new ArisanAdapter.OnSubmitListener() {
+        @Override
+        public void onSubmit(String response) {
+            ArisanForm form = new ArisanForm(getBaseContext());
+            form.copyAdapterFrom(arisanAdapter);
+            arisanAdapter = form.buildAdapter();
+            vForm.setAdapter(form.buildAdapter());
+            Toast.makeText(MainActivity.this,response,Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -211,75 +179,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("__Uri", "Uri is null");
             }
         }
-    }
-
-    public void addData(Order order){
-        List<Additional> additionals = new ArrayList<>();
-        Additional additional = new Additional();
-        additional.setName("Misis");
-        additional.setQuantity(3);
-        additionals.add(additional);
-        order.setAdditionals(additionals);
-
-        vForm.setVisibility(View.VISIBLE);
-        //PREPARE DATA
-        ArisanPreparation preparation = new ArisanPreparation(this);
-        preparation.setModel(order);
-        preparation.fillData("menu",DataMaster.MENU);
-        preparation.fillData("topping",DataMaster.TOPPING);
-        preparation.setSubmitBackground(R.drawable.gradient);
-
-        if(order.getId() == 0){
-            preparation.setTitle("New Order");
-            preparation.setSubmit("INSERT");
-        }else{
-            preparation.setTitle("Copy Order");
-            preparation.setSubmit("COPY");
-        }
-
-        ArisanForm arisanForm = new ArisanForm(this);
-        arisanForm.addViewMod("location", new ArisanListener.ViewMod() {
-            @Override
-            public Object modding(Object view) {
-                EditText editText = (EditText)view;
-                editText.setText("Anone");
-                return editText;
-            }
-        });
-        arisanForm.addListener("location", new ArisanListener.Condition() {
-            @Override
-            public ListenerModel onValue(String value) {
-                ListenerModel model = new ListenerModel();
-                if(value.equals("rico")){
-                    model.setMessage("username found");
-                    model.setCondition(true);
-                }else{
-                    model.setMessage("username not found");
-                    model.setCondition(false);
-                }
-                return model;
-            }
-        }).setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
-            @Override
-            public void onSubmit(String response) {
-                Order newOrder = gson.fromJson(response,Order.class);
-
-                Order order = new Order();
-                order.setId(orderList.size()+1);
-                order.setOrderer("Mio");
-
-                order = new ValueUpdater<Order>().update(order,newOrder,Order.class);
-                orderList.add(order);
-                preference.saveObj(DB.ORDER, orderList);
-                refreshList();
-                vForm.setVisibility(View.GONE);
-            }
-        });
-        vForm.setAdapter(arisanForm.buildAdapter());
-    }
-
-    interface ArisanCallback{
-        public void onSomething(String text);
     }
 
     public void refreshList() {

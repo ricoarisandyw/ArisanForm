@@ -1,6 +1,5 @@
 package com.github.arisan.helper;
 
-import com.github.arisan.ArisanForm;
 import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.RadioModel;
 import com.google.gson.Gson;

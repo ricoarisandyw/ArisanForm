@@ -24,6 +24,7 @@ public class ArisanFieldModel {
     private int color;
     private List<List<ArisanFieldModel>> childFieldModel;
     private ArisanListener.Condition arisanListener;
+    private ArisanListener.CheckboxCondition checkboxListener;
     private ArisanListener.ViewMod viewMod;
 
     public ArisanListener.Condition getArisanListener() {
@@ -32,6 +33,18 @@ public class ArisanFieldModel {
 
     public void setArisanListener(ArisanListener.Condition arisanListener) {
         this.arisanListener = arisanListener;
+    }
+
+    public ArisanListener.CheckboxCondition getCheckboxListener() {
+        return checkboxListener;
+    }
+
+    public ListenerModel doCheckboxListener(String value,List<String> data){
+        return checkboxListener.onChecked(value,data);
+    }
+
+    public void setCheckboxListener(ArisanListener.CheckboxCondition checkboxListener) {
+        this.checkboxListener = checkboxListener;
     }
 
     public ArisanListener.ViewMod getViewMod() {

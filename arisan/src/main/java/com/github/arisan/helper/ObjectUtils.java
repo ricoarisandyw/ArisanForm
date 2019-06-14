@@ -9,22 +9,18 @@ import java.util.List;
 
 public class ObjectUtils {
 
-    public Object renewObject(Object object){
+    public static Object renewObject(Object object,Class cls){
         Gson gson = new Gson();
         String json = gson.toJson(object);
-        Object t = gson.fromJson(json,typeBuilder());
+        Object t = gson.fromJson(json,cls);
         return t;
     }
 
-    public List<Object> renewList(List<Object> list){
+    public static List<Object> renewList(List<Object> list,Class cls){
         List<Object> new_list = new ArrayList<>();
         for(Object t:list){
-            new_list.add(renewObject(t));
+            new_list.add(renewObject(t,cls));
         }
         return new_list;
-    }
-
-    public Type typeBuilder(){
-        return new TypeToken<Object>(){}.getType();
     }
 }

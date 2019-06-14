@@ -53,10 +53,10 @@ public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.ViewHo
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     checkedData.add(value);
-                    onCheckedListener.onChecked(checkedData);
+                    onCheckedListener.onChecked(value,checkedData);
                 } else{
                     checkedData.remove(value);
-                    onCheckedListener.onChecked(checkedData);
+                    onCheckedListener.onChecked(value,checkedData);
                 }
 
             }
@@ -80,6 +80,6 @@ public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.ViewHo
     }
 
     interface OnCheckedListener{
-        void onChecked(List<String> checked);
+        void onChecked(String checked, List<String> already_checked);
     }
 }

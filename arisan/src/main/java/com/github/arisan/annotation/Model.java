@@ -9,4 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface Model {
     String OTHERS = "Lainnya . . .";
+    int BUTTON = 185012;
 }

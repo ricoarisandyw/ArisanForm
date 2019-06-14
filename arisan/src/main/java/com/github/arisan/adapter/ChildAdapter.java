@@ -51,7 +51,7 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder> 
 
         ArisanPreparation arisanPreparation = new ArisanPreparation(mContext);
         arisanPreparation.setSubmit("DELETE");
-        arisanPreparation.setSubmitBackground(R.color.colorDanger);
+        arisanPreparation.setSubmitBackground(R.drawable.btn_primary);
         arisanPreparation.useTitle(false);
         arisanPreparation.useSubmitButton(true);
 

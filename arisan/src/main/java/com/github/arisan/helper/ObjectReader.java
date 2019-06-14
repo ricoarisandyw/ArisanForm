@@ -1,17 +1,13 @@
 package com.github.arisan.helper;
 
-import android.util.Log;
-
 import com.github.arisan.annotation.Form;
 import com.github.arisan.model.ArisanFieldModel;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by wijaya on 3/24/2018.
