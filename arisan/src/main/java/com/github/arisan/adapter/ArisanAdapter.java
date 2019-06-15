@@ -426,22 +426,21 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    List<String> dataList = FieldUtils.convertArrayToList(data.getValue());
+                    List<String> dataList = FieldUtils.convertArrayToList(data.getData());
                     List<String> valueList = FieldUtils.convertArrayToList(data.getValue());
 
-                    List<String> no_from_data = FieldUtils.convertArrayToList(data.getValue());
-                    no_from_data.removeAll(dataList);
+                    //remove others value that is not availabel in data
+                    try{
+                        List<String> no_from_data = FieldUtils.convertArrayToList(data.getValue());
+                        no_from_data.removeAll(dataList);
+                        String edittext_value = no_from_data.size() > 0 ? no_from_data.get(0) : null; //edit text value
+                        valueList.remove(edittext_value);
+                    }catch(Exception ignore){}
 
-                    //get only value from checkbox
-                    String edittext_value = no_from_data.size() > 0 ? no_from_data.get(0) : null; //edit text value
-
-                    Log.d("__DATA",edittext_value);
-
-                    valueList.remove(edittext_value);
-                    //
                     String new_value = holder.view.mCheckboxText.getText().toString();
-                    valueList.add(new_value);
-
+                    if(!new_value.equals(""))
+                        valueList.add(new_value);
+                    valueList.remove(Model.OTHERS);
                     data.setValue(valueList);
                     Log.d("__DATA",new Gson().toJson(valueList));
                 }
