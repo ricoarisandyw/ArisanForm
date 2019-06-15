@@ -438,8 +438,10 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     }catch(Exception ignore){}
 
                     String new_value = holder.view.mCheckboxText.getText().toString();
+
                     if(!new_value.equals(""))
                         valueList.add(new_value);
+
                     valueList.remove(Model.OTHERS);
                     data.setValue(valueList);
                     Log.d("__DATA",new Gson().toJson(valueList));

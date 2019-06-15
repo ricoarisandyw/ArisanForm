@@ -15,6 +15,7 @@ public class GsonUtils {
         for(String key:new_obj.keySet()){
             map.put(key,gson.toJson(new_obj.get(key)));
         }
+
         return map;
     }
 }
