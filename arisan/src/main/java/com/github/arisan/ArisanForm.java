@@ -5,6 +5,7 @@ import android.content.Context;
 import com.github.arisan.adapter.ArisanAdapter;
 import com.github.arisan.model.ArisanFieldModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,6 +43,16 @@ public class ArisanForm {
         return this;
     }
 
+    public ArisanForm addCheckboxListener(String field_name, ArisanListener.CheckboxCondition onSomething){
+        for(ArisanFieldModel model : fieldData){
+            if(model.getName().equals(field_name)){
+                model.setCheckboxListener(onSomething);
+                break;
+            }
+        }
+        return this;
+    }
+
     public ArisanForm addViewMod(String field_name,ArisanListener.ViewMod onSomething){
         for(ArisanFieldModel model : fieldData){
             if(model.getName().equals(field_name)){
@@ -71,7 +82,11 @@ public class ArisanForm {
         return adapter;
     }
 
-    public void copyAdapterFrom(ArisanAdapter arisanAdapter){
-        setFieldData(arisanAdapter.getListModel());
+    public void copyFieldFromAdapter(ArisanAdapter arisanAdapter){
+        List<ArisanFieldModel> new_model = new ArrayList<>();
+        for (ArisanFieldModel a:arisanAdapter.getListModel()){
+            new_model.add(a.renew());
+        }
+        setFieldData(new_model);
     }
 }

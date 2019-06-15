@@ -34,6 +34,7 @@ import com.github.arisan.helper.ChildUtils;
 import com.github.arisan.helper.DateConverter;
 import com.github.arisan.helper.FieldAssembler;
 import com.github.arisan.helper.FieldUtils;
+import com.github.arisan.helper.PreferenceHelper;
 import com.github.arisan.helper.SortField;
 import com.github.arisan.helper.TwoDigit;
 import com.github.arisan.helper.UriUtils;
@@ -41,6 +42,7 @@ import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.ListenerModel;
 import com.github.arisan.model.RadioModel;
 import com.github.arisan.model.TypeForm;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,12 +59,14 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     OnSubmitListener onSubmitListener;
     String title;
     String submitText;
+    PreferenceHelper preference;
 
     boolean useTitle = true;
     boolean useSubmit = true;
 
     public ArisanAdapter(Context context, List<ArisanFieldModel> fieldList) {
         this.mContext = context;
+        preference = new PreferenceHelper(context);
         Collections.sort(fieldList,new SortField());
         ArisanPreparation preparation = new ArisanPreparation(mContext);
         useTitle = preparation.isUseTitle();
@@ -236,12 +240,11 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if(isChecked) {
                             String result = buttonView.getText().toString();
-                            //SHOW OTHERS CHECKBOX
-                            if (result.equals(Model.OTHERS)) {
+                            if (!result.equals(Model.OTHERS)) {
                                 Log.d("Arisan","Show others form");
-
+                                holder.view.mRadioText.setVisibility(View.GONE);
+                            } else {
                                 holder.view.mRadioText.setVisibility(View.VISIBLE);
-
                                 data.setValue(result);
                                 holder.view.mRadioText.addTextChangedListener(new TextWatcher() {
                                     @Override
@@ -256,13 +259,13 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                                     @Override
                                     public void afterTextChanged(Editable s) { }
                                 });
-                            } else {
-                                holder.view.mRadioText.setVisibility(View.GONE);
                             }
                             //CONDITION
                             try {
                                 data.setValue(result);
+                                preference.save("saved_position", String.valueOf(position));
                                 data.doListener(result);
+
                             } catch (Exception ignored){}
                         }
                     }
@@ -414,13 +417,53 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             List<String> valueList = FieldUtils.convertArrayToList(data.getValue());
             holder.view.mCheckboxParent.setLayoutManager(new LinearLayoutManager(mContext));
             CheckboxAdapter adapter = new CheckboxAdapter(dataList, valueList);
+
+            holder.view.mCheckboxText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    List<String> dataList = FieldUtils.convertArrayToList(data.getValue());
+                    List<String> valueList = FieldUtils.convertArrayToList(data.getValue());
+
+                    List<String> no_from_data = FieldUtils.convertArrayToList(data.getValue());
+                    no_from_data.removeAll(dataList);
+
+                    //get only value from checkbox
+                    String edittext_value = no_from_data.size() > 0 ? no_from_data.get(0) : null; //edit text value
+
+                    Log.d("__DATA",edittext_value);
+
+                    valueList.remove(edittext_value);
+                    //
+                    String new_value = holder.view.mCheckboxText.getText().toString();
+                    valueList.add(new_value);
+
+                    data.setValue(valueList);
+                    Log.d("__DATA",new Gson().toJson(valueList));
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
             adapter.setOnCheckedListener(new CheckboxAdapter.OnCheckedListener() {
                 @Override
                 public void onChecked(String value,List<String> checked) {
                     data.setValue(checked);
                     try{
+                        preference.save("saved_position", String.valueOf(position));
                         data.doCheckboxListener(value,checked);
                     }catch (Exception ignore){}
+                    if(checked.contains(Model.OTHERS)){
+                        holder.view.mCheckboxText.setVisibility(View.VISIBLE);
+                    }else{
+                        holder.view.mCheckboxText.setVisibility(View.GONE);
+                    }
                 }
             });
             holder.view.mCheckboxLabel.setText(data.getLabel());
@@ -434,10 +477,8 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 @Override
                 public void onClick(View v) {
                     //Add blank child to adapter
-//                    Log.d("__Child Data Before ",new Gson().toJson(childAdapter.mList));
                     childAdapter.mList.add(ChildUtils.listValueRemover(childAdapter.mList));
                     childAdapter.notifyDataSetChanged();
-//                    Log.d("__Child Data After ",new Gson().toJson(childAdapter.mList));
                 }
             });
         }else if(data.getViewType().equals(Form.SEARCH)){
@@ -570,6 +611,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         List<ArisanFieldModel> new_model = new ArrayList<>(getListModel());
         new_model.add(add_model);
         setmList(new_model);
+        notifyDataSetChanged();
     }
 
     public void removeModel(String name){

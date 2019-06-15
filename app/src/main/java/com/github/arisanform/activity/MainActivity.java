@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,48 +19,48 @@ import com.github.arisan.adapter.ArisanAdapter;
 import com.github.arisan.annotation.Model;
 import com.github.arisan.helper.DateDeserializer;
 import com.github.arisan.helper.FieldUtils;
+import com.github.arisan.helper.GsonUtils;
 import com.github.arisan.helper.RadioUtils;
-import com.github.arisan.helper.ValueUpdater;
 import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.ListenerModel;
 import com.github.arisan.helper.UriUtils;
 import com.github.arisan.model.template.FormCheckbox;
 import com.github.arisan.model.template.FormDate;
-import com.github.arisan.model.template.FormSlider;
-import com.github.arisanform.model.Additional;
-import com.github.arisanform.model.ArisanText;
-import com.github.arisanform.model.DB;
-import com.github.arisanform.model.DataMaster;
 import com.github.arisan.annotation.ArisanCode;
 import com.github.arisanform.R;
+import com.github.arisanform.model.ConditionFormC;
+import com.github.arisanform.model.FormC;
 import com.github.arisanform.model.Order;
 import com.github.arisan.helper.PreferenceHelper;
 import com.github.arisanform.model.Radio;
-import com.github.arisanform.model.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import io.realm.Realm;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FormRebuilder{
 
     GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd-MM-yyyy");
     Gson gson;
+    ArisanPreparation preparation;
 
     RecyclerView vList;
     RecyclerView vForm;
     TextView vDummyText;
-    MyAdapter adapter;
-    List<Order> orderList = new ArrayList<>();
 
     PreferenceHelper preference;
-    Realm realm = Realm.getDefaultInstance();
 
     ArisanAdapter arisanAdapter;
+    ArisanForm  form;
+    FormC c;
+    ConditionFormC cond;
+
+    int iteration =1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,84 +83,51 @@ public class MainActivity extends AppCompatActivity {
         vAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showForm();
+                nextForm();
             }
         });
+
+        preparation = new ArisanPreparation(this);
+        preparation.useTitle(true);
+        preparation.useSubmitButton(true);
 
         /*TESTING COLOR*/
         vDummyText.setVisibility(View.GONE);
+
+        c = new FormC(this);
+        cond = new ConditionFormC(this,form);
     }
 
-    public void showForm(){
-        vForm.setVisibility(View.VISIBLE);
-
-        List<ArisanFieldModel> list = new ArrayList<>();
-        final String[] kawin = {"Belum pernah kawin","Kawin","Duda/Janda", Model.OTHERS};
-
-        ArisanFieldModel model = Radio.getField();
-        model.setData(RadioUtils.convertToRadio(kawin));
-        model.setArisanListener(new ArisanListener.Condition() {
-            @Override
-            public ListenerModel onValue(String value) {
-                if(value.equals("Kawin")){
-                    ArisanForm form = new ArisanForm(getBaseContext());
-                    form.copyAdapterFrom(arisanAdapter);
-
-                    ArisanFieldModel new_field = FormDate.getModel();
-                    new_field.setName("slider");
-                    new_field.setLabel("Berapakah jumlah makanan anda yang biasanya anda makan ?");
-                    FieldUtils.insertOrUpdateField(new_field,form.getFieldData());
-
-                    ArisanFieldModel new_field2 = FormCheckbox.getModel();
-                    new_field2.setName("New Field 2");
-                    new_field2.setLabel("Berapakah makanan yang anda makan?");
-                    new_field2.setData(kawin);
-                    new_field2.setCheckboxListener(new ArisanListener.CheckboxCondition() {
-                        @Override
-                        public ListenerModel onChecked(String checked, List<String> all_checked) {
-                            if(all_checked.contains("Kawin")){
-                                Toast.makeText(MainActivity.this, "Kamu kawin", Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(MainActivity.this, "Kamu belum kawin", Toast.LENGTH_SHORT).show();
-                            }
-                            return null;
-                        }
-                    });
-                    FieldUtils.insertOrUpdateField(new_field2,form.getFieldData());
-
-                    arisanAdapter = form.buildAdapter();
-                    vForm.setAdapter(arisanAdapter);
-                }else{
-                    ArisanForm form = new ArisanForm(getBaseContext());
-                    form.copyAdapterFrom(arisanAdapter);
-                    FieldUtils.removeField("New Field",form.getFieldData());
-                    FieldUtils.removeField("New Field 2",form.getFieldData());
-
-                    arisanAdapter = form.buildAdapter();
-                    vForm.setAdapter(arisanAdapter);
-                }
-                return new ListenerModel();
-            }
-        });
-
-        list.add(model);
-        list.add(FormDate.getModel());
-
-        ArisanForm form = new ArisanForm(this);
-        form.setFieldData(list);
+    //TODO: code untuk memunculkan form
+    public void nextForm(){
+        form = new ArisanForm(this);
+        preference.save("saved_position", String.valueOf(1));
+        preparation.setTitle("Form C ke "+iteration);
         form.setOnSubmitListener(submitListener);
-        arisanAdapter = form.buildAdapter();
-        vForm.setAdapter(arisanAdapter);
+        switch (iteration){
+            case 1:{condition_1();break;}
+            case 2:{condition_2();break;}
+            case 3:{condition_3();break;}
+            case 4:{condition_4();break;}
+            case 5:{condition_5();break;}
+            case 6:{condition_6();break;}
+        }
+        rebuild(form);
+        vForm.setVisibility(View.VISIBLE);
     }
 
     ArisanAdapter.OnSubmitListener submitListener = new ArisanAdapter.OnSubmitListener() {
         @Override
         public void onSubmit(String response) {
-            ArisanForm form = new ArisanForm(getBaseContext());
-            form.copyAdapterFrom(arisanAdapter);
-            arisanAdapter = form.buildAdapter();
-            vForm.setAdapter(form.buildAdapter());
-            Toast.makeText(MainActivity.this,response,Toast.LENGTH_SHORT).show();
+            //===START OF PROJECT ABID
+            Map<String,String> data = GsonUtils.convertToMap(response);
+            //Menyimpan ke shared preference
+            for(String s:data.keySet()){
+                preference.save(s,data.get(s));
+            }
+            iteration++;
+            nextForm();
+            //===END OF PROJECT ABID
         }
     };
 
@@ -181,7 +147,300 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void refreshList() {
-        adapter.notifyDataSetChanged();
+    @Override
+    public void rebuild(ArisanForm arisan) {
+        //Get existing
+        //Add new
+        arisanAdapter = form.buildAdapter();
+        vForm.swapAdapter(arisanAdapter,true);
+        scrollTo();
+    }
+
+    public void condition_1(){
+        form.setFieldData(c.all_1());
+        form.addListener("103", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                if(!value.equals(Model.OTHERS)) {
+                    form.copyFieldFromAdapter(arisanAdapter);
+                    ConditionUtils.whenShow(!(value.equals(Model.OTHERS) || value.equals(c.Str(R.string.tidak_bekerja))), form.getFieldData(),
+                            c.getMap("103_1"));
+                    rebuild(form);
+                    scrollTo();
+                }
+                return null;
+            }
+        });
+        form.addCheckboxListener("108", new ArisanListener.CheckboxCondition() {
+            @Override
+            public ListenerModel onChecked(String just_checked, List<String> all_checked) {
+                Log.d("__DATA",new Gson().toJson(all_checked));
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(all_checked.contains(c.Str(R.string.asuransi_lain)),form.getFieldData(),
+                        c.getMap("108_1"));
+                rebuild(form);
+                return null;
+            }
+        });
+    }
+
+    public void condition_2(){
+        form.setFieldData(c.all_2());
+        form.addListener("201", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                cond.MyToast(value);
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.equals(c.Str(R.string.ya)),form.getFieldData(),
+                        c.getMap("201_1")
+                        );
+                rebuild(form);
+                return null;
+            }
+        });
+        form.addCheckboxListener("204", new ArisanListener.CheckboxCondition() {
+            @Override
+            public ListenerModel onChecked(String just_checked, List<String> all_checked) {
+                if(just_checked.equals(c.Str(R.string.autoimun))){
+                    //go to signature
+                    submitListener.onSubmit(arisanAdapter.getResult());
+                    Toast.makeText(MainActivity.this, "Anda diarahkan ke halaman selanjutnya", Toast.LENGTH_SHORT).show();
+                }else{
+                    form.copyFieldFromAdapter(arisanAdapter);
+                    ConditionUtils.whenShow(all_checked.contains(c.Str(R.string.lain)),form.getFieldData(),
+                            c.getMap("204_1")
+                    );
+                    rebuild(form);
+                }
+                return null;
+            }
+        });
+        form.addListener("205_2", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                if(value.equals(c.Str(R.string.autoimun))){
+                    //go to signature
+                }else{
+                    form.copyFieldFromAdapter(arisanAdapter);
+                    ConditionUtils.whenShow(value.equals(c.Str(R.string.ya)),form.getFieldData(),
+                            c.getMap("205_3")
+                    );
+                    rebuild(form);
+                }
+                return null;
+            }
+        });
+        form.addListener("206_1", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                if(value.equals(c.Str(R.string.autoimun))){
+                    //go to signature
+                }else{
+                    form.copyFieldFromAdapter(arisanAdapter);
+                    ConditionUtils.whenShow(value.equals(c.Str(R.string.kanker)),form.getFieldData(),
+                            c.getMap("206_0_1")
+                    );
+                    rebuild(form);
+                }
+                return null;
+            }
+        });
+        form.addListener("206_2", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.equals(c.Str(R.string.ya)),form.getFieldData(),
+                        c.getMap("206_2_1")
+                );
+                rebuild(form);
+                return null;
+            }
+        });
+        form.addListener("207", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.equals(c.Str(R.string.ya)),form.getFieldData(),
+                        c.getMap("207_1")
+                );
+                rebuild(form);
+                return null;
+            }
+        });
+        form.addListener("211", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.equals(c.Str(R.string.lain)),form.getFieldData(),
+                        c.getMap("211_0_1")
+                );
+                rebuild(form);
+                return null;
+            }
+        });
+
+
+    }
+
+    public void condition_3(){
+        form.setFieldData(c.all_3());
+        form.addListener("301", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.contains(c.Str(R.string.ya_sebutkan_minimal_3)),form.getFieldData(),
+                        c.getMap("301_1")
+                );
+                rebuild(form);
+                return null;
+            }
+        });
+        form.addListener("303", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.contains(c.Str(R.string.ya)),form.getFieldData(),
+                        c.getMap("303_1")
+                );
+                rebuild(form);
+                return null;
+            }
+        });
+        form.addListener("304", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.contains(c.Str(R.string.ya)),form.getFieldData(),
+                        c.getMap("304_1")
+                );
+                rebuild(form);
+                return null;
+            }
+        });
+        form.addListener("306", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.contains(c.Str(R.string.ya)),form.getFieldData(),
+                        c.getMap("306_1")
+                );
+                rebuild(form);
+                return null;
+            }
+        });
+        form.addListener("307", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.contains(c.Str(R.string.ya)),form.getFieldData(),
+                        c.getMap("307_1")
+                );
+                rebuild(form);
+                return null;
+            }
+        });
+        form.addListener("308", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.contains(c.Str(R.string.ya)),form.getFieldData(),
+                        c.getMap("308_1")
+                );
+                rebuild(form);
+                return null;
+            }
+        });
+        form.addListener("307", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.contains(c.Str(R.string.ya)),form.getFieldData(),
+                        c.getMap("307_1")
+                );
+                rebuild(form);
+                return null;
+            }
+        });
+    }
+
+    public void condition_4(){
+        form.setFieldData(c.all_4());
+        form.addCheckboxListener("402", new ArisanListener.CheckboxCondition() {
+            @Override
+            public ListenerModel onChecked(String just_checked, List<String> all_checked) {
+                boolean condition = all_checked.contains(c.Str(R.string.lain))||all_checked.contains(c.Str(R.string.obat_china));
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(condition
+                        ,form.getFieldData(),
+                            c.getMap("402_0_1"));
+                rebuild(form);
+                return null;
+            }
+        });
+        form.addListener("402_4", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.equals(c.Str(R.string.ya)),form.getFieldData(),
+                        c.getMap("402_4_1"));
+                rebuild(form);
+                return null;
+            }
+        });
+        form.addListener("404", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.equals(value.equals(c.Str(R.string.lain))),form.getFieldData(),
+                        c.getMap("404_0_1"));
+                rebuild(form);
+                return null;
+            }
+        });
+    }
+
+    public void condition_5(){
+        form.setFieldData(c.all_5());
+        form.addCheckboxListener("501", new ArisanListener.CheckboxCondition() {
+            @Override
+            public ListenerModel onChecked(String just_checked, List<String> all_checked) {
+                boolean condition = all_checked.contains(c.Str(R.string.lain))||all_checked.contains(c.Str(R.string.obat_china));
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(condition
+                        ,form.getFieldData(),
+                        c.getMap("501_1"));
+                rebuild(form);
+                return null;
+            }
+        });
+    }
+
+    public void condition_6(){
+        form.setFieldData(c.all_6());
+        form.addListener("601", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.equals(c.Str(R.string.bekerja)),form.getFieldData(),
+                        c.getMap("601_1"));
+                rebuild(form);
+                return null;
+            }
+        });
+        form.addListener("602", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(value.equals(c.Str(R.string.bekerja)),form.getFieldData(),
+                        c.getMap("602_1"));
+                rebuild(form);
+                return null;
+            }
+        });
+    }
+
+    public void scrollTo(){
+        int saved_position = Integer.parseInt(preference.load("saved_position"));
+        vForm.scrollToPosition(saved_position);
     }
 }

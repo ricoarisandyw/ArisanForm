@@ -1,5 +1,8 @@
 package com.github.arisan.model;
 
+import android.view.View;
+import android.widget.TextView;
+
 import com.github.arisan.ArisanListener;
 
 import java.util.List;
@@ -40,7 +43,7 @@ public class ArisanFieldModel {
     }
 
     public ListenerModel doCheckboxListener(String value,List<String> data){
-        return checkboxListener.onChecked(value,data);
+        return this.checkboxListener.onChecked(value,data);
     }
 
     public void setCheckboxListener(ArisanListener.CheckboxCondition checkboxListener) {
@@ -211,7 +214,9 @@ public class ArisanFieldModel {
         new_model.setFileType(fileType);
         new_model.setRequire(require);
         new_model.addCondition(arisanListener);
+        new_model.setCheckboxListener(checkboxListener);
         new_model.addViewMod(viewMod);
+
         return new_model;
     }
 }

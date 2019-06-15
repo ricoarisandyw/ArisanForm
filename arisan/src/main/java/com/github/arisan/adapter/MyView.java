@@ -39,6 +39,7 @@ public class MyView {
     //CHECKBOX
     RecyclerView mCheckboxParent;
     TextView mCheckboxLabel;
+    EditText mCheckboxText;
     //ONETOMANY
     RecyclerView mOnetoManyList;
     TextView mOnetoManyLabel;
@@ -69,6 +70,7 @@ public class MyView {
         mFileName = v.findViewById(R.id.arisan_file_name);
         mCheckboxParent = v.findViewById(R.id.arisan_checkbox_list);
         mCheckboxLabel = v.findViewById(R.id.arisan_label_checkbox);
+        mCheckboxText = v.findViewById(R.id.arisan_checkbox_text);
         mEditTextSearch = v.findViewById(R.id.arisan_search_name);
         mSearchButton = v.findViewById(R.id.arisan_search_button);
         mSearchLabel = v.findViewById(R.id.arisan_search_label);
