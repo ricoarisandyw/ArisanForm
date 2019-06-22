@@ -12,4 +12,8 @@ public class SortField implements Comparator<ArisanFieldModel>
     public int compare(ArisanFieldModel o1, ArisanFieldModel o2) {
         return o1.getPosition() - o2.getPosition();
     }
+
+    public static SortField getInstance(){
+        return new SortField();
+    }
 }

@@ -7,12 +7,13 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:padding="6dp"
+        android:padding="4dp"
         android:layout_height="wrap_content">
 
         <CheckBox
             android:id="@+id/arisan_checkbox"
             android:text="Text"
+            android:textSize="@dimen/font_size_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

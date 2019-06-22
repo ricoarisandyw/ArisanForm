@@ -8,32 +8,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="6dp">
+        android:layout_margin="8dp">
 
         <TextView
             android:id="@+id/arisan_search_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Label"
+            android:textColor="@color/label"
+            android:layout_marginBottom="@dimen/label_margin"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/arisan_search_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_below="@id/arisan_search_label"
+            android:layout_alignBottom="@+id/arisan_search_button"
+            android:layout_alignParentStart="true"
             android:layout_toLeftOf="@id/arisan_search_button"
-            android:hint="Search here . . ." />
+            android:hint="Search here . . ."
+            android:textSize="@dimen/font_size_body" />
 
         <Button
+            android:background="@drawable/btn_submit"
+            android:drawablePadding="5dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="10dp"
+            android:gravity="center"
+            android:textColor="#FFF"
+            android:textSize="@dimen/font_size_body"
             android:id="@+id/arisan_search_button"
-            android:layout_width="130dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:drawableTint="#FFF"
             android:layout_below="@id/arisan_search_label"
-            android:drawableRight="@android:drawable/ic_menu_search"
-            android:drawableTint="@android:color/black"
+            android:drawableRight="@drawable/ic_search"
             android:text="SEARCH" />
 
     </RelativeLayout>

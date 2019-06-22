@@ -21,7 +21,7 @@ import java.util.List;
 public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder> {
 
     List<List<ArisanFieldModel>> mList;
-    Context mContext;
+    private Context mContext;
 
     public ChildAdapter(List<List<ArisanFieldModel>> mList, Context mContext) {
         this.mList = mList;
@@ -49,13 +49,9 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder> 
     public void onBindViewHolder(ChildAdapter.ViewHolder holder, final int position) {
         holder.vChild.setLayoutManager(new LinearLayoutManager(mContext));
 
-        ArisanPreparation arisanPreparation = new ArisanPreparation(mContext);
-        arisanPreparation.setSubmit("DELETE");
-        arisanPreparation.setSubmitBackground(R.drawable.btn_primary);
-        arisanPreparation.useTitle(false);
-        arisanPreparation.useSubmitButton(true);
-
         ArisanForm arisanForm = new ArisanForm(mContext);
+        arisanForm.setUse_title(false);
+        arisanForm.setSubmitText("DELETE");
         arisanForm.setFieldData(mList.get(position));
         arisanForm.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
             @Override
@@ -71,7 +67,6 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder> 
         ArisanAdapter arisanAdapter = arisanForm.buildAdapter();
 
         holder.vChild.setAdapter(arisanAdapter);
-        arisanPreparation.clearData();
     }
 
     @Override

@@ -6,14 +6,15 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:padding="6dp"
+        android:padding="8dp"
         android:gravity="center"
         android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/arisan_title"
             android:text="TITLE"
-            android:textSize="18sp"
+            android:textSize="16sp"
+            android:textColor="@color/label"
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

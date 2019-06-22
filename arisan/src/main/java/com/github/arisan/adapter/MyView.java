@@ -17,11 +17,15 @@ public class MyView {
 
     TextView mTitle;
     Button mSubmit;
+    TextView mBlankText;
     //TEXT
     TextView mInputTextLabel;
     TextView mDateLabel;
     TextView mSpinnerLabel;
     EditText mEditText;
+    //PASSOWRD
+    TextView mPasswordLabel;
+    EditText mPassword;
     //SEARCH
     EditText mEditTextSearch;
     TextView mSearchLabel;
@@ -56,15 +60,18 @@ public class MyView {
     public MyView(View v) {
         this.view = v;
 
-        mInputTextLabel = v.findViewById(com.github.arisan.R.id.arisan_text_label);
-        mEditText = v.findViewById(com.github.arisan.R.id.arisan_text);
+        mPasswordLabel = v.findViewById(R.id.arisan_password_label);
+        mPassword = v.findViewById(R.id.arisan_password);
+        mBlankText = v.findViewById(R.id.arisan_button_blank);
+        mInputTextLabel = v.findViewById(R.id.arisan_text_label);
+        mEditText = v.findViewById(R.id.arisan_text);
         mDateLabel = v.findViewById(R.id.arisan_date_label);
         mDate = v.findViewById(R.id.arisan_date);
         mSpinnerLabel = v.findViewById(R.id.arisan_spinner_label);
         mSpinner = v.findViewById(R.id.arisan_spinner);
-        mTitle = v.findViewById(com.github.arisan.R.id.arisan_title);
-        mSubmit = v.findViewById(com.github.arisan.R.id.arisan_button);
-        aSwitch = v.findViewById(com.github.arisan.R.id.arisan_switch);
+        mTitle = v.findViewById(R.id.arisan_title);
+        mSubmit = v.findViewById(R.id.arisan_button);
+        aSwitch = v.findViewById(R.id.arisan_switch);
         mFile = v.findViewById(R.id.arisan_upload);
         mFileLabel = v.findViewById(R.id.arisan_file_label);
         mFileName = v.findViewById(R.id.arisan_file_name);

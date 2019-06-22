@@ -45,7 +45,7 @@ public class ConditionFormC {
 
 
 
-    public ArisanForm condition_1(){
+    /*public ArisanForm condition_1(){
         form.addListener("103", new ArisanListener.Condition() {
             @Override
             public ListenerModel onValue(String value) {
@@ -114,5 +114,5 @@ public class ConditionFormC {
 
     public static void addOthers(){
 
-    }
+    }*/
 }

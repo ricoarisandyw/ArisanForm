@@ -5,15 +5,26 @@
 
     <LinearLayout
         android:orientation="vertical"
+        android:padding="8dp"
         android:layout_width="match_parent"
-        android:padding="6dp"
         android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/arisan_button_blank"
+            android:text="Cannot blank!!!"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/colorDanger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/arisan_button"
+            android:textColor="#FFF"
             android:text="SUBMIT"
-            android:elevation="5dp"
-            android:background="@drawable/btn_primary"
+            android:elevation="8dp"
+            android:translationZ="6dp"
+            android:background="@drawable/btn_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

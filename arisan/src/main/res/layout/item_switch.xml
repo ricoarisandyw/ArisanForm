@@ -6,12 +6,13 @@
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:padding="6dp"
+        android:layout_margin="8dp"
         android:layout_height="wrap_content">
 
         <Switch
             android:id="@+id/arisan_switch"
             android:text="Text"
+            android:textColor="@color/label"
             android:textStyle="bold"
             android:layout_alignParentLeft="true"
             android:layout_width="match_parent"

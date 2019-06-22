@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:padding="6dp"
+    android:layout_margin="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
         android:text="Label"
         android:id="@+id/arisan_radio_label"
+        android:textColor="@color/label"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/label_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

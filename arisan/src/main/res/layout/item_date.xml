@@ -9,16 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="6dp">
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/arisan_date_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:text="Text"
+            android:textColor="@color/label"
+            android:layout_marginBottom="8dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,12 +25,16 @@
 
         <TextView
             android:id="@+id/arisan_date"
+            android:textSize="@dimen/font_size_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:drawableLeft="@drawable/ic_date"
             android:gravity="center"
-            android:drawableTint="@color/font"
+            android:background="@drawable/btn_submit"
+            android:padding="8dp"
+            android:textColor="#FFF"
+            android:drawableTint="#FFF"
             android:text="12-01-1997"
             app:layout_constraintBottom_toBottomOf="@+id/arisan_date_label"
             app:layout_constraintEnd_toEndOf="parent"

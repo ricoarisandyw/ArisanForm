@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.github.arisan.ArisanListener;
+import com.github.arisan.adapter.ArisanAdapter;
 
 import java.util.List;
 
@@ -42,8 +43,8 @@ public class ArisanFieldModel {
         return checkboxListener;
     }
 
-    public ListenerModel doCheckboxListener(String value,List<String> data){
-        return this.checkboxListener.onChecked(value,data);
+    public ListenerModel doCheckboxListener(String value,List<String> data,ArisanAdapter adapter){
+        return this.checkboxListener.onChecked(value,data,adapter);
     }
 
     public void setCheckboxListener(ArisanListener.CheckboxCondition checkboxListener) {
@@ -86,8 +87,8 @@ public class ArisanFieldModel {
         return viewMod.modding(view);
     }
 
-    public ListenerModel doListener(String value){
-        return arisanListener.onValue(value);
+    public ListenerModel doListener(String value, ArisanAdapter adapter){
+        return arisanListener.onValue(value,adapter);
     }
 
     public int getColor() {

@@ -16,7 +16,7 @@ public class FieldAssembler {
     public static String toJson(List<ArisanFieldModel> data) {
         StringBuilder result = new StringBuilder("{");
         for (int i = 0; i < data.size(); i++) {
-            ArisanFieldModel model = data.get(i);
+            ArisanFieldModel model = data.get(i).renew();
 
             //For model type List
             if (model.getChildFieldModel() != null) {
@@ -24,6 +24,7 @@ public class FieldAssembler {
             } else
                 result.append(convertModelToJson(model));
 
+            //For model
             if (i < data.size() - 1 && (model.getValue() != null || model.getChildFieldModel() != null)) {
                 result.append(",");
             }

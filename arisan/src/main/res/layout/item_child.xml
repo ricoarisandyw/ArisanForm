@@ -5,9 +5,9 @@
     android:layout_height="wrap_content">
 
     <View
-        android:background="#03A9F4"
+        android:background="@drawable/btn_primary"
         android:layout_marginRight="5dp"
-        android:layout_width="10dp"
+        android:layout_width="6dp"
         android:layout_height="match_parent"/>
 
     <android.support.v7.widget.RecyclerView

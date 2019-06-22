@@ -18,30 +18,25 @@ import com.github.arisan.ArisanPreparation;
 import com.github.arisan.adapter.ArisanAdapter;
 import com.github.arisan.annotation.Model;
 import com.github.arisan.helper.DateDeserializer;
-import com.github.arisan.helper.FieldUtils;
 import com.github.arisan.helper.GsonUtils;
-import com.github.arisan.helper.RadioUtils;
+import com.github.arisan.helper.ObjectReader;
 import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.ListenerModel;
 import com.github.arisan.helper.UriUtils;
-import com.github.arisan.model.template.FormCheckbox;
-import com.github.arisan.model.template.FormDate;
 import com.github.arisan.annotation.ArisanCode;
 import com.github.arisanform.R;
+import com.github.arisanform.helper.DummyCreator;
+import com.github.arisanform.model.AllField;
 import com.github.arisanform.model.ConditionFormC;
 import com.github.arisanform.model.FormC;
-import com.github.arisanform.model.Order;
+import com.github.arisanform.model.KKK;
 import com.github.arisan.helper.PreferenceHelper;
-import com.github.arisanform.model.Radio;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity implements FormRebuilder{
 
@@ -80,10 +75,16 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
         //Get Stored Data
         //FLOATING ADD
         FloatingActionButton vAdd = findViewById(R.id.add_todo);
+//        vAdd.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                nextForm();
+//            }
+//        });
         vAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextForm();
+                form();
             }
         });
 
@@ -96,6 +97,87 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
 
         c = new FormC(this);
         cond = new ConditionFormC(this,form);
+    }
+
+    public void form(){
+        form = new ArisanForm(this);
+        form.setModel(new AllField());
+        form.setTitle("ALL FIELD FORM");
+        form.setSubmitText("SUBMIT");
+        DummyCreator.fillDummyArray(form.getFieldData());
+        form.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
+            @Override
+            public void onSubmit(String response) {
+                Toast.makeText(MainActivity.this, response, Toast.LENGTH_SHORT).show();
+                Log.e("__RESPONSE",response);
+//                vForm.setVisibility(View.GONE);
+            }
+        });
+        form.addChildListener("one_to_many", "search", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value,ArisanAdapter adapter) {
+                if(value.equals("1234")){
+                    for(ArisanFieldModel model:adapter.getData()){
+                        if(model.getName().equals("name")){
+                            model.setValue("rico");
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                    return new ListenerModel("jangan menggunakan 1234",false);
+                }
+                return null;
+            }
+        });
+        form.addListener("edit_text", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value, ArisanAdapter adapter) {
+                if(value.equals("1234")){
+                    for(ArisanFieldModel model:adapter.getData()){
+                        try {
+                            if (model.getName().equals("name")) {
+                                model.setValue("rico");
+                                adapter.notifyDataSetChanged();
+                            }
+                        }catch (Exception ignored){}
+                    }
+                }
+                return null;
+            }
+        });
+
+        arisanAdapter = form.buildAdapter();
+
+        vForm.setAdapter(arisanAdapter);
+
+        vForm.setVisibility(View.VISIBLE);
+    }
+/*
+
+    public void lapak(){
+        form = new ArisanForm(this);
+        form.setOnSubmitListener(submitListener);
+        form.setFieldData(ObjectReader.getField(new KKK()));
+        form.addChildListener("data_kk","search", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value) {
+                if(value.equals(String.valueOf(1234))){
+                    form.copyFieldFromAdapter(arisanAdapter);
+                    form.fillData("name","Rico Arisandy Wijaya");
+                    rebuild(form);
+                }else{
+                    ListenerModel listenerModel = new ListenerModel();
+                    listenerModel.setMessage("Tidak ditemukan");
+                    listenerModel.setCondition(false);
+                    return listenerModel;
+                }
+                return null;
+            }
+        });
+
+        arisanAdapter = form.buildAdapter();
+
+        vForm.setAdapter(arisanAdapter);
+        vForm.setVisibility(View.VISIBLE);
     }
 
     //TODO: code untuk memunculkan form
@@ -135,15 +217,17 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==ArisanCode.REQUEST_FILE){
-            Uri uri = data.getData();
-            if (uri != null) {
-                UriUtils utils = new UriUtils(this,uri);
-                String path = utils.getPath();
-                Log.d("__Uri Path", utils.getUri().getPath());
-                arisanAdapter.updateFile("photo",uri);
-            }else{
-                Log.d("__Uri", "Uri is null");
-            }
+            try {
+                Uri uri = data.getData();
+                if (uri != null) {
+                    UriUtils utils = new UriUtils(this, uri);
+                    String path = utils.getPath();
+                    Log.d("__Uri Path", utils.getUri().getPath());
+                    arisanAdapter.updateFile("photo", uri);
+                } else {
+                    Log.d("__Uri", "Uri is null");
+                }
+            }catch (Exception ignore){Log.e("URI ERROR","Failed to get URI");}
         }
     }
 
@@ -438,9 +522,15 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
             }
         });
     }
+*/
 
     public void scrollTo(){
         int saved_position = Integer.parseInt(preference.load("saved_position"));
         vForm.scrollToPosition(saved_position);
+    }
+
+    @Override
+    public void rebuild(ArisanForm form) {
+
     }
 }

@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:padding="6dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/arisan_text_label"
-            android:text="Text"
-            android:textStyle="bold"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/label_margin"
+            android:text="Text"
+            android:textColor="@color/label"
+            android:textSize="@dimen/font_size_body"
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/arisan_text"
-            android:fontFamily="sans-serif"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/arisan_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="text here. . ."
+                android:textSize="@dimen/font_size_body" />
+
 
     </LinearLayout>
 

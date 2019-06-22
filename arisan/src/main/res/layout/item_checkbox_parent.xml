@@ -6,12 +6,14 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:padding="6dp"
+        android:padding="8dp"
         android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/arisan_label_checkbox"
             android:text="label here"
+            android:textColor="@color/label"
+            android:layout_marginBottom="@dimen/label_margin"
             android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
