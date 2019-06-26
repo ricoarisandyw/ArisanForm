@@ -1,7 +1,7 @@
 package com.github.arisanform.activity;
 
+import android.Manifest;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -16,27 +16,46 @@ import com.github.arisan.ArisanForm;
 import com.github.arisan.ArisanListener;
 import com.github.arisan.ArisanPreparation;
 import com.github.arisan.adapter.ArisanAdapter;
-import com.github.arisan.annotation.Model;
 import com.github.arisan.helper.DateDeserializer;
-import com.github.arisan.helper.GsonUtils;
+import com.github.arisan.helper.ImagePickerUtils;
 import com.github.arisan.helper.ObjectReader;
+import com.github.arisan.helper.PermissionUtils;
+import com.github.arisan.helper.PreferenceHelper;
 import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.ListenerModel;
-import com.github.arisan.helper.UriUtils;
-import com.github.arisan.annotation.ArisanCode;
 import com.github.arisanform.R;
-import com.github.arisanform.helper.DummyCreator;
+import com.github.arisan.helper.DummyCreator;
+import com.github.arisan.helper.Logger;
 import com.github.arisanform.model.AllField;
 import com.github.arisanform.model.ConditionFormC;
 import com.github.arisanform.model.FormC;
-import com.github.arisanform.model.KKK;
-import com.github.arisan.helper.PreferenceHelper;
+import com.github.arisanform.model.KK;
+import com.github.arisanform.model.MyResponse;
+import com.github.arisanform.model.Url;
+import com.github.arisanform.model.probolinggo.model.BedaIdentitas;
+import com.github.arisanform.model.probolinggo.model.KTP;
+import com.github.arisanform.model.probolinggo.model.SKCK;
+import com.github.arisanform.network.API;
+import com.github.arisanform.network.Controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements FormRebuilder{
 
@@ -61,6 +80,9 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        askPermission();
+
         preference = new PreferenceHelper(this);
 
         gsonBuilder.registerTypeAdapter(Date.class,new DateDeserializer("dd-MM-yyyy","HH:mm"));
@@ -75,41 +97,122 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
         //Get Stored Data
         //FLOATING ADD
         FloatingActionButton vAdd = findViewById(R.id.add_todo);
-//        vAdd.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                nextForm();
-//            }
-//        });
+
         vAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                form();
+                form = new ArisanForm(MainActivity.this);
+                form.setTitle("ALL FIELD");
+                form.setBackground(R.drawable.btn_success);
+                form.setLabelColor(R.color.colorDanger);
+                form.setFieldData(DummyCreator.fillDummyArray(ObjectReader.getField(new AllField())));
+                form.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
+                    @Override
+                    public void onSubmit(String response) {
+                        Toast.makeText(MainActivity.this, response, Toast.LENGTH_SHORT).show();
+                        Log.e("__RESPONSE", response);
+                        vForm.setVisibility(View.GONE);
+                    }
+                });
+                arisanAdapter = form.buildAdapter();
+                vForm.setAdapter(arisanAdapter);
+                vForm.setVisibility(View.VISIBLE);
+//                form();
             }
         });
+    }
 
-        preparation = new ArisanPreparation(this);
-        preparation.useTitle(true);
-        preparation.useSubmitButton(true);
+    public void askPermission(){
+        final String[] PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
 
-        /*TESTING COLOR*/
-        vDummyText.setVisibility(View.GONE);
+        Dexter.withActivity(this).withPermissions(
+                PERMISSIONS
+        ).withListener(new MultiplePermissionsListener() {
+            @Override
+            public void onPermissionsChecked(MultiplePermissionsReport report) {
+                Toast.makeText(MainActivity.this, "Permission complete", Toast.LENGTH_SHORT).show();
+                Logger.d("REPORT");
+                Logger.d(report);
+            }
 
-        c = new FormC(this);
-        cond = new ConditionFormC(this,form);
+            @Override
+            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                Toast.makeText(MainActivity.this, "Rationaled", Toast.LENGTH_SHORT).show();
+
+                List<String> strings = new ArrayList<>();
+                for(PermissionRequest permissionRequest:permissions){
+                    strings.add(permissionRequest.getName());
+                }
+
+                PermissionUtils.askPermission(MainActivity.this, (String[]) strings.toArray());
+                Logger.d("PERMISSION");
+                Logger.d(permissions);
+                askPermission();
+            }
+        }).check();
     }
 
     public void form(){
         form = new ArisanForm(this);
-        form.setModel(new AllField());
-        form.setTitle("ALL FIELD FORM");
+        form.setFieldData(DummyCreator.fillDummyArray(ObjectReader.getField(new KTP())));
+        form.setTitle("FORM KTP");
         form.setSubmitText("SUBMIT");
-        DummyCreator.fillDummyArray(form.getFieldData());
+        form.setBackground(R.drawable.btn_success);
         form.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
             @Override
             public void onSubmit(String response) {
-                Toast.makeText(MainActivity.this, response, Toast.LENGTH_SHORT).show();
-                Log.e("__RESPONSE",response);
+                form = new ArisanForm(MainActivity.this);
+                form.setFieldData(DummyCreator.fillDummyArray(ObjectReader.getField(new KK())));
+                form.setTitle("FORM KK");
+                form.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
+                    @Override
+                    public void onSubmit(String response) {
+                        Toast.makeText(MainActivity.this, response, Toast.LENGTH_SHORT).show();
+                        Log.e("__RESPONSE",response);
+
+                        form = new ArisanForm(MainActivity.this);
+                        form.setFieldData(DummyCreator.fillDummyArray(ObjectReader.getField(new SKCK())));
+                        form.setTitle("FORM KK");
+                        form.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
+                            @Override
+                            public void onSubmit(String response) {
+                                Toast.makeText(MainActivity.this, response, Toast.LENGTH_SHORT).show();
+                                Log.e("__RESPONSE",response);
+
+                                form = new ArisanForm(MainActivity.this);
+                                form.setModel(DummyCreator.fillDummyArray(ObjectReader.getField(new BedaIdentitas())));
+                                form.setTitle("FORM BEDA IDENTITAS");
+                                form.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
+                                    @Override
+                                    public void onSubmit(String response) {
+                                        vForm.setVisibility(View.GONE);
+                                    }
+                                });
+                                arisanAdapter = form.buildAdapter();
+                                vForm.setAdapter(arisanAdapter);
+                            }
+                        });
+                        arisanAdapter = form.buildAdapter();
+                        vForm.setAdapter(arisanAdapter);
+                    }
+                });
+                arisanAdapter = form.buildAdapter();
+                vForm.setAdapter(arisanAdapter);
+
+//                API api = new Controller().getInstance().create(API.class);
+//                api.test().enqueue(new Callback<MyResponse<Url>>() {
+//                    @Override
+//                    public void onResponse(Call<MyResponse<Url>> call, Response<MyResponse<Url>> response) {
+//                        Log.d("Retroift Response",new Gson().toJson(response));
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<MyResponse<Url>> call, Throwable t) {
+//
+//                    }
+//                });
 //                vForm.setVisibility(View.GONE);
             }
         });
@@ -151,7 +254,39 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
 
         vForm.setVisibility(View.VISIBLE);
     }
-/*
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == ImagePickerUtils.ARISAN_REQUEST_IMAGE && resultCode == RESULT_OK){
+            ImagePickerUtils imagePickerUtils = new ImagePickerUtils(this,data);
+            arisanAdapter.updateImage(imagePickerUtils);
+
+            File file = imagePickerUtils.getFile();
+
+            // create RequestBody instance from file
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+
+            // MultipartBody.Part is used to send also the actual file name
+            MultipartBody.Part file_body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+
+            new Controller().getInstance().create(API.class).upload(file_body).enqueue(new Callback<MyResponse<Url>>() {
+                @Override
+                public void onResponse(Call<MyResponse<Url>> call, Response<MyResponse<Url>> response) {
+                    if(response.isSuccessful()) Logger.d(response.body());
+                    else Logger.d("FAILED TO UPLOAD FILE");
+                }
+
+                @Override
+                public void onFailure(Call<MyResponse<Url>> call, Throwable t) {
+                    Logger.d("SOMETHING WRONG");
+                }
+            });
+        }else{
+            Logger.d("NO PICK");
+        }
+    }
+
+    /*
 
     public void lapak(){
         form = new ArisanForm(this);

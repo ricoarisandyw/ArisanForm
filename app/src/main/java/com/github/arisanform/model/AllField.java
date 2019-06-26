@@ -1,15 +1,21 @@
 package com.github.arisanform.model;
 
+import android.net.Uri;
+
 import com.github.arisan.annotation.Form;
 
+import java.net.URI;
 import java.util.List;
 
 public class AllField {
     @Form(required = true)
     String edit_text;
 
-    @Form
-    String name;
+    @Form(type = Form.IMAGE)
+    URI image;
+
+    @Form(type = Form.SPINNER)
+    String spinner;
 
     @Form(type = Form.PASSWORD)
     String password;
@@ -23,11 +29,14 @@ public class AllField {
     @Form(type = Form.SLIDER)
     int slider;
 
+    @Form(type = Form.AUTOCOMPLETE)
+    String autocomplete;
+
     @Form(type = Form.DATE)
     String date;
 
     @Form(type = Form.FILE)
-    String file;
+    Uri file;
 
     @Form(type = Form.RADIO)
     String radio;
@@ -89,11 +98,11 @@ public class AllField {
         this.date = date;
     }
 
-    public String getFile() {
+    public Uri getFile() {
         return file;
     }
 
-    public void setFile(String file) {
+    public void setFile(Uri file) {
         this.file = file;
     }
 

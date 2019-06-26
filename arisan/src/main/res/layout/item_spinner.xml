@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <Spinner
+        <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/arisan_spinner"
             android:text="TITLE"
             android:foregroundTint="#FFF"

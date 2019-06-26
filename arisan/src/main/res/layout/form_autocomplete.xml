@@ -11,22 +11,22 @@
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/arisan_text_label"
+            android:id="@+id/arisan_autocomplete_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/label_margin"
             android:text="Text"
             android:textColor="@color/label"
-            android:textSize="@dimen/font_size_small"
+            android:textSize="@dimen/font_size_body"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/arisan_text"
+        <android.support.v7.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/arisan_autocomplete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:hint="text here. . ."
             android:textSize="@dimen/font_size_body" />
-
 
     </LinearLayout>
 

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Arisan</string>
 
-    <dimen name="font_size_small">8sp</dimen>
+    <dimen name="font_size_small">10sp</dimen>
     <dimen name="font_size_body">14sp</dimen>
     <dimen name="font_size_subheading">16sp</dimen>
     <dimen name="font_size_title">20sp</dimen>
@@ -461,4 +461,6 @@
     <string name="bekerja">Bekerja</string>
     <string name="pertanyaan_c_601_1">Lama bekerja ? (Bulan)</string>
     <string name="pertanyaan_c_602_1">Berapa lama anda bekerja ? (Minggu)</string>
+    <string name="pick">PICK</string>
+    <string name="filename_with_ex">filename_with_ex</string>
 </resources>

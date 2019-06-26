@@ -1,9 +1,12 @@
 package com.github.arisan.adapter;
 
+import android.support.v7.widget.AppCompatAutoCompleteTextView;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -15,13 +18,10 @@ import com.github.arisan.R;
 public class MyView {
     View view;
 
-    TextView mTitle;
+    TextView mTitle,mBlankText;
     Button mSubmit;
-    TextView mBlankText;
     //TEXT
-    TextView mInputTextLabel;
-    TextView mDateLabel;
-    TextView mSpinnerLabel;
+    TextView mEditTextLabel,mDateLabel,mSpinnerLabel;
     EditText mEditText;
     //PASSOWRD
     TextView mPasswordLabel;
@@ -29,15 +29,14 @@ public class MyView {
     //SEARCH
     EditText mEditTextSearch;
     TextView mSearchLabel;
-    Button mSearchButton;
+    ImageView mSearchButton;
     //BOOLEAN
     Switch aSwitch;
     //SPINNER
-    Spinner mSpinner;
+    AppCompatSpinner mSpinner;
     //FILE
     Button mFile;
-    TextView mFileName;
-    TextView mFileLabel;
+    TextView mFileName,mFileLabel;
     //DATETIME
     TextView mDate;
     //CHECKBOX
@@ -56,14 +55,21 @@ public class MyView {
     TextView mSlideLabel;
     TextView mSlideValue;
     SeekBar mSlide;
+    //IMAGE
+    TextView mImageLabel,mImageName;
+    ImageView mImage;
+    Button mImagePick;
+    //AUTOCOMPLETE
+    AppCompatAutoCompleteTextView mAutocomplete;
+    TextView mAutocompleteLabel;
 
-    public MyView(View v) {
+    MyView(View v) {
         this.view = v;
 
         mPasswordLabel = v.findViewById(R.id.arisan_password_label);
         mPassword = v.findViewById(R.id.arisan_password);
         mBlankText = v.findViewById(R.id.arisan_button_blank);
-        mInputTextLabel = v.findViewById(R.id.arisan_text_label);
+        mEditTextLabel = v.findViewById(R.id.arisan_text_label);
         mEditText = v.findViewById(R.id.arisan_text);
         mDateLabel = v.findViewById(R.id.arisan_date_label);
         mDate = v.findViewById(R.id.arisan_date);
@@ -90,5 +96,11 @@ public class MyView {
         mSlideLabel = v.findViewById(R.id.arisan_slide_label);
         mSlide = v.findViewById(R.id.arisan_slide);
         mSlideValue = v.findViewById(R.id.arisan_slide_text);
+        mImage = v.findViewById(R.id.arisan_image_view);
+        mImageLabel = v.findViewById(R.id.arisan_image_label);
+        mImageName = v.findViewById(R.id.arisan_image_name);
+        mImagePick = v.findViewById(R.id.arisan_image_pick);
+        mAutocomplete = v.findViewById(R.id.arisan_autocomplete);
+        mAutocompleteLabel = v.findViewById(R.id.arisan_autocomplete_label);
     }
 }

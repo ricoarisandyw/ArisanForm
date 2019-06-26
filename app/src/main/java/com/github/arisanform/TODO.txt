@@ -1,2 +1,11 @@
 DONE: Search Column or button to do something
 TODO: Annotation processing for value assignment
+TODO: Make annotation for retrofit map
+TODO: Make annotation for modifier Map
+TODO: Response is json and File
+TODO: Permission for file
+TODO: SHIT!!! Material view from AndroidX make my view from Support-v7 not work well (it cause support-7 view cannot converted to androidx)
+
+Probolinggo :
+TODO: QR Code untuk device khusus
+TODO: Formnya untuk pindah saja

@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 public class ObjectGetter {
     Object object;
-    Map<String, Object> myMap;
+    Map<String, Object> myMap = new HashMap<>();
 
     public ObjectGetter() {
     }
@@ -30,11 +31,14 @@ public class ObjectGetter {
     ObjectGetter(Object object) {
         this.object = object;
         Type type = new TypeToken<Map<String, Object>>(){}.getType();
-        String json = new Gson().toJson(this.object);
+        String json = new Gson().toJson(object);
+        System.out.println("Json : "+json);
         myMap = new Gson().fromJson(json, type);
+//        for(String key:myMap.keySet())
+//            System.out.println("Data : "+key+myMap.get(key));
     }
 
-    public List<Object> getList(Object object){
+    List<Object> getList(Object object){
         Type type = new TypeToken<List<Object>>(){}.getType();
         List<Object> childs;
         if(object!=null) childs = new Gson().fromJson(new Gson().toJson(object), type);

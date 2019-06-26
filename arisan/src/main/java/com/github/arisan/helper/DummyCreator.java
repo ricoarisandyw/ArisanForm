@@ -1,4 +1,4 @@
-package com.github.arisanform.helper;
+package com.github.arisan.helper;
 
 import com.github.arisan.annotation.Form;
 import com.github.arisan.helper.FieldUtils;
@@ -14,12 +14,11 @@ public class DummyCreator {
 
     public static List<ArisanFieldModel> fillDummyArray(List<ArisanFieldModel> models){
         for(ArisanFieldModel model:models){
-            String view_type = model.getViewType();
-            if(view_type.equals(Form.RADIO))
+            int view_type = model.getViewType();
+            if(view_type==Form.RADIO)
                 model.setData(RadioUtils.convertToRadio(DUMMY_ARRAY));
-            else if(view_type.equals(Form.CHECKBOX))
+            else if(view_type==Form.CHECKBOX||view_type==Form.SPINNER||view_type==Form.AUTOCOMPLETE)
                 model.setData(DUMMY_ARRAY);
-            
         }
         return models;
     }

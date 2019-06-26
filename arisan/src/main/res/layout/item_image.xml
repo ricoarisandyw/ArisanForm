@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/arisan_image_label"
+            android:textColor="@color/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/label_margin"
+            android:layout_weight="0.7"
+            android:text="Label"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/label_margin"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/arisan_image_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:text="@string/filename_with_ex" />
+
+            <Button
+                android:id="@+id/arisan_image_pick"
+                android:background="@drawable/btn_submit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:textColor="#FFF"
+                android:text="@string/pick" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/arisan_image_view"
+            android:background="@color/pale_gray"
+            android:src="@drawable/ic_camera"
+            android:padding="20dp"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:contentDescription="TODO" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,38 +1,36 @@
 package com.github.arisan.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.github.arisan.ArisanForm;
-import com.github.arisan.ArisanPreparation;
 import com.github.arisan.R;
-import com.github.arisan.helper.FieldAssembler;
 import com.github.arisan.model.ArisanFieldModel;
-import com.google.gson.Gson;
 
 import java.util.List;
 
 public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder> {
 
     List<List<ArisanFieldModel>> mList;
-    private Context mContext;
+    private Activity activity;
+    private ArisanForm form;
 
-    public ChildAdapter(List<List<ArisanFieldModel>> mList, Context mContext) {
+    ChildAdapter(List<List<ArisanFieldModel>> mList, Activity activity, ArisanForm form) {
         this.mList = mList;
-        this.mContext = mContext;
+        this.activity = activity;
+        this.form = form;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         RecyclerView vChild;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
             vChild = v.findViewById(R.id.arisan_item_child);
         }
@@ -47,9 +45,11 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ChildAdapter.ViewHolder holder, final int position) {
-        holder.vChild.setLayoutManager(new LinearLayoutManager(mContext));
+        holder.vChild.setLayoutManager(new LinearLayoutManager(activity));
 
-        ArisanForm arisanForm = new ArisanForm(mContext);
+        ArisanForm arisanForm = new ArisanForm(activity);
+        arisanForm.setLabelColor(form.getLabelColor());
+        arisanForm.setBackground(form.getBackground());
         arisanForm.setUse_title(false);
         arisanForm.setSubmitText("DELETE");
         arisanForm.setFieldData(mList.get(position));
@@ -60,7 +60,7 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder> 
                     mList.remove(mList.get(position));
                     notifyDataSetChanged();
                 }else{
-                    Toast.makeText(mContext,"Cannot remove all",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity,"Cannot remove all",Toast.LENGTH_SHORT).show();
                 }
             }
         });

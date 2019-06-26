@@ -18,4 +18,16 @@ public class GsonUtils {
 
         return map;
     }
+
+    public static Map<String,String> convertToMap(Object object){
+        Gson gson = new Gson();
+        String json = gson.toJson(object);
+        Map<String,Object> new_obj = gson.fromJson(json,new TypeToken<Map<String,Object>>(){}.getType());
+        Map<String,String> map = new HashMap<>();
+        for(String key:new_obj.keySet()){
+            map.put(key,gson.toJson(new_obj.get(key)));
+        }
+
+        return map;
+    }
 }

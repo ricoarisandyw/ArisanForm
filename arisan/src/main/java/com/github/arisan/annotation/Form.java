@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD) //can use in method only.
 public @interface Form {
     String label() default "field name";
-    String type() default Form.TEXT;
+    int type() default Form.TEXT;
     boolean required() default false;
     String format() default "dd-MM-yyyy";
     int position() default 100;
@@ -21,19 +21,23 @@ public @interface Form {
     int color() default 0;
     Class relation() default String.class;
 
-    String TEXT = "TEXT";
-    String PASSWORD = "PASSWORD";
-    String NUMBER = "NUMBER";
-    String EMAIL = "EMAIL";
-    String CHECKBOX = "CHECKBOX";
-    String SPINNER = "SPINNER";
-    String DATE = "DATE";
-    String DATETIME = "DATETIME";
-    String TIME = "TIME";
-    String BOOLEAN = "BOOLEAN";
-    String FILE = "FILE";
-    String SEARCH = "SEARCH";
-    String ONETOMANY = "ONETOMANY";
-    String RADIO = "RADIO";
-    String SLIDER = "SLIDER";
+    int TEXT = 181;
+    int PASSWORD = 182;
+    int NUMBER = 183;
+    int EMAIL = 184;
+    int CHECKBOX = 185;
+    int SPINNER = 186;
+    int DATE = 187;
+    int DATETIME = 188;
+    int TIME = 189;
+    int BOOLEAN = 190;
+    int FILE = 191;
+    int SEARCH = 192;
+    int ONETOMANY = 193;
+    int RADIO = 194;
+    int SLIDER = 195;
+    int IMAGE = 196;
+    int AUTOCOMPLETE = 197;
+    int CAMERA = 198;
+    int GALLERY = 199;
 }

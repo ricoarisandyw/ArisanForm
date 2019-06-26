@@ -65,7 +65,7 @@ List of @Form category
 Todo todo = new Todo();
 todo.title = "Create my first form";
 //ArisanPreparation will save your model data into local SharedPreference
-ArisanPreparation preparation = new ArisanPreparation(context);
+ArisanPreparation preparation = new ArisanPreparation(activity);
         preparation.setTitle("Create TODO");
         preparation.setSubmit("ADD TODO");
         preparation.setModel(todo);
@@ -76,7 +76,7 @@ ArisanPreparation preparation = new ArisanPreparation(context);
 ### 3. Build your adapter and assign to your RecyclerView
 
 ```java
-    ArisanForm arisanForm = new ArisanForm(context);
+    ArisanForm arisanForm = new ArisanForm(activity);
     arisanForm.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
                 @Override
                 public void onSubmit(String response) {

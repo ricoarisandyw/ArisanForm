@@ -5,6 +5,7 @@ import android.util.Log;
 import com.github.arisan.model.ArisanFieldModel;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,17 +16,22 @@ import java.util.Map;
 public class FieldAssembler {
     public static String toJson(List<ArisanFieldModel> data) {
         StringBuilder result = new StringBuilder("{");
+        List<String> json_list = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
             ArisanFieldModel model = data.get(i).renew();
 
             //For model type List
             if (model.getChildFieldModel() != null) {
-                result.append(convertListToJson(model));
-            } else
-                result.append(convertModelToJson(model));
-
-            //For model
-            if (i < data.size() - 1 && (model.getValue() != null || model.getChildFieldModel() != null)) {
+                String json = convertListToJson(model);
+                json_list.add(json);
+            } else if (model.getValue() != null) {
+                String json = convertModelToJson(model);
+                json_list.add(json);
+            }
+        }
+        for (String json : json_list) {
+            result.append(json);
+            if (json_list.indexOf(json) < json_list.size()-1) {
                 result.append(",");
             }
         }
@@ -52,7 +58,7 @@ public class FieldAssembler {
             result.append("[");
             for (int i = 0; i < data.size(); i++) {
                 String json = toJson(data.get(i));
-                if(!json.equals("{}")) {
+                if (!json.equals("{}")) {
                     result.append(toJson(data.get(i)));
                     if (i < data.size() - 1) {
                         result.append(",");

@@ -1,5 +1,6 @@
 package com.github.arisan.model;
 
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,7 +16,7 @@ public class ArisanFieldModel {
     private String fieldType;
     private String label;
     private String name;
-    private String viewType;
+    private int viewType;
     private int position;
     private Object data;
     private Object value;
@@ -30,6 +31,7 @@ public class ArisanFieldModel {
     private ArisanListener.Condition arisanListener;
     private ArisanListener.CheckboxCondition checkboxListener;
     private ArisanListener.ViewMod viewMod;
+    Bitmap thumbnail;
 
     public ArisanListener.Condition getArisanListener() {
         return arisanListener;
@@ -150,9 +152,7 @@ public class ArisanFieldModel {
         this.value = value;
     }
 
-    public String getFieldType() {
-        return fieldType;
-    }
+    public String getFieldType() { return fieldType; }
 
     public void setFieldType(String fieldType) {
         this.fieldType = fieldType;
@@ -166,11 +166,11 @@ public class ArisanFieldModel {
         this.name = name;
     }
 
-    public String getViewType() {
+    public int getViewType() {
         return viewType;
     }
 
-    public void setViewType(String viewType) {
+    public void setViewType(int viewType) {
         this.viewType = viewType;
     }
 
@@ -198,6 +198,14 @@ public class ArisanFieldModel {
         this.label = label;
     }
 
+    public Bitmap getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Bitmap thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
     public ArisanFieldModel renew(){
         ArisanFieldModel new_model = new ArisanFieldModel();
         new_model.setValue(value);
@@ -217,6 +225,7 @@ public class ArisanFieldModel {
         new_model.addCondition(arisanListener);
         new_model.setCheckboxListener(checkboxListener);
         new_model.addViewMod(viewMod);
+        new_model.setThumbnail(thumbnail);
 
         return new_model;
     }

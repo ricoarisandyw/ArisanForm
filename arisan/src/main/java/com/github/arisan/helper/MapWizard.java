@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by wijaya on 3/24/2018.
  */
-public class ObjectReader {
+public class MapWizard {
     private static ArisanFieldModel extractField(ObjectGetter o, Field f, Form form){
         ArisanFieldModel arisanField = new ArisanFieldModel();
         arisanField.setViewType(form.type());

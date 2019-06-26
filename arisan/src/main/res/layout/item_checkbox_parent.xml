@@ -12,6 +12,7 @@
         <TextView
             android:id="@+id/arisan_label_checkbox"
             android:text="label here"
+            android:textSize="@dimen/font_size_small"
             android:textColor="@color/label"
             android:layout_marginBottom="@dimen/label_margin"
             android:textStyle="bold"

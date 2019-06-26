@@ -1,6 +1,6 @@
 package com.github.arisan;
 
-import android.content.Context;
+import android.app.Activity;
 
 import com.github.arisan.adapter.ArisanAdapter;
 import com.github.arisan.helper.ObjectReader;
@@ -14,14 +14,16 @@ import java.util.List;
  */
 
 public class ArisanForm {
-    private Context context;
+    private Activity activity;
     private List<ArisanFieldModel> fieldData;
     private ArisanPreparation preparation;
     private ArisanAdapter.OnSubmitListener onSubmitListener;
 
     private boolean use_title = true;
     private boolean use_submit = true;
-    private int submit_background;
+    private int background;
+    private int labelColor;
+    private int buttonColor;
     private String submitText = "SUBMIT";
     private String title;
     private String blankMessage;
@@ -50,18 +52,18 @@ public class ArisanForm {
         this.submitText = submitText;
     }
 
-    public int getSubmit_background() {
-        return submit_background;
+    public int getBackground() {
+        return background;
     }
 
-    public void setSubmit_background(int submit_background) {
-        this.submit_background = submit_background;
+    public void setBackground(int background) {
+        this.background = background;
     }
 
-    public ArisanForm(Context context){
-        this.preparation = new ArisanPreparation(context);
+    public ArisanForm(Activity activity){
+        this.preparation = new ArisanPreparation(activity);
         this.fieldData = preparation.getModel();
-        this.context = context;
+        this.activity = activity;
     }
 
     public boolean isUse_title() {
@@ -90,6 +92,14 @@ public class ArisanForm {
 
     public void setModel(Object object){
         this.fieldData = ObjectReader.getField(object);
+    }
+
+    public int getLabelColor() {
+        return labelColor;
+    }
+
+    public void setLabelColor(int labelColor) {
+        this.labelColor = labelColor;
     }
 
     public ArisanForm addListener(String field_name, ArisanListener.Condition onSomething){
@@ -147,7 +157,7 @@ public class ArisanForm {
     }
 
     public ArisanAdapter buildAdapter(){
-        ArisanAdapter adapter = new ArisanAdapter(context, this);
+        ArisanAdapter adapter = new ArisanAdapter(activity, this);
         adapter.setSubmitBackground(preparation.getSubmitBackground());
         adapter.setOnSubmitListener(this.onSubmitListener);
         return adapter;
@@ -170,5 +180,11 @@ public class ArisanForm {
         }
     }
 
+    public int getButtonColor() {
+        return buttonColor;
+    }
 
+    public void setButtonColor(int buttonColor) {
+        this.buttonColor = buttonColor;
+    }
 }

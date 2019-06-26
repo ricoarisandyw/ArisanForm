@@ -9,11 +9,11 @@ public class ConditionUtils {
     public static void whenShow(boolean correct, List<ArisanFieldModel> existing, ArisanFieldModel... model){
         if(correct){
             for(ArisanFieldModel m:model){
-                FieldUtils.insertOrUpdateField(m,existing);
+                FieldUtils.INSTANCE.insertOrUpdateField(m,existing);
             }
         }else{
             for(ArisanFieldModel m:model){
-                FieldUtils.removeField(m.getName(),existing);
+                FieldUtils.INSTANCE.removeField(m.getName(),existing);
             }
         }
     }

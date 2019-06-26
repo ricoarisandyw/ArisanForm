@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="8dp">
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/arisan_search_label"
@@ -21,6 +21,7 @@
 
         <EditText
             android:id="@+id/arisan_search_name"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/arisan_search_label"
@@ -30,22 +31,18 @@
             android:hint="Search here . . ."
             android:textSize="@dimen/font_size_body" />
 
-        <Button
+        <ImageView
             android:background="@drawable/btn_submit"
-            android:drawablePadding="5dp"
-            android:paddingEnd="5dp"
-            android:paddingStart="10dp"
+            android:padding="10dp"
             android:gravity="center"
             android:textColor="#FFF"
-            android:textSize="@dimen/font_size_body"
             android:id="@+id/arisan_search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:drawableTint="#FFF"
             android:layout_below="@id/arisan_search_label"
-            android:drawableRight="@drawable/ic_search"
-            android:text="SEARCH" />
+            android:foregroundTint="#FFF"
+            android:src="@drawable/ic_search" />
 
     </RelativeLayout>
 

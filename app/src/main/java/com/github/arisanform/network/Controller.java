@@ -8,7 +8,7 @@ public class Controller {
 
     public Retrofit getInstance(){
         if (retrofit == null) {
-            String BASE_URL = "http://192.168.43.28/test/";
+            String BASE_URL = "http://192.168.43.28:5000/";
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
