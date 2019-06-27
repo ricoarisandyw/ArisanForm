@@ -17,7 +17,7 @@
             android:layout_marginBottom="@dimen/label_margin"
             android:text="Text"
             android:textColor="@color/label"
-            android:textSize="@dimen/font_size_small"
+            android:textSize="@dimen/font_size_body"
             android:textStyle="bold" />
 
         <EditText

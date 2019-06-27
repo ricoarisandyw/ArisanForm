@@ -45,6 +45,7 @@ import com.github.arisan.model.ListenerModel;
 import com.github.arisan.model.RadioModel;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -184,7 +185,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             if(a.getName()!=null)
                 if(a.getName().equals(fieldName)){
                     a.setData(utils.getFilename());
-                    a.setValue(utils.getPath());
+                    a.setValue(utils.getRealPath());
                     this.notifyDataSetChanged();
                     break;
                 }
@@ -196,6 +197,13 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         UriUtils uriTools = new UriUtils(activity,uri);
         String pick_type = preference.load("pick_image");
 
+//        File f1 = new File(uri.getPath());
+//        if(!f1.exists()) Log.d("__F1","NOT FOUND");
+//        File f2 = new File(uri.getEncodedPath());
+//        if(!f2.exists()) Log.d("__F2","NOT FOUND");
+//        File f3 = new File(uriTools.getRealPath());
+//        if(!f3.exists()) Log.d("__F3","NOT FOUND");
+
         if(pick_type.equals(String.valueOf(Form.IMAGE))) uriTools = new UriUtils(activity, uri);
 
         for(ArisanFieldModel a: fieldList) {
@@ -203,7 +211,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 if(a.getName().equals(imagePickerUtils.getFieldName())){
                     a.setData(uriTools.getFilename_with_ex());
                     a.setThumbnail(imagePickerUtils.getBitmap());
-                    a.setValue(imagePickerUtils.getUri());
+                    a.setValue(uriTools.getRealPath());
 
                     notifyDataSetChanged();
                     break;
@@ -231,7 +239,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     }
 
     public void removeModel(String name){
-        FieldUtils.INSTANCE.removeField(name, fieldList);
+        FieldUtils.removeField(name, fieldList);
         notifyDataSetChanged();
     }
 
@@ -246,7 +254,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     private String checkBlankCondition(){
         StringBuilder blank = new StringBuilder();
         List<ArisanFieldModel> models = getListField();
-        List<String> arr_string = FieldUtils.INSTANCE.countBlank(models);
+        List<String> arr_string = FieldUtils.countBlank(models);
         no_blank = arr_string.size() == 0;
         blank.append(new KotlinTextUtils().join(arr_string));
         blank.append(" ").append(blank_message);
@@ -399,7 +407,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     private void ViewAutocomplete(ViewHolder holder, final ArisanFieldModel data) {
         holder.view.mAutocompleteLabel.setText(data.getLabel());
-        List<String> datas = FieldUtils.INSTANCE.convertArrayToList(data.getData());
+        List<String> datas = FieldUtils.convertArrayToList(data.getData());
         ArrayAdapter<String> adapter = new AutocompleteAdapter(activity, android.R.layout.select_dialog_item, datas);
         holder.view.mAutocomplete.setThreshold(1); //will start working from first character
         holder.view.mAutocomplete.setAdapter(adapter);
@@ -488,8 +496,8 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     }
 
     private void ViewCheckbox(final ViewHolder holder, final int position, final ArisanFieldModel data) {
-        List<String> dataList = FieldUtils.INSTANCE.convertArrayToList(data.getData());
-        List<String> valueList = FieldUtils.INSTANCE.convertArrayToList(data.getValue());
+        List<String> dataList = FieldUtils.convertArrayToList(data.getData());
+        List<String> valueList = FieldUtils.convertArrayToList(data.getValue());
         holder.view.mCheckboxParent.setLayoutManager(new LinearLayoutManager(activity));
         final CheckboxAdapter adapter = new CheckboxAdapter(dataList, valueList);
 
@@ -501,12 +509,12 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                List<String> dataList = FieldUtils.INSTANCE.convertArrayToList(data.getData());
-                List<String> valueList = FieldUtils.INSTANCE.convertArrayToList(data.getValue());
+                List<String> dataList = FieldUtils.convertArrayToList(data.getData());
+                List<String> valueList = FieldUtils.convertArrayToList(data.getValue());
 
                 //remove others value that is not availabel in data
                 try{
-                    List<String> no_from_data = FieldUtils.INSTANCE.convertArrayToList(data.getValue());
+                    List<String> no_from_data = FieldUtils.convertArrayToList(data.getValue());
                     no_from_data.removeAll(dataList);
                     String edittext_value = no_from_data.size() > 0 ? no_from_data.get(0) : null; //edit text value
                     valueList.remove(edittext_value);
@@ -569,7 +577,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     private void ViewSpinner(ViewHolder holder, final ArisanFieldModel data) {
         holder.view.mSpinnerLabel.setText(data.getLabel());
         //ArrayAdapter mAdapter = new ArrayAdapter(activity,android.R.layout.simple_spinner_item,(List)data.getData());
-        final List<String> dataArray = FieldUtils.INSTANCE.convertArrayToList(data.getData());
+        final List<String> dataArray = FieldUtils.convertArrayToList(data.getData());
         ArrayAdapter<String> mAdapter = new ArrayAdapter<>(activity,android.R.layout.simple_spinner_item,dataArray);
         holder.view.mSpinner.setAdapter(mAdapter);
         holder.view.mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -697,7 +705,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     private void ViewRadio(final ViewHolder holder, final int position, final ArisanFieldModel data) {
         String value = (String) data.getValue();
-        List<RadioModel> dataList = FieldUtils.INSTANCE.convertDataToRadio(data.getData());
+        List<RadioModel> dataList = FieldUtils.convertDataToRadio(data.getData());
         holder.view.mRadioGroup.removeAllViews();
         for(RadioModel mData:dataList){
             RadioButton btn = new RadioButton(activity);
@@ -764,7 +772,8 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 data.setValue(progress);
                 holder.view.mSlideValue.setText(String.valueOf(progress));
-                data.doListener(String.valueOf(progress),ArisanAdapter.this);
+                if(data.getArisanListener()!=null) data.doListener(String.valueOf(progress),ArisanAdapter.this);
+
             }
 
             @Override

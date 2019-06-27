@@ -4,6 +4,7 @@ TODO: Make annotation for retrofit map
 TODO: Make annotation for modifier Map
 TODO: Response is json and File
 TODO: Permission for file
+TODO: Grouping Field like (GROUP A = village, city & GROUP B = first name, lastname)
 TODO: SHIT!!! Material view from AndroidX make my view from Support-v7 not work well (it cause support-7 view cannot converted to androidx)
 
 Probolinggo :

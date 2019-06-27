@@ -2,6 +2,8 @@ package com.github.arisanform.activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,15 +20,15 @@ import com.github.arisan.ArisanListener;
 import com.github.arisan.ArisanPreparation;
 import com.github.arisan.adapter.ArisanAdapter;
 import com.github.arisan.helper.DateDeserializer;
+import com.github.arisan.helper.DummyCreator;
 import com.github.arisan.helper.ImagePickerUtils;
+import com.github.arisan.helper.Logger;
 import com.github.arisan.helper.ObjectReader;
 import com.github.arisan.helper.PermissionUtils;
 import com.github.arisan.helper.PreferenceHelper;
 import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.ListenerModel;
 import com.github.arisanform.R;
-import com.github.arisan.helper.DummyCreator;
-import com.github.arisan.helper.Logger;
 import com.github.arisanform.model.AllField;
 import com.github.arisanform.model.ConditionFormC;
 import com.github.arisanform.model.FormC;
@@ -39,16 +42,9 @@ import com.github.arisanform.network.API;
 import com.github.arisanform.network.Controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -66,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
     RecyclerView vList;
     RecyclerView vForm;
     TextView vDummyText;
+    ImageView vImage;
 
     PreferenceHelper preference;
 
@@ -73,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
     ArisanForm  form;
     FormC c;
     ConditionFormC cond;
+    AllField my_data;
 
     int iteration =1;
 
@@ -80,6 +78,10 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //TODO: For Abid Project Purpose
+//        startActivity(new Intent(this,FormulirCActivity.class));
+//        finish();
 
         askPermission();
 
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
         vList = findViewById(R.id.data_list);
         vForm = findViewById(R.id.data_form);
         vDummyText = findViewById(R.id.dummy_text);
+        vImage = findViewById(R.id.data_image);
 
         vForm.setLayoutManager(new LinearLayoutManager(this));
 
@@ -112,6 +115,17 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
                         Toast.makeText(MainActivity.this, response, Toast.LENGTH_SHORT).show();
                         Log.e("__RESPONSE", response);
                         vForm.setVisibility(View.GONE);
+                        my_data = new Gson().fromJson(response,AllField.class);
+
+                        File imgFile = new File(my_data.getImage());
+
+                        if(imgFile.exists()){
+                            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                            ImageView myImage = (ImageView) findViewById(R.id.data_image);
+                            myImage.setImageBitmap(myBitmap);
+                        }else{
+                            Log.d("IMAGE__","NOT FOUND");
+                        }
                     }
                 });
                 arisanAdapter = form.buildAdapter();
@@ -120,38 +134,15 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
 //                form();
             }
         });
+
+
     }
 
     public void askPermission(){
         final String[] PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA};
-
-        Dexter.withActivity(this).withPermissions(
-                PERMISSIONS
-        ).withListener(new MultiplePermissionsListener() {
-            @Override
-            public void onPermissionsChecked(MultiplePermissionsReport report) {
-                Toast.makeText(MainActivity.this, "Permission complete", Toast.LENGTH_SHORT).show();
-                Logger.d("REPORT");
-                Logger.d(report);
-            }
-
-            @Override
-            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                Toast.makeText(MainActivity.this, "Rationaled", Toast.LENGTH_SHORT).show();
-
-                List<String> strings = new ArrayList<>();
-                for(PermissionRequest permissionRequest:permissions){
-                    strings.add(permissionRequest.getName());
-                }
-
-                PermissionUtils.askPermission(MainActivity.this, (String[]) strings.toArray());
-                Logger.d("PERMISSION");
-                Logger.d(permissions);
-                askPermission();
-            }
-        }).check();
+        PermissionUtils.askPermission(this,PERMISSIONS);
     }
 
     public void form(){
@@ -356,8 +347,8 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
                 Uri uri = data.getData();
                 if (uri != null) {
                     UriUtils utils = new UriUtils(this, uri);
-                    String path = utils.getPath();
-                    Log.d("__Uri Path", utils.getUri().getPath());
+                    String path = utils.getRealPath();
+                    Log.d("__Uri Path", utils.getUri().getRealPath());
                     arisanAdapter.updateFile("photo", uri);
                 } else {
                     Log.d("__Uri", "Uri is null");

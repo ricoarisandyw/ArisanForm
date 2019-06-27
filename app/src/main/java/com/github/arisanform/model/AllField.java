@@ -3,8 +3,6 @@ package com.github.arisanform.model;
 import android.net.Uri;
 
 import com.github.arisan.annotation.Form;
-
-import java.net.URI;
 import java.util.List;
 
 public class AllField {
@@ -12,7 +10,7 @@ public class AllField {
     String edit_text;
 
     @Form(type = Form.IMAGE)
-    URI image;
+    String image;
 
     @Form(type = Form.SPINNER)
     String spinner;
@@ -128,5 +126,31 @@ public class AllField {
 
     public void setOne_to_many(List<KK> one_to_many) {
         this.one_to_many = one_to_many;
+    }
+
+
+
+    public String getSpinner() {
+        return spinner;
+    }
+
+    public void setSpinner(String spinner) {
+        this.spinner = spinner;
+    }
+
+    public String getAutocomplete() {
+        return autocomplete;
+    }
+
+    public void setAutocomplete(String autocomplete) {
+        this.autocomplete = autocomplete;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

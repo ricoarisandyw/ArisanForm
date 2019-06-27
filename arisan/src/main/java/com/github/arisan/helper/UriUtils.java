@@ -47,7 +47,7 @@ public class UriUtils {
         this.uri = uri;
     }
 
-    public String getPath() {
+    public String getRealPath() {
         return path;
     }
 

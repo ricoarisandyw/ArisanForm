@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.util.Base64;
 import android.widget.Toast;
 
@@ -65,12 +66,13 @@ public class ImagePickerUtils {
 
     private void extractFromGallery() {
         try {
-            final Uri imageUri = data.getData();
-            setUri(imageUri);
+            Uri imageUri = data.getData();
+            InputStream imageStream = activity.getContentResolver().openInputStream(imageUri);
+            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
 
-            final InputStream imageStream = activity.getContentResolver().openInputStream(imageUri);
-            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+            setUri(imageUri);
             setBitmap(selectedImage);
+            setFile(new File(imageUri.getPath()));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             Toast.makeText(activity, "Something went wrong", Toast.LENGTH_LONG).show();

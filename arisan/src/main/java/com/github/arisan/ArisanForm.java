@@ -25,7 +25,7 @@ public class ArisanForm {
     private int labelColor;
     private int buttonColor;
     private String submitText = "SUBMIT";
-    private String title;
+    private String title = "TITLE";
     private String blankMessage;
 
     public String getBlankMessage() {
