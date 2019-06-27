@@ -2,7 +2,9 @@ package com.github.arisanform.model;
 
 import com.github.arisan.annotation.Form;
 
-public class KK {
+import io.realm.RealmObject;
+
+public class KK extends RealmObject {
     @Form(type = Form.SEARCH)
     String search;
 

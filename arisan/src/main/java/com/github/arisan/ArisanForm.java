@@ -173,8 +173,8 @@ public class ArisanForm {
 
     public void fillData(String field_name,Object value){
         for (ArisanFieldModel fieldModel:fieldData){
-            if(fieldModel.equals(field_name)){
-                fieldModel.setValue(value);
+            if(fieldModel.getName().equals(field_name)){
+                fieldModel.setData(value);
                 break;
             }
         }

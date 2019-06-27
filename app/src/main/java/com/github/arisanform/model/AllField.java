@@ -5,7 +5,15 @@ import android.net.Uri;
 import com.github.arisan.annotation.Form;
 import java.util.List;
 
-public class AllField {
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class AllField extends RealmObject {
+
+    @PrimaryKey
+    int id;
+
     @Form(required = true)
     String edit_text;
 
@@ -34,18 +42,26 @@ public class AllField {
     String date;
 
     @Form(type = Form.FILE)
-    Uri file;
+    String file;
 
     @Form(type = Form.RADIO)
     String radio;
 
     @Form(type = Form.CHECKBOX)
-    List<String> checkbox;
+    RealmList<String> checkbox;
 
     @Form(type = Form.ONETOMANY,relation = KK.class)
-    List<KK> one_to_many;
+    RealmList<KK> one_to_many;
 
     public AllField() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getEdit_text() {
@@ -96,11 +112,11 @@ public class AllField {
         this.date = date;
     }
 
-    public Uri getFile() {
+    public String getFile() {
         return file;
     }
 
-    public void setFile(Uri file) {
+    public void setFile(String file) {
         this.file = file;
     }
 
@@ -112,20 +128,20 @@ public class AllField {
         this.radio = radio;
     }
 
-    public List<String> getCheckbox() {
+    public RealmList<String> getCheckbox() {
         return checkbox;
     }
 
-    public void setCheckbox(List<String> checkbox) {
+    public void setCheckbox(RealmList<String> checkbox) {
         this.checkbox = checkbox;
     }
 
-    public List<KK> getOne_to_many() {
-        return one_to_many;
+    public void setOne_to_many(RealmList<KK> one_to_many) {
+        this.one_to_many = one_to_many;
     }
 
-    public void setOne_to_many(List<KK> one_to_many) {
-        this.one_to_many = one_to_many;
+    public RealmList<KK> getOne_to_many() {
+        return one_to_many;
     }
 
 

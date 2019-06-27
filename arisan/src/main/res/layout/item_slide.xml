@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/label_margin"
             android:text="Label"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

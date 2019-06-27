@@ -3,6 +3,7 @@ package com.github.arisan.helper;
 import com.github.arisan.annotation.Form;
 import com.github.arisan.model.ArisanFieldModel;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +49,8 @@ public class ObjectReader {
         Field[] declaredField = o.getClass().getDeclaredFields();
         ObjectGetter objectGetter = new ObjectGetter(o);
         for (Field f : declaredField) {
-            if (f.isAnnotationPresent(Form.class)) {
+            //if (f.isAnnotationPresent(Form.class)) {
+            if(f.getAnnotation(Form.class)!=null){
                 Form annotation = f.getAnnotation(Form.class);
 
                 ArisanFieldModel arisanField = extractField(objectGetter,f, annotation);
@@ -62,7 +64,8 @@ public class ObjectReader {
                         ObjectGetter insideGetter = new ObjectGetter(values);
                         List<ArisanFieldModel> insideModel = new ArrayList<>();
                         for(Field ff : my_fields){
-                            if (ff.isAnnotationPresent(Form.class)) {
+                            if(ff.getAnnotation(Form.class)!=null){
+                            //if (ff.isAnnotationPresent(Form.class)) {
                                 Form annotation2 = ff.getAnnotation(Form.class);
                                 ArisanFieldModel childField = extractField(insideGetter,ff, annotation2);
                                 insideModel.add(childField);

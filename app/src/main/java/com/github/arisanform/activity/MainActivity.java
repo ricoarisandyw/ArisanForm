@@ -42,10 +42,13 @@ import com.github.arisanform.network.API;
 import com.github.arisanform.network.Controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
+import io.realm.RealmList;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -83,6 +86,14 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
 //        startActivity(new Intent(this,FormulirCActivity.class));
 //        finish();
 
+        RealmList<String> data;
+        String[] arr_str = {"satu","dua","tiga"};
+        String json = new Gson().toJson(arr_str);
+        data = new Gson().fromJson(json,new TypeToken<RealmList<String>>(){}.getType());
+        for(String d:data){
+            System.out.println("__DATA "+d);
+        }
+
         askPermission();
 
         preference = new PreferenceHelper(this);
@@ -109,6 +120,10 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
                 form.setBackground(R.drawable.btn_success);
                 form.setLabelColor(R.color.colorDanger);
                 form.setFieldData(DummyCreator.fillDummyArray(ObjectReader.getField(new AllField())));
+
+                String[] baru = {"baru","satu","dua"};
+                form.fillData("checkbox",baru);
+
                 form.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
                     @Override
                     public void onSubmit(String response) {
@@ -658,5 +673,10 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
     @Override
     public void rebuild(ArisanForm form) {
 
+    }
+
+    public RealmList<String> convertArrayToRealm(List<String> list){
+        Gson gson = new Gson();
+        return gson.fromJson(gson.toJson(list),new TypeToken<RealmList<String>>(){}.getType());
     }
 }
