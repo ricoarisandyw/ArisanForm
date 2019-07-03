@@ -30,11 +30,11 @@ import com.github.arisan.R;
 import com.github.arisan.annotation.ArisanCode;
 import com.github.arisan.annotation.Form;
 import com.github.arisan.annotation.Model;
-import com.github.arisan.helper.ImagePickerUtils;
 import com.github.arisan.helper.ChildUtils;
 import com.github.arisan.helper.DateConverter;
 import com.github.arisan.helper.FieldAssembler;
 import com.github.arisan.helper.FieldUtils;
+import com.github.arisan.helper.ImagePickerUtils;
 import com.github.arisan.helper.KotlinTextUtils;
 import com.github.arisan.helper.NumberUtils;
 import com.github.arisan.helper.PreferenceHelper;
@@ -45,7 +45,6 @@ import com.github.arisan.model.ListenerModel;
 import com.github.arisan.model.RadioModel;
 import com.google.gson.Gson;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -320,10 +319,10 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String value = holder.view.mEditText.getText().toString();
-                data.setValue(value);
-                if(value.equals("")){
-                    data.setValue(null);
-                }
+                
+                if(value.equals("")) data.setValue(null);
+                else data.setValue(value);
+
                 try{
                     data.doListener(value,ArisanAdapter.this);
                 }catch (Exception ignore){
@@ -661,7 +660,11 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                         String convertedResult = new DateConverter(result).from("HH:mm").to(data.getDateFormat());
                         holder.view.mDate.setText(convertedResult);
                         data.setValue(convertedResult);
-                        data.doListener(convertedResult,ArisanAdapter.this);
+                        try {
+                            data.doListener(convertedResult, ArisanAdapter.this);
+                        }catch (Exception ignore){
+                            Log.e("ArisanForm","Listener not found");
+                        }
                     }
                 },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity)).show();
             }
@@ -691,7 +694,11 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                         holder.view.mDate.setText(new DateConverter(result).from("dd-MM-yyyy").to(data.getDateFormat()));
                         String value = new DateConverter(result).from("dd-MM-yyyy").to(data.getDateFormat());
                         data.setValue(value);
-                        data.doListener(value,ArisanAdapter.this);
+                        try{
+                            data.doListener(value,ArisanAdapter.this);
+                        }catch (Exception ignore){
+                            Log.e("ArisanForm","Listener not found");
+                        }
                     }
                 }, calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH),

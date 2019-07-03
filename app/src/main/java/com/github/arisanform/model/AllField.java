@@ -38,7 +38,7 @@ public class AllField extends RealmObject {
     @Form(type = Form.AUTOCOMPLETE)
     String autocomplete;
 
-    @Form(type = Form.DATE)
+    @Form(type = Form.DATE,format = "yyyy-MM-dd")
     String date;
 
     @Form(type = Form.FILE)
