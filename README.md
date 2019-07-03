@@ -23,15 +23,15 @@ public class Todo {
     String title;
     @Form(position = 1)
     String note;
-    @Form(category = Form.NUMBER)
+    @Form(type = Form.NUMBER)
     int quantity;
-    @Form(category = Form.BOOLEAN,position = 3)
+    @Form(type = Form.BOOLEAN,position = 3)
     boolean urgent;
-    @Form(category = Form.BOOLEAN,position = 2)
+    @Form(type = Form.BOOLEAN,position = 2)
     boolean important;
-    @Form(category=Form.DATE,label = "Start Date",dateFormat="yyyy-MM-dd")
+    @Form(type=Form.DATE,label = "Start Date",dateFormat="yyyy-MM-dd")
     Date startDate;
-    @Form(category=Form.SPINNER)
+    @Form(type=Form.SPINNER)
     String category;
 }
 ```
@@ -40,13 +40,13 @@ List of @Form variable
 
 | Form Type  | Default | Note |
 | --------- | --------- | ------ |
-| category   | Form.TEXT | editText |
+| type   | Form.TEXT | editText |
 | label  | field name | |
 | position  | -1 | it means random sequence |
 | dateFormat | dd-MM-yyyy | use it just for Date category |
 | required  | false | (WIP) |
 
-List of @Form category
+List of @Form types
 
 | Form Type | Status |
 | --------- | ------ |
