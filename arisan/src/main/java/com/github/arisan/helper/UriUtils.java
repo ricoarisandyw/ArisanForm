@@ -19,13 +19,7 @@ public class UriUtils {
         this.uri = uri;
         this.context = context;
 
-        String[] proj = {MediaStore.Images.Media.DATA};
-        CursorLoader loader = new CursorLoader(context, uri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        path = cursor.getString(column_index);
-        cursor.close();
+        path = uri.toString();
 
         filename_with_ex = path.substring(path.lastIndexOf("/")+1);
         if (filename_with_ex.indexOf(".") > 0) {

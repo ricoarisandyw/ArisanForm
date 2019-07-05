@@ -131,34 +131,38 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(final ArisanAdapter.ViewHolder holder, final int pos) {
-        System.out.println("Arisan : onBind Adapter");
-        final int position = holder.getAdapterPosition();
+    public void onBindViewHolder(ArisanAdapter.ViewHolder holder, int position) {
         final ArisanFieldModel data = fieldList.get(position);
         int color = data.getColor();
+
+        System.out.println("Arisan : onBind Adapter");
+        System.out.println("Arisan : onBind Adapter" + position + " : "+ data.getLabel() + " : "+new Gson().toJson(data.getValue()));
 
         if(position==0&&useTitle){
             ViewTitle(holder, data, color);
         }else if(position== fieldList.size()-1&&useSubmit){
             ViewSubmit(holder, data, color);
         }else {
-            switch (data.getViewType()){
-                case Form.BOOLEAN:ViewBoolean(holder, data, color);break;
-                case Form.SLIDER:ViewSlider(holder, data);break;
-                case Form.RADIO:ViewRadio(holder, position, data);break;
-                case Form.DATE:ViewDate(holder, data, color);break;
-                case Form.TIME:ViewTime(holder, data, color);break;
-                case Form.DATETIME:ViewDateTime(holder, data, color);break;
-                case Form.SPINNER:ViewSpinner(holder, data);break;
-                case Form.FILE:ViewFile(holder, data, color);break;
-                case Form.CHECKBOX:ViewCheckbox(holder, position, data);break;
-                case Form.ONETOMANY:ViewOneToMany(holder, data);break;
-                case Form.SEARCH:ViewSearch(holder, data);break;
-                case Form.IMAGE: ViewImage(holder, data);break;
-                case Form.AUTOCOMPLETE: ViewAutocomplete(holder, data);break;
-                case Form.PASSWORD:ViewPassword(holder, data);break;
-                default:ViewEditText(holder, data, color);break;
-            }
+            if(data.getViewType()== Form.TEXT){
+                ViewEditText(holder, data, color);
+            }else
+                switch (data.getViewType()){
+                    case Form.BOOLEAN:ViewBoolean(holder, data, color);break;
+                    case Form.SLIDER:ViewSlider(holder, data);break;
+                    case Form.RADIO:ViewRadio(holder, position, data);break;
+                    case Form.DATE:ViewDate(holder, data, color);break;
+                    case Form.TIME:ViewTime(holder, data, color);break;
+                    case Form.DATETIME:ViewDateTime(holder, data, color);break;
+                    case Form.SPINNER:ViewSpinner(holder, data);break;
+                    case Form.FILE:ViewFile(holder, data, color);break;
+                    case Form.CHECKBOX:ViewCheckbox(holder, position, data);break;
+                    case Form.ONETOMANY:ViewOneToMany(holder, data);break;
+                    case Form.SEARCH:ViewSearch(holder, data);break;
+                    case Form.IMAGE: ViewImage(holder, data);break;
+                    case Form.AUTOCOMPLETE: ViewAutocomplete(holder, data);break;
+                    case Form.PASSWORD:ViewPassword(holder, data);break;
+                    default:ViewEditText(holder, data, color);break;
+                }
         }
     }
 
@@ -166,6 +170,12 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     public int getItemCount() {
         if(fieldList !=null)
             return fieldList.size();
+        else if(useTitle && useSubmit)
+            return fieldList.size()+2;
+        else if(useSubmit)
+            return fieldList.size()+1;
+        else if(useTitle)
+            return fieldList.size()+1;
         else
             return 0;
     }
@@ -282,37 +292,43 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     /*=================VIEW CONDITION=====================*/
 
-    private void ViewEditText(final ViewHolder holder, final ArisanFieldModel data, int color) {
+    private void ViewEditText(final ViewHolder holder, final ArisanFieldModel an, int color) {
+        final ArisanFieldModel data = fieldList.get(holder.getAdapterPosition());
+
         holder.view.mEditTextLabel.setText(data.getLabel());
-        try{
-            holder.view.mEditTextSearch = (EditText) data.doViewMod(holder.view.mEditTextSearch);
-        }catch (Exception ignore){ }
 
         switch (data.getViewType()) {
-            case Form.NUMBER:
+            case Form.NUMBER: {
                 holder.view.mEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                if(data.getValue()!=null&&data.getValue().toString().equals("0.0")){
+                if (data.getValue() != null && data.getValue().toString().equals("0.0")) {
                     holder.view.mEditText.setText("0");
                     data.setValue(0);
                 } else if (data.getValue() != null) {
-                    holder.view.mEditText.setText(data.getValue().toString().replace(".0",""));
+                    holder.view.mEditText.setText(data.getValue().toString().replace(".0", ""));
                 }
                 break;
-            case Form.EMAIL:
+            }
+            case Form.EMAIL: {
                 holder.view.mEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 if (data.getValue() != null) {
                     holder.view.mEditText.setText(data.getValue().toString());
                 }
                 break;
-            default:
+            }
+            default: {
                 //Input Type Text
-                if (data.getValue() != null && data.getValue() != "") {
+                if (data.getValue() != null && !data.getValue().equals("")) {
+                    Log.d("__DATA",new Gson().toJson(data));
                     holder.view.mEditText.setText(data.getValue().toString());
+                }else{
+                    Log.d("__DATA",new Gson().toJson(data));
+                    holder.view.mEditText.setText("");
                 }
+
                 if (data.getError_message() != null && data.getValue() != "") {
                     holder.view.mEditText.setError(data.getError_message());
                 }
-                break;
+            }
         }
 
         holder.view.mEditText.addTextChangedListener(new TextWatcher() {
@@ -346,10 +362,10 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String value = holder.view.mPassword.getText().toString();
-                data.setValue(value);
-                if(value.equals("")){
-                    data.setValue(null);
-                }
+
+                if(value.equals("")) data.setValue(null);
+                else data.setValue(value);
+
                 try{
                     data.doListener(value,ArisanAdapter.this);
                 }catch (Exception ignore){
@@ -526,7 +542,6 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
                 valueList.remove(Model.OTHERS);
                 data.setValue(valueList);
-                Log.d("__DATA",new Gson().toJson(valueList));
             }
 
             @Override

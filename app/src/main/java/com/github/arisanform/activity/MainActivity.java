@@ -33,6 +33,7 @@ import com.github.arisanform.model.AllField;
 import com.github.arisanform.model.ConditionFormC;
 import com.github.arisanform.model.FormC;
 import com.github.arisanform.model.KK;
+import com.github.arisanform.model.ManyField;
 import com.github.arisanform.model.MyResponse;
 import com.github.arisanform.model.Url;
 import com.github.arisanform.model.probolinggo.model.BedaIdentitas;
@@ -119,7 +120,8 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
                 form.setTitle("ALL FIELD");
                 form.setBackground(R.drawable.btn_success);
                 form.setLabelColor(R.color.colorDanger);
-                form.setFieldData(DummyCreator.fillDummyArray(ObjectReader.getField(new AllField())));
+//                form.setFieldData(DummyCreator.fillDummyArray(ObjectReader.getField(new AllField())));
+                form.setModel(new ManyField());
 
                 String[] baru = {"baru","satu","dua"};
                 form.fillData("checkbox",baru);

@@ -23,6 +23,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/data_form"
             android:visibility="gone"
@@ -33,6 +37,8 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp" />
+
+        </ScrollView>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/data_list"
