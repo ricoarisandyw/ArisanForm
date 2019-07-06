@@ -416,10 +416,11 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     private void ViewAutocomplete(ViewHolder holder, final ArisanFieldModel data) {
         holder.view.mAutocompleteLabel.setText(data.getLabel());
         final List<String> datas = FieldUtils.convertArrayToList(data.getData());
-        ArrayAdapter<String> adapter = new AutocompleteAdapter(activity, android.R.layout.select_dialog_item, datas);
+        AutocompleteAdapter adapter = new AutocompleteAdapter(activity, android.R.layout.select_dialog_item, datas);
         holder.view.mAutocomplete.setThreshold(1); //will start working from first character
         holder.view.mAutocomplete.setAdapter(adapter);
         holder.view.mAutocomplete.addTextChangedListener(holder.textListener);
+
         holder.view.mAutocomplete.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -432,6 +433,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             }
         });
 
+        if(data.getValue()!=null) holder.view.mAutocomplete.setText(data.getValue().toString());
         if(label_color!=0) holder.view.mAutocompleteLabel.setTextColor(activity.getResources().getColor(label_color));
     }
 
@@ -460,7 +462,6 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     private void ViewSearch(final ViewHolder holder, final ArisanFieldModel data) {
         holder.view.mSearchLabel.setText(data.getLabel());
-
         holder.view.mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -478,20 +479,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             holder.view.mEditTextSearch = (EditText) data.doViewMod(holder.view.mEditTextSearch);
         }catch (Exception ignored){ }
 
-        holder.view.mEditTextSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String value = holder.view.mEditTextSearch.getText().toString();
-                data.setValue(value);
-            }
+        holder.view.mEditTextSearch.addTextChangedListener(holder.textListener);
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-            @Override
-            public void afterTextChanged(Editable s) { }
-        });
-
+        if(data.getValue()!=null) holder.view.mEditTextSearch.setText(data.getValue().toString());
         if(label_color!=0) holder.view.mSearchLabel.setTextColor(activity.getResources().getColor(label_color));
         if(background!=0)holder.view.mSearchButton.setBackgroundResource(background);
     }
