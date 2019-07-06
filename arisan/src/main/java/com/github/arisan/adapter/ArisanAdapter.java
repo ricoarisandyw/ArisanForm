@@ -107,15 +107,17 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     @Override
     public ArisanAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         System.out.println("Arisan : OnCreateViewHolder Adapter");
-        return new ViewHolder(MyInflater.inflate(parent,viewType));
+        return new ViewHolder(MyInflater.inflate(parent,viewType),new MyTextWatcher());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         MyView view;
+        MyTextWatcher textListener;
 
-        ViewHolder(View v) {
+        ViewHolder(View v,MyTextWatcher textListener) {
             super(v);
             view = new MyView(v);
+            this.textListener = textListener;
         }
     }
 
@@ -134,9 +136,8 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     public void onBindViewHolder(ArisanAdapter.ViewHolder holder, int position) {
         final ArisanFieldModel data = fieldList.get(position);
         int color = data.getColor();
-
         System.out.println("Arisan : onBind Adapter");
-        System.out.println("Arisan : onBind Adapter" + position + " : "+ data.getLabel() + " : "+new Gson().toJson(data.getValue()));
+        holder.textListener.updatePostition(holder.getAdapterPosition());
 
         if(position==0&&useTitle){
             ViewTitle(holder, data, color);
@@ -159,9 +160,9 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     case Form.ONETOMANY:ViewOneToMany(holder, data);break;
                     case Form.SEARCH:ViewSearch(holder, data);break;
                     case Form.IMAGE: ViewImage(holder, data);break;
-                    case Form.AUTOCOMPLETE: ViewAutocomplete(holder, data);break;
-                    case Form.PASSWORD:ViewPassword(holder, data);break;
-                    default:ViewEditText(holder, data, color);break;
+                    case Form.AUTOCOMPLETE: { ViewAutocomplete(holder, data); }break;
+                    case Form.PASSWORD:{ ViewPassword(holder, data); }break;
+                    default:{ ViewEditText(holder, data, color); }
                 }
         }
     }
@@ -292,8 +293,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     /*=================VIEW CONDITION=====================*/
 
-    private void ViewEditText(final ViewHolder holder, final ArisanFieldModel an, int color) {
-        final ArisanFieldModel data = fieldList.get(holder.getAdapterPosition());
+    private void ViewEditText(final ViewHolder holder, final ArisanFieldModel data, int color) {
 
         holder.view.mEditTextLabel.setText(data.getLabel());
 
@@ -317,68 +317,61 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             }
             default: {
                 //Input Type Text
-                if (data.getValue() != null && !data.getValue().equals("")) {
-                    Log.d("__DATA",new Gson().toJson(data));
+                if (data.getValue() != null) {
+                    Log.d("__DATA",new Gson().toJson(data.getValue()));
                     holder.view.mEditText.setText(data.getValue().toString());
-                }else{
-                    Log.d("__DATA",new Gson().toJson(data));
-                    holder.view.mEditText.setText("");
                 }
 
                 if (data.getError_message() != null && data.getValue() != "") {
                     holder.view.mEditText.setError(data.getError_message());
                 }
-            }
+            }break;
         }
 
-        holder.view.mEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String value = holder.view.mEditText.getText().toString();
-                
-                if(value.equals("")) data.setValue(null);
-                else data.setValue(value);
-
-                try{
-                    data.doListener(value,ArisanAdapter.this);
-                }catch (Exception ignore){
-                    Log.e("Arisan","Listener Not Found!!!");
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-            @Override
-            public void afterTextChanged(Editable s) { }
-        });
+        holder.view.mEditText.addTextChangedListener(holder.textListener);
 
         if(label_color!=0) holder.view.mEditTextLabel.setTextColor(activity.getResources().getColor(label_color));
     }
 
-    private void ViewPassword(final ViewHolder holder, final ArisanFieldModel data) {
-        holder.view.mPasswordLabel.setText(data.getLabel());
-        holder.view.mPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String value = holder.view.mPassword.getText().toString();
+    private class MyTextWatcher implements TextWatcher{
+        int position;
 
-                if(value.equals("")) data.setValue(null);
-                else data.setValue(value);
+        void updatePostition(int position) {
+            this.position = position;
+        }
 
-                try{
-                    data.doListener(value,ArisanAdapter.this);
-                }catch (Exception ignore){
-                    Log.e("Arisan","Listener Not Found!!!");
-                }
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String value = s.toString();
+
+            if(value.equals("")) {
+                fieldList.get(position).setValue(null);
+            } else {
+                Log.d("__Arisan Edit text",value);
+                fieldList.get(position).setValue(value);
             }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            try{
+                fieldList.get(position).doListener(value,ArisanAdapter.this);
+            }catch (Exception ignore){
+                //Log.e("Arisan","Listener Not Found!!!");
+            }
+        }
 
-            @Override
-            public void afterTextChanged(Editable s) { }
-        });
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    }
+
+    private void ViewPassword(final ViewHolder holder, final ArisanFieldModel data) {
+        holder.view.mPasswordLabel.setText(data.getLabel());
+        holder.view.mPassword.addTextChangedListener(holder.textListener);
         holder.view.mPassword.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -422,10 +415,22 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     private void ViewAutocomplete(ViewHolder holder, final ArisanFieldModel data) {
         holder.view.mAutocompleteLabel.setText(data.getLabel());
-        List<String> datas = FieldUtils.convertArrayToList(data.getData());
+        final List<String> datas = FieldUtils.convertArrayToList(data.getData());
         ArrayAdapter<String> adapter = new AutocompleteAdapter(activity, android.R.layout.select_dialog_item, datas);
         holder.view.mAutocomplete.setThreshold(1); //will start working from first character
         holder.view.mAutocomplete.setAdapter(adapter);
+        holder.view.mAutocomplete.addTextChangedListener(holder.textListener);
+        holder.view.mAutocomplete.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                data.setValue(datas.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         if(label_color!=0) holder.view.mAutocompleteLabel.setTextColor(activity.getResources().getColor(label_color));
     }

@@ -120,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
                 form.setTitle("ALL FIELD");
                 form.setBackground(R.drawable.btn_success);
                 form.setLabelColor(R.color.colorDanger);
-//                form.setFieldData(DummyCreator.fillDummyArray(ObjectReader.getField(new AllField())));
-                form.setModel(new ManyField());
+                form.setFieldData(DummyCreator.fillDummyArray(ObjectReader.getField(new AllField())));
+//                form.setModel(new ManyField());
 
                 String[] baru = {"baru","satu","dua"};
                 form.fillData("checkbox",baru);
@@ -131,18 +131,18 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
                     public void onSubmit(String response) {
                         Toast.makeText(MainActivity.this, response, Toast.LENGTH_SHORT).show();
                         Log.e("__RESPONSE", response);
-                        vForm.setVisibility(View.GONE);
-                        my_data = new Gson().fromJson(response,AllField.class);
-
-                        File imgFile = new File(my_data.getImage());
-
-                        if(imgFile.exists()){
-                            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                            ImageView myImage = (ImageView) findViewById(R.id.data_image);
-                            myImage.setImageBitmap(myBitmap);
-                        }else{
-                            Log.d("IMAGE__","NOT FOUND");
-                        }
+//                        vForm.setVisibility(View.GONE);
+//                        my_data = new Gson().fromJson(response,AllField.class);
+//
+//                        File imgFile = new File(my_data.getImage());
+//
+//                        if(imgFile.exists()){
+//                            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//                            ImageView myImage = (ImageView) findViewById(R.id.data_image);
+//                            myImage.setImageBitmap(myBitmap);
+//                        }else{
+//                            Log.d("IMAGE__","NOT FOUND");
+//                        }
                     }
                 });
                 arisanAdapter = form.buildAdapter();
@@ -151,8 +151,6 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
 //                form();
             }
         });
-
-
     }
 
     public void askPermission(){

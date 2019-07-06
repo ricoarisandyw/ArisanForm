@@ -21,7 +21,8 @@ public class AutocompleteAdapter extends ArrayAdapter {
     }
 
     public int getCount() {
-        return allCodes.size();
+        if(allCodes !=null) return allCodes.size();
+        else return 0;
     }
 
     public String getItem(int position) {
