@@ -138,15 +138,15 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         int color = data.getColor();
         System.out.println("Arisan : onBind Adapter");
         holder.textListener.updatePostition(holder.getAdapterPosition());
-
+        System.out.printf("__TYPE : %s",data.getViewType());
         if(position==0&&useTitle){
             ViewTitle(holder, data, color);
         }else if(position== fieldList.size()-1&&useSubmit){
             ViewSubmit(holder, data, color);
         }else {
-            if(data.getViewType()== Form.TEXT){
-                ViewEditText(holder, data, color);
-            }else
+//            if(data.getViewType()== Form.TEXT){
+//                ViewEditText(holder, data, color);
+//            }else
                 switch (data.getViewType()){
                     case Form.BOOLEAN:ViewBoolean(holder, data, color);break;
                     case Form.SLIDER:ViewSlider(holder, data);break;
@@ -160,9 +160,11 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     case Form.ONETOMANY:ViewOneToMany(holder, data);break;
                     case Form.SEARCH:ViewSearch(holder, data);break;
                     case Form.IMAGE: ViewImage(holder, data);break;
-                    case Form.AUTOCOMPLETE: { ViewAutocomplete(holder, data); }break;
-                    case Form.PASSWORD:{ ViewPassword(holder, data); }break;
-                    default:{ ViewEditText(holder, data, color); }
+                    case Form.AUTOCOMPLETE:ViewAutocomplete(holder, data);break;
+                    case Form.PASSWORD:ViewPassword(holder, data);break;
+                    case Form.ONELINETEXT :ViewOneLineText(holder,data,color);break;
+                    case Form.TEXT2 :ViewEditText2(holder,data,color);break;
+                    default:ViewEditText(holder, data, color);
                 }
         }
     }
@@ -294,11 +296,11 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     /*=================VIEW CONDITION=====================*/
 
     private void ViewEditText(final ViewHolder holder, final ArisanFieldModel data, int color) {
-
         holder.view.mEditTextLabel.setText(data.getLabel());
-
+        Log.d("__TYPE", String.valueOf(data.getViewType()));
         switch (data.getViewType()) {
             case Form.NUMBER: {
+//                Log.d("__TYPE","NUMBER");
                 holder.view.mEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
                 if (data.getValue() != null && data.getValue().toString().equals("0.0")) {
                     holder.view.mEditText.setText("0");
@@ -306,16 +308,18 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 } else if (data.getValue() != null) {
                     holder.view.mEditText.setText(data.getValue().toString().replace(".0", ""));
                 }
-                break;
             }
+            break;
             case Form.EMAIL: {
+//                Log.d("__TYPE","EMAIL");
                 holder.view.mEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 if (data.getValue() != null) {
                     holder.view.mEditText.setText(data.getValue().toString());
                 }
-                break;
             }
+            break;
             default: {
+//                Log.d("__TYPE","NORMAL");
                 //Input Type Text
                 if (data.getValue() != null) {
                     Log.d("__DATA",new Gson().toJson(data.getValue()));
@@ -331,6 +335,42 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         holder.view.mEditText.addTextChangedListener(holder.textListener);
 
         if(label_color!=0) holder.view.mEditTextLabel.setTextColor(activity.getResources().getColor(label_color));
+    }
+
+    private void ViewEditText2(final ViewHolder holder, final ArisanFieldModel data, int color) {
+        holder.view.mEditText2Layout.setHint(data.getLabel());
+        Log.d("__TYPE", String.valueOf(data.getViewType()));
+        //Input Type Text
+        if (data.getValue() != null) {
+            Log.d("__DATA",new Gson().toJson(data.getValue()));
+            holder.view.mEditText2.setText(data.getValue().toString());
+        }
+
+        if (data.getError_message() != null && data.getValue() != "") {
+            holder.view.mEditText2.setError(data.getError_message());
+        }
+
+        holder.view.mEditText2.addTextChangedListener(holder.textListener);
+
+        if(label_color!=0) holder.view.mEditText2.setHintTextColor(activity.getResources().getColor(label_color));
+    }
+
+    private void ViewOneLineText(final ViewHolder holder, final ArisanFieldModel data, int color) {
+        holder.view.mOneLineText.setHint(data.getLabel());
+        Log.d("__TYPE", String.valueOf(data.getViewType()));
+        //Input Type Text
+        if (data.getValue() != null) {
+            Log.d("__DATA",new Gson().toJson(data.getValue()));
+            holder.view.mOneLineText.setText(data.getValue().toString());
+        }
+
+        if (data.getError_message() != null && data.getValue() != "") {
+            holder.view.mOneLineText.setError(data.getError_message());
+        }
+
+        holder.view.mOneLineText.addTextChangedListener(holder.textListener);
+
+//        if(label_color!=0) holder.view.mOneLineText.setHintTextColor(activity.getResources().getColor(label_color));
     }
 
     private class MyTextWatcher implements TextWatcher{
@@ -352,7 +392,6 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             if(value.equals("")) {
                 fieldList.get(position).setValue(null);
             } else {
-                Log.d("__Arisan Edit text",value);
                 fieldList.get(position).setValue(value);
             }
 
@@ -479,7 +518,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             holder.view.mEditTextSearch = (EditText) data.doViewMod(holder.view.mEditTextSearch);
         }catch (Exception ignored){ }
 
-        holder.view.mEditTextSearch.addTextChangedListener(holder.textListener);
+        //holder.view.mEditTextSearch.addTextChangedListener(holder.textListener);
 
         if(data.getValue()!=null) holder.view.mEditTextSearch.setText(data.getValue().toString());
         if(label_color!=0) holder.view.mSearchLabel.setTextColor(activity.getResources().getColor(label_color));

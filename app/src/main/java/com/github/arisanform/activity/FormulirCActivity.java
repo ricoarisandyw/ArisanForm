@@ -140,6 +140,16 @@ public class FormulirCActivity extends AppCompatActivity {
                 return null;
             }
         });
+        form.addListener("104", new ArisanListener.Condition() {
+            @Override
+            public ListenerModel onValue(String value, ArisanAdapter adapter) {
+                Toast.makeText(FormulirCActivity.this, value, Toast.LENGTH_SHORT).show();
+                form.copyFieldFromAdapter(adapter);
+                ConditionUtils.whenShow(value.equals(c.Str(R.string.tidak)),form.getFieldData(),c.getMap("104_1"));
+                rebuild(form);
+                return null;
+            }
+        });
         form.addCheckboxListener("108", new ArisanListener.CheckboxCondition() {
             @Override
             public ListenerModel onChecked(String just_checked, List<String> all_checked,ArisanAdapter adapter) {
@@ -162,6 +172,9 @@ public class FormulirCActivity extends AppCompatActivity {
                 ConditionUtils.whenShow(value.equals(c.Str(R.string.ya)),form.getFieldData(),
                         c.getMap("201_1")
                 );
+                ConditionUtils.whenShow(value.equals(c.Str(R.string.ya)),form.getFieldData(),
+                        c.getMap("202")
+                );
                 rebuild(form);
                 return null;
             }
@@ -173,6 +186,8 @@ public class FormulirCActivity extends AppCompatActivity {
                     //go to signature
                     submitListener.onSubmit(arisanAdapter.getResult());
                     Toast.makeText(getBaseContext(), "Anda diarahkan ke halaman selanjutnya", Toast.LENGTH_SHORT).show();
+                    //startActivity(new Intent(FormulirCActivity.this,SignatureActivity.class));
+                    finish();
                 }else{
                     form.copyFieldFromAdapter(arisanAdapter);
                     ConditionUtils.whenShow(all_checked.contains(c.Str(R.string.lain)),form.getFieldData(),
@@ -183,11 +198,27 @@ public class FormulirCActivity extends AppCompatActivity {
                 return null;
             }
         });
+        form.addCheckboxListener("205", new ArisanListener.CheckboxCondition() {
+            @Override
+            public ListenerModel onChecked(String just_checked, List<String> all_checked, ArisanAdapter adapter) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(all_checked.size()>0,form.getFieldData(),
+                        c.getMap("205_1")
+                );
+                ConditionUtils.whenShow(all_checked.size()>0,form.getFieldData(),
+                        c.getMap("205_2")
+                );
+                rebuild(form);
+                return null;
+            }
+        });
         form.addListener("205_2", new ArisanListener.Condition() {
             @Override
             public ListenerModel onValue(String value,ArisanAdapter adapter) {
                 if(value.equals(c.Str(R.string.autoimun))){
                     //go to signature
+                    //startActivity(new Intent(FormulirCActivity.this,SignatureActivity.class));
+                    finish();
                 }else{
                     form.copyFieldFromAdapter(arisanAdapter);
                     ConditionUtils.whenShow(value.equals(c.Str(R.string.ya)),form.getFieldData(),
@@ -203,6 +234,8 @@ public class FormulirCActivity extends AppCompatActivity {
             public ListenerModel onValue(String value,ArisanAdapter adapter) {
                 if(value.equals(c.Str(R.string.autoimun))){
                     //go to signature
+                    //startActivity(new Intent(FormulirCActivity.this,SignatureActivity.class));
+                    finish();
                 }else{
                     form.copyFieldFromAdapter(arisanAdapter);
                     ConditionUtils.whenShow(value.equals(c.Str(R.string.kanker)),form.getFieldData(),
@@ -235,6 +268,23 @@ public class FormulirCActivity extends AppCompatActivity {
                 return null;
             }
         });
+        form.addCheckboxListener("210", new ArisanListener.CheckboxCondition() {
+            @Override
+            public ListenerModel onChecked(String just_checked, List<String> all_checked, ArisanAdapter adapter) {
+                form.copyFieldFromAdapter(arisanAdapter);
+                ConditionUtils.whenShow(all_checked.contains(c.Str(R.string.minuman_ringan)),form.getFieldData(),
+                        c.getMap("210_0_1")
+                );
+                ConditionUtils.whenShow(all_checked.contains(c.Str(R.string.minuman_ringan)),form.getFieldData(),
+                        c.getMap("210_0_2")
+                );
+                ConditionUtils.whenShow(all_checked.contains(c.Str(R.string.minuman_ringan)),form.getFieldData(),
+                        c.getMap("210_0_3")
+                );
+                rebuild(form);
+                return null;
+            }
+        });
         form.addListener("211", new ArisanListener.Condition() {
             @Override
             public ListenerModel onValue(String value,ArisanAdapter adapter) {
@@ -246,8 +296,6 @@ public class FormulirCActivity extends AppCompatActivity {
                 return null;
             }
         });
-
-
     }
 
     public void condition_3(){

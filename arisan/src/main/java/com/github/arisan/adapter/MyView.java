@@ -1,5 +1,6 @@
 package com.github.arisan.adapter;
 
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,11 @@ public class MyView {
     //TEXT
     TextView mEditTextLabel,mDateLabel,mSpinnerLabel;
     EditText mEditText;
+    //ONELINE
+    TextView mOneLineText;
+    //TEXT2
+    TextInputLayout mEditText2Layout;
+    TextView mEditText2;
     //PASSOWRD
     TextView mPasswordLabel;
     EditText mPassword;
@@ -102,5 +108,8 @@ public class MyView {
         mImagePick = v.findViewById(R.id.arisan_image_pick);
         mAutocomplete = v.findViewById(R.id.arisan_autocomplete);
         mAutocompleteLabel = v.findViewById(R.id.arisan_autocomplete_label);
+        mOneLineText = v.findViewById(R.id.arisan_oneline_text);
+        mEditText2 = v.findViewById(R.id.arisan_text2_text);
+        mEditText2Layout = v.findViewById(R.id.arisan_text2_text_layout);
     }
 }

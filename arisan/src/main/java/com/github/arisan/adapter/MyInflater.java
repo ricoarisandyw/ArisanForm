@@ -46,6 +46,10 @@ public class MyInflater {
             v = inflater.inflate(R.layout.item_image, parent, false);
         }else if(viewType== Form.AUTOCOMPLETE){
             v = inflater.inflate(R.layout.form_autocomplete, parent, false);
+        }else if(viewType== Form.ONELINETEXT){
+            v = inflater.inflate(R.layout.item_onelinetext, parent, false);
+        }else if(viewType== Form.TEXT2){
+            v = inflater.inflate(R.layout.item_text2, parent, false);
         }else{
             v = inflater.inflate(R.layout.item_edittext, parent, false);
         }

@@ -40,4 +40,6 @@ public @interface Form {
     int AUTOCOMPLETE = 197;
     int CAMERA = 198;
     int GALLERY = 199;
+    int ONELINETEXT = 200;
+    int TEXT2 = 201;
 }

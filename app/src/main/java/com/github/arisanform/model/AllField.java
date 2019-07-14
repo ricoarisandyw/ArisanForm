@@ -53,6 +53,12 @@ public class AllField extends RealmObject {
     @Form(type = Form.ONETOMANY,relation = KK.class)
     RealmList<KK> one_to_many;
 
+    @Form(type = Form.ONELINETEXT)
+    String oneline_text;
+
+    @Form(type = Form.TEXT2)
+    String text2;
+
     public AllField() {
     }
 
@@ -168,5 +174,21 @@ public class AllField extends RealmObject {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getOneline_text() {
+        return oneline_text;
+    }
+
+    public void setOneline_text(String oneline_text) {
+        this.oneline_text = oneline_text;
+    }
+
+    public String getText2() {
+        return text2;
+    }
+
+    public void setText2(String text2) {
+        this.text2 = text2;
     }
 }

@@ -2,6 +2,7 @@ package com.github.arisanform.model;
 
 import android.content.Context;
 
+import com.github.arisan.annotation.Form;
 import com.github.arisan.annotation.Model;
 import com.github.arisan.helper.RadioUtils;
 import com.github.arisan.model.ArisanFieldModel;
@@ -21,6 +22,8 @@ import java.util.Map;
 public class FormC {
     static Map<String, ArisanFieldModel> data = new HashMap<>();
     Context context;
+    String SA = " [SA]";
+    String MA = " [MA]";
 
     public FormC(Context context){
         this.context = context;
@@ -41,105 +44,115 @@ public class FormC {
 
         String[] status_kawin = {Str(R.string.belum_kawin),Str(R.string.kawin),Str(R.string.duda_janda)};
         ArisanFieldModel model10l = FormRadio.getModel();
-        model10l.setLabel(Str(R.string.pertanyaan_c_101));
+        model10l.setLabel(Str(R.string.pertanyaan_c_101)+SA);
         model10l.setName("101");
-        model10l.setPosition(1);
+        model10l.setPosition(10);
         model10l.setData(RadioUtils.convertToRadio(status_kawin));
 
         ArisanFieldModel model102 = FormRadio.getModel();
         String[] sekolah = {Str(R.string.tidak_sekolah),Str(R.string.lulus_sd),Str(R.string.lulus_smp),Str(R.string.akademi)};
-        model102.setLabel(Str(R.string.pertanyaan_c_102));
+        model102.setLabel(Str(R.string.pertanyaan_c_102)+SA);
         model102.setName("102");
-        model102.setPosition(2);
+        model102.setPosition(20);
         model102.setData(RadioUtils.convertToRadio(sekolah));
 
         ArisanFieldModel model103 = FormRadio.getModel();
         String[] test = {Str(R.string.manajer),Str(R.string.teknisi),Str(R.string.tenaga_pemasaran),
                 Str(R.string.buruh),Str(R.string.sopir),Str(R.string.polri),Str(R.string.pekerjaan_rumah),
                 Str(R.string.atlit),Str(R.string.pensiunan),Str(R.string.pelajar),Str(R.string.tidak_bekerja), Model.OTHERS};
-        model103.setLabel(Str(R.string.pertanyaan_c_103_a));
+        model103.setLabel(Str(R.string.pertanyaan_c_103_a)+SA);
         model103.setName("103");
-        model103.setPosition(3);
+        model103.setPosition(30);
         model103.setData(RadioUtils.convertToRadio(test));
 
         ArisanFieldModel model103_1 = FormNumber.getModel();
         model103_1.setName("103_1");
         model103_1.setLabel(Str(R.string.pertanyaan_c_103_b));
-        model103_1.setPosition(4);
+        model103_1.setPosition(31);
 
         ArisanFieldModel model103_2 = FormText.getModel();
         model103_2.setName("103_2");
         model103_2.setLabel(Str(R.string.pertanyaan_c_103_c));
-        model103_2.setPosition(5);
+        model103_2.setPosition(32);
 
         ArisanFieldModel model104 = FormRadio.getModel();
         model104.setName("104");
-        String[] jawaban4 = {Str(R.string.ya),Str(R.string.istri),Str(R.string.anak)
-                ,Str(R.string.orang_tua), Model.OTHERS};
-        model104.setLabel(Str(R.string.pertanyaan_c_104));
-        model104.setPosition(6);
+        String[] jawaban4 = {Str(R.string.ya),Str(R.string.tidak)};
+        model104.setLabel(Str(R.string.pertanyaan_c_104)+SA);
+        model104.setPosition(40);
         model104.setData(RadioUtils.convertToRadio(jawaban4));
+
+        ArisanFieldModel model104_1 = FormRadio.getModel();
+        model104_1.setName("104_1");
+        String[] jawaban4_1 = {Str(R.string.istri),Str(R.string.anak)
+                ,Str(R.string.orang_tua), Model.OTHERS};
+        model104_1.setLabel("Apa status anda dalam keluarga?"+SA);
+        model104_1.setPosition(41);
+        model104_1.setData(RadioUtils.convertToRadio(jawaban4_1));
 
         ArisanFieldModel model105 = FormText.getModel();
         model105.setName("105");
         model105.setLabel(Str(R.string.pertanyaan_c_105));
-        model105.setPosition(6);
+        model103_1.setViewType(Form.NUMBER);
+        model105.setPosition(50);
 
         ArisanFieldModel model105_1 = FormText.getModel();
         model105_1.setName("105_1");
         model105_1.setLabel(Str(R.string.pertanyaan_c_105_1));
-        model105_1.setPosition(7);
+        model103_1.setViewType(Form.NUMBER);
+        model105_1.setPosition(51);
 
         ArisanFieldModel model105_2 = FormText.getModel();
         model105_2.setName("105_2");
         model105_2.setLabel(Str(R.string.pertanyaan_c_105_2));
-        model105_2.setPosition(8);
+        model103_1.setViewType(Form.NUMBER);
+        model105_2.setPosition(52);
 
         ArisanFieldModel model106 = FormText.getModel();
         model106.setName("106");
         model106.setLabel(Str(R.string.pertanyaan_c_106));
-        model106.setPosition(9);
+        model103_1.setViewType(Form.NUMBER);
+        model106.setPosition(60);
 
         ArisanFieldModel model107 = FormRadio.getModel();
         model107.setName("107");
         String[] jawaban107 = {Str(R.string.dibawah1juta),Str(R.string.sampai2juta),Str(R.string.sampai3juta),
                 Str(R.string.sampai4juta),Str(R.string.sampai5juta),Str(R.string.sampai6juta),Str(R.string.sampai7juta),
                 Str(R.string.sampai8juta),Str(R.string.diatas8juta),Str(R.string.tidak_tahu)};
-        model107.setLabel(Str(R.string.pertanyaan_c_107));
-        model107.setPosition(10);
+        model107.setLabel(Str(R.string.pertanyaan_c_107)+SA);
+        model107.setPosition(70);
         model107.setData(RadioUtils.convertToRadio(jawaban107));
 
         ArisanFieldModel model108 = FormCheckbox.getModel();
         //**jika tidak asuransi lain maka loncat ke 109
         model108.setName("108");
         String[] jawaban108 = {Str(R.string.bpjs_kes),Str(R.string.bpjs_ket),Str(R.string.asuransi_lain),Str(R.string.tidak_punya_asuransi)};
-        model108.setLabel(Str(R.string.pertanyaan_c_108));
-        model108.setPosition(11);
+        model108.setLabel(Str(R.string.pertanyaan_c_108)+MA);
+        model108.setPosition(80);
         model108.setData(jawaban108);
 
         ArisanFieldModel model108_1 = FormText.getModel();
         //**jika tidak asuransi lain maka loncat ke 109
         model108_1.setName("108_1");
         model108_1.setLabel(Str(R.string.pertanyaan_c_108_1));
-        model108_1.setPosition(12);
+        model108_1.setPosition(81);
 
         ArisanFieldModel model109 = FormCheckbox.getModel();
         model109.setName("109");
         String[] jawaban109 = {Str(R.string.sendiri)
                 ,Str(R.string.kerabat)
                 , Model.OTHERS};
-        model109.setLabel(Str(R.string.pertanyaan_c_109));
-        model109.setPosition(13);
+        model109.setLabel(Str(R.string.pertanyaan_c_109)+MA);
+        model109.setPosition(90);
         model109.setData(jawaban109);
-
-
 
         list.add(model10l);
         list.add(model102);
-        list.add(model103);
+//        list.add(model103);
 //        list.add(model103_2);
 //        list.add(model103_3);
         list.add(model104);
+//        list.add(model104_1);
         list.add(model105);
         list.add(model105_1);
         list.add(model105_2);
@@ -151,10 +164,11 @@ public class FormC {
 
         data.put("101",model10l);
         data.put("102",model102);
-        data.put("103",model103);
-        data.put("103_1",model103_1);
-        data.put("103_2",model103_2);
+//        data.put("103",model103);
+//        data.put("103_1",model103_1);
+//        data.put("103_2",model103_2);
         data.put("104",model104);
+        data.put("104_1",model104_1);
         data.put("105",model105);
         data.put("105_1",model105_1);
         data.put("105_2",model105_2);
@@ -176,13 +190,13 @@ public class FormC {
         String[] jawaban201 = {Str(R.string.ya)
                 ,Str(R.string.tidak)};
         mode201.setLabel(Str(R.string.pertanyaan_c_201));
-        mode201.setPosition(8);
+        mode201.setPosition(1000);
         mode201.setData(RadioUtils.convertToRadio(jawaban201));
 
         ArisanFieldModel mode201_1 = FormText.getModel();
         mode201_1.setName("201_1");
         mode201_1.setLabel(Str(R.string.pertanyaan_c_201_1));
-        mode201_1.setPosition(9);
+        mode201_1.setPosition(1100);
 
         ArisanFieldModel model202 = FormRadio.getModel();
         String[] jawaban202 = {Str(R.string.dibawah_1_tahun)
@@ -192,13 +206,18 @@ public class FormC {
                 ,Str(R.string.diatas_10_tahun)};
         model202.setLabel(Str(R.string.pertanyaan_c_202));
         model202.setName("202");
-        model202.setPosition(10);
+        model202.setPosition(2000);
         model202.setData(RadioUtils.convertToRadio(jawaban202));
 
         ArisanFieldModel mode203 = FormDate.getModel();
         mode203.setName("203");
-        mode203.setLabel(Str(R.string.pertanyaan_c_203));
-        mode203.setPosition(11);
+        mode203.setLabel("Kapan anda mulai mendapat terapi Hemodialisis? (Bulan)");
+        mode203.setPosition(3000);
+
+        ArisanFieldModel mode203_1 = FormDate.getModel();
+        mode203_1.setName("203_1");
+        mode203_1.setLabel("Kapan anda mulai mendapat terapi Hemodialisis? (Tahun)");
+        mode203_1.setPosition(3000);
 
         ArisanFieldModel model204 = FormCheckbox.getModel();
         //**jika autoimun maka selesai(intent ke signatureActivity)
@@ -214,14 +233,14 @@ public class FormC {
                 ,Str(R.string.tidak_tahu)
         };
         model204.setLabel(Str(R.string.pertanyaan_c_204));
-        model204.setPosition(12);
+        model204.setPosition(4000);
         model204.setName("204");
         model204.setData(jawaban204);
 
         ArisanFieldModel model204_1 = FormText.getModel();
         model204_1.setName("204_1");
         model204_1.setLabel(Str(R.string.pertanyaan_c_204_1));
-        model204_1.setPosition(13);
+        model204_1.setPosition(4100);
 
         ArisanFieldModel model205 = FormCheckbox.getModel();
         String[] jawaban205 = {Str(R.string.masalah_ginjal)
@@ -240,7 +259,7 @@ public class FormC {
                 ,Str(R.string.tidak)
         };
         model205.setLabel(Str(R.string.pertanyaan_c_205));
-        model205.setPosition(14);
+        model205.setPosition(5000);
         model205.setName("205");
         model205.setData(jawaban205);
 
@@ -253,7 +272,7 @@ public class FormC {
         };
         model205_1.setName("205_1");
         model205_1.setLabel(Str(R.string.pertanyaan_c_205_1));
-        model205_1.setPosition(15);
+        model205_1.setPosition(5100);
         model205_1.setData(RadioUtils.convertToRadio(jawaban205_1));
 
         ArisanFieldModel model205_2 = FormRadio.getModel();
@@ -263,7 +282,7 @@ public class FormC {
         };
         model205_2.setName("205_2");
         model205_2.setLabel(Str(R.string.pertanyaan_c_205_2));
-        model205_2.setPosition(16);
+        model205_2.setPosition(5200);
         model205_2.setData(RadioUtils.convertToRadio(jawaban205_2));
 
         ArisanFieldModel model205_3 = FormRadio.getModel();
@@ -274,7 +293,7 @@ public class FormC {
         };
         model205_3.setName("205_3");
         model205_3.setLabel(Str(R.string.pertanyaan_c_205_3));
-        model205_3.setPosition(17);
+        model205_3.setPosition(5300);
         model205_3.setData(RadioUtils.convertToRadio(jawaban205_3));
 
         ArisanFieldModel model206 = FormRadio.getModel();
@@ -290,19 +309,20 @@ public class FormC {
                 ,Str(R.string.leukemia)
                 ,Str(R.string.muntah_darah)
                 ,Str(R.string.tukak_lambung)
+                ,"Sering mimisan"
                 ,Str(R.string.operasi_pada_arteri)
                 ,Str(R.string.kanker)
                 ,Str(R.string.tidak)
         };
         model206.setName("206");
         model206.setLabel(Str(R.string.pertanyaan_c_206));
-        model206.setPosition(18);
+        model206.setPosition(6000);
         model206.setData(RadioUtils.convertToRadio(jawaban206));
 
         ArisanFieldModel model206_0_1 = FormText.getModel();
         model206_0_1.setName("206_0_1");
         model206_0_1.setLabel(Str(R.string.pertanyaan_c_206_0_1));
-        model206_0_1.setPosition(19);
+        model206_0_1.setPosition(6010);
 
         ArisanFieldModel model206_1 = FormRadio.getModel();
         String[] jawaban206_1 = {Str(R.string.dibawah_1_tahun)
@@ -313,7 +333,7 @@ public class FormC {
         };
         model206_1.setName("206_1");
         model206_1.setLabel(Str(R.string.pertanyaan_c_206_1));
-        model206_1.setPosition(20);
+        model206_1.setPosition(6100);
         model206_1.setData(RadioUtils.convertToRadio(jawaban206_1));
 
         ArisanFieldModel model206_2 = FormRadio.getModel();
@@ -323,7 +343,7 @@ public class FormC {
         };
         model206_2.setName("206_2");
         model206_2.setLabel(Str(R.string.pertanyaan_c_206_2));
-        model206_2.setPosition(21);
+        model206_2.setPosition(6200);
         model206_2.setData(RadioUtils.convertToRadio(jawaban206_2));
 
         ArisanFieldModel model206_2_1 = FormRadio.getModel();
@@ -334,13 +354,13 @@ public class FormC {
         };
         model206_2_1.setName("206_2_1");
         model206_2_1.setLabel(Str(R.string.pertanyaan_c_206_2_1));
-        model206_2_1.setPosition(22);
+        model206_2_1.setPosition(6210);
         model206_2_1.setData(RadioUtils.convertToRadio(jawaban206_2_1));
 
         ArisanFieldModel model206_3 = FormText.getModel();
         model206_3.setName("206_3");
         model206_3.setLabel(Str(R.string.pertanyaan_c_206_3));
-        model206_3.setPosition(23);
+        model206_3.setPosition(6300);
 
         ArisanFieldModel model207 = FormRadio.getModel();
         //**jika tidak langsung ke 207_2
@@ -349,7 +369,7 @@ public class FormC {
         };
         model207.setName("207");
         model207.setLabel(Str(R.string.pertanyaan_c_207));
-        model207.setPosition(24);
+        model207.setPosition(7000);
         model207.setData(RadioUtils.convertToRadio(jawaban207));
 
         ArisanFieldModel model207_1 = FormRadio.getModel();
@@ -360,7 +380,7 @@ public class FormC {
         };
         model207_1.setName("207_1");
         model207_1.setLabel(Str(R.string.pertanyaan_c_207_1));
-        model207_1.setPosition(24);
+        model207_1.setPosition(7100);
         model207_1.setData(RadioUtils.convertToRadio(jawaban207_1));
 
         ArisanFieldModel model207_2 = FormRadio.getModel();
@@ -369,7 +389,7 @@ public class FormC {
         };
         model207_2.setName("207_2");
         model207_2.setLabel(Str(R.string.pertanyaan_c_207_2));
-        model207_2.setPosition(25);
+        model207_2.setPosition(7200);
         model207_2.setData(RadioUtils.convertToRadio(jawaban207_2));
 
         ArisanFieldModel model208 = FormRadio.getModel();
@@ -379,7 +399,7 @@ public class FormC {
         };
         model208.setName("208");
         model208.setLabel(Str(R.string.pertanyaan_c_208));
-        model208.setPosition(26);
+        model208.setPosition(8000);
         model208.setData(RadioUtils.convertToRadio(jawaban208));
 
         ArisanFieldModel model209 = FormCheckbox.getModel();
@@ -387,11 +407,11 @@ public class FormC {
                 ,Str(R.string.air_isi_ulang)
                 ,Str(R.string.air_ledeng)
                 ,Str(R.string.air_sumur)
-                ,Str(R.string.lain), Model.OTHERS
+                , Model.OTHERS
         };
         model209.setName("209");
         model209.setLabel(Str(R.string.pertanyaan_c_209));
-        model209.setPosition(27);
+        model209.setPosition(9000);
         model209.setData(jawaban209);
 
         ArisanFieldModel model210 = FormCheckbox.getModel();
@@ -405,13 +425,23 @@ public class FormC {
         };
         model210.setName("210");
         model210.setLabel(Str(R.string.pertanyaan_c_210));
-        model210.setPosition(28);
+        model210.setPosition(10000);
         model210.setData(jawaban210);
 
-        ArisanFieldModel mode210_0_1 = FormText.getModel();
-        mode210_0_1.setName("210_1");
-        mode210_0_1.setLabel(Str(R.string.pertanyaan_c_210_0_1));
-        mode210_0_1.setPosition(29);
+        ArisanFieldModel model210_0_1 = FormText.getModel();
+        model210_0_1.setName("210_0_1");
+        model210_0_1.setLabel("Sebutkan minuman ringan tersebut?");
+        model210_0_1.setPosition(10010);
+
+        ArisanFieldModel model210_0_2 = FormText.getModel();
+        model210_0_2.setName("210_0_2");
+        model210_0_2.setLabel("Sebutkan minuman isotonis tersebut?");
+        model210_0_2.setPosition(10020);
+
+        ArisanFieldModel model210_0_3 = FormText.getModel();
+        model210_0_3.setName("210_0_3");
+        model210_0_3.setLabel("Sebutkan minuman berenergi tersebut?");
+        model210_0_3.setPosition(10030);
 
         ArisanFieldModel model210_1 = FormCheckbox.getModel();
         String[] jawaban210_1 = {Str(R.string.lebih_dari_sekali)
@@ -422,13 +452,13 @@ public class FormC {
         };
         model210_1.setName("210_1");
         model210_1.setLabel(Str(R.string.pertanyaan_c_210_1));
-        model210_1.setPosition(30);
+        model210_1.setPosition(10100);
         model210_1.setData(jawaban210_1);
 
         ArisanFieldModel model210_2 = FormText.getModel();
         model210_2.setName("210_2");
         model210_2.setLabel(Str(R.string.pertanyaan_c_210_2));
-        model210_2.setPosition(31);
+        model210_2.setPosition(10200);
 
         ArisanFieldModel model210_3 = FormRadio.getModel();
         String[] jawaban210_3 = {Str(R.string.dibawah_1_tahun)
@@ -439,18 +469,18 @@ public class FormC {
         };
         model210_3.setLabel(Str(R.string.pertanyaan_c_210_3));
         model210_3.setName("210_3");
-        model210_3.setPosition(32);
+        model210_3.setPosition(10300);
         model210_3.setData(RadioUtils.convertToRadio(jawaban210_3));
 
         ArisanFieldModel model210_4 = FormRadio.getModel();
         String[] jawaban210_4 = {Str(R.string.merasa_tidak_berefek)
                 ,Str(R.string.ingin_mendapat_manfaat_lebih)
                 ,Str(R.string.menyukai_rasanya)
-                ,Str(R.string.lain), Model.OTHERS
+                , Model.OTHERS
         };
         model210_4.setName("210_4");
         model210_4.setLabel(Str(R.string.pertanyaan_c_210_4));
-        model210_4.setPosition(33);
+        model210_4.setPosition(10400);
         model210_4.setData(RadioUtils.convertToRadio(jawaban210_4));
 
         ArisanFieldModel model211 = FormCheckbox.getModel();
@@ -463,20 +493,193 @@ public class FormC {
                 ,Str(R.string.daging_olahan)
                 ,Str(R.string.makanan_kaleng)
                 ,Str(R.string.makanan_terfermentasi)
-                ,Str(R.string.lain)
                 ,Str(R.string.tidak)
+                ,Model.OTHERS
         };
         model211.setLabel(Str(R.string.pertanyaan_c_211));
         model211.setName("211");
-        model211.setPosition(34);
+        model211.setPosition(11000);
         model211.setData(jawaban211);
 
+        /*LOOPING*/
+
+        /*BURGER*/
+        
         ArisanFieldModel model211_0_1 = FormText.getModel();
         model211_0_1.setName("211_0_1");
-        model211_0_1.setLabel(Str(R.string.pertanyaan_c_211_0_1));
-        model211_0_1.setPosition(35);
+        model211_0_1.setLabel("Sebutkan nama burger tersebut!");
+        model211_0_1.setPosition(11010);
 
-        ArisanFieldModel model211_1 = FormRadio.getModel();
+        ArisanFieldModel model211_0_2 = FormText.getModel();
+        model211_0_2.setName("211_0_2");
+        model211_0_2.setLabel("Seberapa sering anda mengkonsumsi burger tersebut!");
+        model211_0_2.setPosition(11010);
+
+        ArisanFieldModel model211_0_3 = FormText.getModel();
+        model211_0_3.setName("211_0_3");
+        model211_0_3.setLabel("Berapa lama anda mengkonsumsi makanan burger secara rutin?");
+        model211_0_3.setPosition(11010);
+
+        ArisanFieldModel model211_0_4 = FormText.getModel();
+        model211_0_4.setName("211_0_4");
+        model211_0_4.setLabel("Seberapa sering Anda menambahkan garam kedalam burger?");
+        model211_0_4.setPosition(11010);
+        
+        /*END OF BURGER*/
+
+        /*MI INSTAN*/
+
+        ArisanFieldModel model211_1_1 = FormText.getModel();
+        model211_1_1.setName("211_1_1");
+        model211_1_1.setLabel("Sebutkan nama mie instan tersebut!");
+        model211_1_1.setPosition(11010);
+
+        ArisanFieldModel model211_1_2 = FormText.getModel();
+        model211_1_2.setName("211_1_2");
+        model211_1_2.setLabel("Seberapa sering anda mengkonsumsi mie instan tersebut!");
+        model211_1_2.setPosition(11010);
+
+        ArisanFieldModel model211_1_3 = FormText.getModel();
+        model211_1_3.setName("211_1_3");
+        model211_1_3.setLabel("Berapa lama anda mengkonsumsi makanan mie instan secara rutin?");
+        model211_1_3.setPosition(11010);
+
+        ArisanFieldModel model211_1_4 = FormText.getModel();
+        model211_1_4.setName("211_1_4");
+        model211_1_4.setLabel("Seberapa sering Anda menambahkan garam kedalam mie instan?");
+        model211_1_4.setPosition(11010);
+
+        /*END OF MI INSTAN*/
+
+        /*MAKANAN BERKECAP*/
+
+        ArisanFieldModel model211_2_1 = FormText.getModel();
+        model211_2_1.setName("211_2_1");
+        model211_2_1.setLabel("Sebutkan nama makanan berkecap tersebut!");
+        model211_2_1.setPosition(11010);
+
+        ArisanFieldModel model211_2_2 = FormText.getModel();
+        model211_2_2.setName("211_2_2");
+        model211_2_2.setLabel("Seberapa sering anda mengkonsumsi makanan berkecap tersebut!");
+        model211_2_2.setPosition(11010);
+
+        ArisanFieldModel model211_2_3 = FormText.getModel();
+        model211_2_3.setName("211_2_3");
+        model211_2_3.setLabel("Berapa lama anda mengkonsumsi makanan makanan berkecap secara rutin?");
+        model211_2_3.setPosition(11010);
+
+        ArisanFieldModel model211_2_4 = FormText.getModel();
+        model211_2_4.setName("211_2_4");
+        model211_2_4.setLabel("Seberapa sering Anda menambahkan garam kedalam makanan berkecap?");
+        model211_2_4.setPosition(11010);
+
+        /*END OF MAKANAN BERKECAP*/
+
+        /*MAKANAN LEMAK*/
+
+        ArisanFieldModel model211_3_1 = FormText.getModel();
+        model211_3_1.setName("211_3_1");
+        model211_3_1.setLabel("Sebutkan nama makanan berlemak tersebut!");
+        model211_3_1.setPosition(11010);
+
+        ArisanFieldModel model211_3_2 = FormText.getModel();
+        model211_3_2.setName("211_3_2");
+        model211_3_2.setLabel("Seberapa sering anda mengkonsumsi makanan berlemak tersebut!");
+        model211_3_2.setPosition(11010);
+
+        ArisanFieldModel model211_3_3 = FormText.getModel();
+        model211_3_3.setName("211_3_3");
+        model211_3_3.setLabel("Berapa lama anda mengkonsumsi makanan makanan berlemak secara rutin?");
+        model211_3_3.setPosition(11010);
+
+        ArisanFieldModel model211_3_4 = FormText.getModel();
+        model211_3_4.setName("211_3_4");
+        model211_3_4.setLabel("Seberapa sering Anda menambahkan garam kedalam makanan berlemak?");
+        model211_3_4.setPosition(11010);
+
+        /*END OF MAKANAN LEMAK*/
+
+        /*MAKANAN DAGING OLAHAN*/
+
+        ArisanFieldModel model211_4_1 = FormText.getModel();
+        model211_4_1.setName("211_4_1");
+        model211_4_1.setLabel("Sebutkan nama daging olahan tersebut!");
+        model211_4_1.setPosition(11010);
+
+        ArisanFieldModel model211_4_2 = FormText.getModel();
+        model211_4_2.setName("211_4_2");
+        model211_4_2.setLabel("Seberapa sering anda mengkonsumsi daging olahan tersebut!");
+        model211_4_2.setPosition(11010);
+
+        ArisanFieldModel model211_4_3 = FormText.getModel();
+        model211_4_3.setName("211_4_3");
+        model211_4_3.setLabel("Berapa lama anda mengkonsumsi makanan daging olahan secara rutin?");
+        model211_4_3.setPosition(11010);
+
+        ArisanFieldModel model211_4_4 = FormText.getModel();
+        model211_4_4.setName("211_4_4");
+        model211_4_4.setLabel("Seberapa sering Anda menambahkan garam kedalam daging olahan?");
+        model211_4_4.setPosition(11010);
+
+        /*END OF DAGING OLAHAN*/
+
+        /*MAKANAN KALENG*/
+
+        ArisanFieldModel model211_5_1 = FormText.getModel();
+        model211_5_1.setName("211_5_1");
+        model211_5_1.setLabel("Sebutkan nama makanan kaleng tersebut!");
+        model211_5_1.setPosition(11010);
+
+        ArisanFieldModel model211_5_2 = FormText.getModel();
+        model211_5_2.setName("211_5_2");
+        model211_5_2.setLabel("Seberapa sering anda mengkonsumsi makanan kaleng tersebut!");
+        model211_5_2.setPosition(11010);
+
+        ArisanFieldModel model211_5_3 = FormText.getModel();
+        model211_5_3.setName("211_5_3");
+        model211_5_3.setLabel("Berapa lama anda mengkonsumsi makanan makanan kaleng secara rutin?");
+        model211_5_3.setPosition(11010);
+
+        ArisanFieldModel model211_5_4 = FormText.getModel();
+        model211_5_4.setName("211_5_4");
+        model211_5_4.setLabel("Seberapa sering Anda menambahkan garam kedalam makanan kaleng?");
+        model211_5_4.setPosition(11010);
+
+        /*END OF MAKANAN KALENG*/
+        
+        /*MAKANAN FERMENTASI*/
+
+        ArisanFieldModel model211_6_1 = FormText.getModel();
+        model211_6_1.setName("211_6_1");
+        model211_6_1.setLabel("Sebutkan nama makanan fermentasi tersebut!");
+        model211_6_1.setPosition(11010);
+
+        ArisanFieldModel model211_6_2 = FormRadio.getModel();
+        String[] jawaban211_1 = {Str(R.string.lebih_dari_sekali)
+                ,Str(R.string.setidaknya_sekali)
+                ,Str(R.string.tiga_kali_perminggu)
+                ,Str(R.string.satu_kali_perminggu)
+                ,Str(R.string.satu_kali_perbulan)
+        };
+        model211_6_2.setLabel(Str(R.string.pertanyaan_c_211_1));
+        model211_6_2.setName("211_6_2");
+        model211_6_2.setPosition(11100);
+        model211_6_2.setData(RadioUtils.convertToRadio(jawaban211_1));
+
+        ArisanFieldModel model211_6_3 = FormText.getModel();
+        model211_6_3.setName("211_6_3");
+        model211_6_3.setLabel("Berapa lama anda mengkonsumsi makanan makanan fermentasi secara rutin?");
+        model211_6_3.setPosition(11010);
+
+        ArisanFieldModel model211_6_4 = FormText.getModel();
+        model211_6_4.setName("211_6_4");
+        model211_6_4.setLabel("Seberapa sering Anda menambahkan garam kedalam makanan fermentasi?");
+        model211_6_4.setPosition(11010);
+
+        /*END OF FERMENTASI*/
+
+
+        /*ArisanFieldModel model211_1 = FormRadio.getModel();
         String[] jawaban211_1 = {Str(R.string.lebih_dari_sekali)
                 ,Str(R.string.setidaknya_sekali)
                 ,Str(R.string.tiga_kali_perminggu)
@@ -485,8 +688,8 @@ public class FormC {
         };
         model211_1.setLabel(Str(R.string.pertanyaan_c_211_1));
         model211_1.setName("211_1");
-        model211_1.setPosition(36);
-        model211_1.setData(RadioUtils.convertToRadio(jawaban211_1));
+        model211_1.setPosition(11100);
+        model211_1.setData(RadioUtils.convertToRadio(jawaban211_1));*/
 
         ArisanFieldModel model211_2 = FormRadio.getModel();
         String[] jawaban211_2 = {Str(R.string.dibawah_1_tahun)
@@ -497,7 +700,7 @@ public class FormC {
         };
         model211_2.setName("211_2");
         model211_2.setLabel(Str(R.string.pertanyaan_c_211_2));
-        model211_2.setPosition(37);
+        model211_2.setPosition(11200);
         model211_2.setData(RadioUtils.convertToRadio(jawaban211_2));
 
         ArisanFieldModel model212 = FormRadio.getModel();
@@ -508,23 +711,25 @@ public class FormC {
         };
         model212.setLabel(Str(R.string.pertanyaan_c_212));
         model212.setName("212");
-        model212.setPosition(38);
+        model212.setPosition(12000);
         model212.setData(RadioUtils.convertToRadio(jawaban212));
 
         ArisanFieldModel model212_1 = FormText.getModel();
         model212_1.setLabel(Str(R.string.pertanyaan_c_212_1));
         model212_1.setName("212_1");
-        model212_1.setPosition(39);
+        model212_1.setPosition(12100);
+
+        /*END LOOPING*/
 
         ArisanFieldModel model213 = FormText.getModel();
         model213.setLabel(Str(R.string.pertanyaan_c_213));
         model213.setName("213");
-        model213.setPosition(40);
+        model213.setPosition(13000);
 
         ArisanFieldModel model214 = FormText.getModel();
         model214.setLabel(Str(R.string.pertanyaan_c_214));
         model214.setName("214");
-        model214.setPosition(41);
+        model214.setPosition(14000);
 
         ArisanFieldModel model215 = FormCheckbox.getModel();
         String[] jawaban215 = {Str(R.string.kendaraan_pribadi_roda_2)
@@ -536,22 +741,23 @@ public class FormC {
         };
         model215.setLabel(Str(R.string.pertanyaan_c_215));
         model215.setName("215");
-        model215.setPosition(42);
+        model215.setPosition(15000);
         model215.setData(jawaban215);
 
         ArisanFieldModel model216 = FormText.getModel();
         model216.setLabel(Str(R.string.pertanyaan_c_216));
         model216.setName("216");
-        model216.setPosition(43);
+        model216.setPosition(16000);
 
         list.add(mode201);
 //        list.add(mode201_1);
 //        list.add(model202);
         list.add(mode203);
+        list.add(mode203_1);
         list.add(model204);
         list.add(model205);
-        list.add(model205_1);
-        list.add(model205_2);
+//        list.add(model205_1);
+//        list.add(model205_2);
 //        list.add(model205_3);
         list.add(model206);
         list.add(model206_1);
@@ -565,13 +771,16 @@ public class FormC {
         list.add(model208);
         list.add(model209);
         list.add(model210);
+        list.add(model210_0_1);
+        list.add(model210_0_2);
+        list.add(model210_0_3);
         list.add(model210_1);
         list.add(model210_2);
         list.add(model210_3);
         list.add(model210_4);
         list.add(model211);
 //        list.add(model211_0_1);
-        list.add(model211_1);
+//        list.add(model211_1);
         list.add(model211_2);
         list.add(model212);
         list.add(model212_1);
@@ -585,6 +794,7 @@ public class FormC {
         data.put("201_1",mode201_1);
         data.put("202",model202);
         data.put("203",mode203);
+        data.put("203_1",mode203_1);
         data.put("204",model204);
         data.put("204_1",model204_1);
         data.put("205",model205);
@@ -609,7 +819,7 @@ public class FormC {
         data.put("210_4",model210_4);
         data.put("211",model211);
         data.put("211_0_1",model211_0_1);
-        data.put("211_1",model211_1);
+//        data.put("211_1",model211_1);
         data.put("211_2",model211_2);
         data.put("212",model212);
         data.put("212_1",model212_1);
