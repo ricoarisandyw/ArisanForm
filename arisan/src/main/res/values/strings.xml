@@ -6,7 +6,7 @@
     <dimen name="font_size_subheading">16sp</dimen>
     <dimen name="font_size_title">20sp</dimen>
     <dimen name="icon_size">20dp</dimen>
-    <dimen name="label_margin">5dp</dimen>
+    <dimen name="label_margin">2dp</dimen>
 
     <string name="lembar_data_peserta">Lembar Data Peserta</string>
     <string name="nama_pasien">Nama Pasien</string>

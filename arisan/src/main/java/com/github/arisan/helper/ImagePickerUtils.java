@@ -38,6 +38,7 @@ public class ImagePickerUtils {
     private String fieldName;
     private Intent data;
     private PreferenceHelper db;
+    private int child_position;
 
     public ImagePickerUtils(Activity activity, Intent data) {
         this.activity = activity;
@@ -301,5 +302,13 @@ public class ImagePickerUtils {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public int getChild_position() {
+        return child_position;
+    }
+
+    public void setChild_position(int child_position) {
+        this.child_position = child_position;
     }
 }

@@ -65,7 +65,8 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder> 
             }
         });
         ArisanAdapter arisanAdapter = arisanForm.buildAdapter();
-
+        arisanAdapter.setChild(true);
+        arisanAdapter.setIndex_child(position);
         holder.vChild.setAdapter(arisanAdapter);
     }
 

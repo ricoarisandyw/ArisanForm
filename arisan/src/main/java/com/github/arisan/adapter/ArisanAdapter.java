@@ -66,6 +66,8 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     private int label_color;
     private boolean useTitle;
     private boolean useSubmit;
+    private boolean isChild = false;
+    private int index_child = -1;
 
     public ArisanAdapter(Activity activity, ArisanForm form) {
         this.activity = activity;
@@ -357,7 +359,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     private void ViewOneLineText(final ViewHolder holder, final ArisanFieldModel data, int color) {
         holder.view.mOneLineText.setHint(data.getLabel());
-        Log.d("__TYPE", String.valueOf(data.getViewType()));
+        //Log.d("__TYPE", String.valueOf(data.getViewType()));
         //Input Type Text
         if (data.getValue() != null) {
             Log.d("__DATA",new Gson().toJson(data.getValue()));
@@ -939,5 +941,21 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     public void setForm(ArisanForm form) {
         this.form = form;
+    }
+
+    public boolean isChild() {
+        return isChild;
+    }
+
+    public void setChild(boolean child) {
+        isChild = child;
+    }
+
+    public int getIndex_child() {
+        return index_child;
+    }
+
+    public void setIndex_child(int index_child) {
+        this.index_child = index_child;
     }
 }
