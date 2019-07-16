@@ -933,17 +933,13 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     }
 
     private void ViewDelete(final ViewHolder holder, ArisanFieldModel data, int color) {
-        //SUBMIT BUTTON
-
+        //DELETE BUTTON
         holder.view.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onSubmitListener.onSubmit("submit");
+                onSubmitListener.onSubmit("json");
             }
         });
-
-        if(background!=0) holder.view.mSubmit.setBackgroundResource(background);
-        if(form.getButtonColor()!=0) holder.view.mSubmitText.setTextColor(activity.getResources().getColor(form.getButtonColor()));
     }
 
     private void ViewTitle(ViewHolder holder, ArisanFieldModel data, int color) {
