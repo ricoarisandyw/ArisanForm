@@ -6,7 +6,7 @@ import io.realm.RealmObject;
 
 public class ChildModel extends RealmObject {
 
-    @Form(type = Form.IMAGE,required = true)
+    @Form(type = Form.IMAGE)
     private String image;
 
     @Form(type = Form.IMAGE)

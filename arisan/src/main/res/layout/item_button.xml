@@ -18,15 +18,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <Button
+        <LinearLayout
             android:id="@+id/arisan_button"
-            android:textColor="#FFF"
-            android:text="SUBMIT"
             android:elevation="8dp"
             android:translationZ="6dp"
             android:background="@drawable/btn_submit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="48dp"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/arisan_button_progress"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:backgroundTintMode="add"
+                android:indeterminateTint="#fff" />
+
+            <TextView
+                android:padding="5dp"
+                android:id="@+id/arisan_button_text"
+                android:text="SUBMIT"
+                android:textColor="#FFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

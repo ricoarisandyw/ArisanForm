@@ -14,7 +14,7 @@ public class AllField extends RealmObject {
     @PrimaryKey
     int id;
 
-    @Form(required = true)
+    @Form
     String edit_text;
 
     @Form(type = Form.IMAGE)

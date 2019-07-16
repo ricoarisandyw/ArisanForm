@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -20,7 +22,10 @@ public class MyView {
     View view;
 
     TextView mTitle,mBlankText;
-    Button mSubmit;
+    //BUTTON
+    LinearLayout mSubmit;
+    ProgressBar mProgress;
+    TextView mSubmitText;
     //TEXT
     TextView mEditTextLabel,mDateLabel,mSpinnerLabel;
     EditText mEditText;
@@ -114,5 +119,7 @@ public class MyView {
         mEditText2 = v.findViewById(R.id.arisan_text2_text);
         mEditText2Layout = v.findViewById(R.id.arisan_text2_text_layout);
         mDelete = v.findViewById(R.id.arisan_delete);
+        mProgress = v.findViewById(R.id.arisan_button_progress);
+        mSubmitText = v.findViewById(R.id.arisan_button_text);
     }
 }

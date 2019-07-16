@@ -1,7 +1,6 @@
 package com.github.arisan;
 
 import com.github.arisan.adapter.ArisanAdapter;
-import com.github.arisan.adapter.ArisanListAdapter;
 import com.github.arisan.model.ArisanFieldModel;
 import com.github.arisan.model.ListenerModel;
 
@@ -10,10 +9,6 @@ import java.util.List;
 public class ArisanListener {
     public interface Condition {
         public ListenerModel onValue(String value, ArisanAdapter adapter);
-    }
-
-    public interface ListCondition {
-        public ListenerModel onValue(String value, ArisanListAdapter adapter);
     }
 
     public static interface ChildCondition {
@@ -30,9 +25,5 @@ public class ArisanListener {
 
     public static interface CheckboxCondition{
         public ListenerModel onChecked(String just_checked, List<String> all_checked,ArisanAdapter adapter);
-    }
-
-    public static interface CheckboxListCondition{
-        public ListenerModel onChecked(String just_checked, List<String> all_checked,ArisanListAdapter adapter);
     }
 }

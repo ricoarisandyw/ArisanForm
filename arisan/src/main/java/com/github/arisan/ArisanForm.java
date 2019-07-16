@@ -3,7 +3,6 @@ package com.github.arisan;
 import android.app.Activity;
 
 import com.github.arisan.adapter.ArisanAdapter;
-import com.github.arisan.adapter.ArisanListAdapter;
 import com.github.arisan.helper.ObjectReader;
 import com.github.arisan.model.ArisanFieldModel;
 
@@ -161,13 +160,6 @@ public class ArisanForm {
         ArisanAdapter adapter = new ArisanAdapter(activity, this);
         adapter.setSubmitBackground(preparation.getSubmitBackground());
         adapter.setOnSubmitListener(this.onSubmitListener);
-        return adapter;
-    }
-
-    public ArisanListAdapter buildListAdapter(){
-        ArisanListAdapter adapter = new ArisanListAdapter(activity, this);
-        adapter.setSubmitBackground(preparation.getSubmitBackground());
-//        adapter.setOnSubmitListener(this.onSubmitListener);
         return adapter;
     }
 

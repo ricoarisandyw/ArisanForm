@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,7 +55,7 @@ import java.util.List;
  * Created by wijaya on 3/27/2018.
  */
 
-public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder>{
+public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder> {
     private List<ArisanFieldModel> fieldList = new ArrayList<>();
     private Activity activity;
     private ArisanForm form;
@@ -69,6 +70,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     private boolean isChild = false;
     private int index_child = -1;
     private String parent_field;
+    private ProgressListener progressListener;
 
     public ArisanAdapter(Activity activity, ArisanForm form) {
         this.activity = activity;
@@ -891,10 +893,20 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         if(label_color!=0) holder.view.aSwitch.setTextColor(activity.getResources().getColor(label_color));
     }
 
-    private void ViewSubmit(final ViewHolder holder, ArisanFieldModel data, int color) {
-        //SUBMIT BUTTON
+    public void showSubmitProgress(boolean roll){
+        if(isUseSubmit())
+            fieldList.get(fieldList.size()-1).setData(roll);
+        notifyDataSetChanged();
+    }
 
-        holder.view.mSubmit.setText(data.getLabel());
+    private void ViewSubmit(final ViewHolder holder, ArisanFieldModel data, int color) {
+        boolean roll = data.getData() != null && (boolean) data.getData();
+
+        if(roll) holder.view.mProgress.setVisibility(View.VISIBLE);
+        else holder.view.mProgress.setVisibility(View.GONE);
+
+        //SUBMIT BUTTON
+        holder.view.mSubmitText.setText(data.getLabel());
         holder.view.mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -915,7 +927,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         });
 
         if(background!=0) holder.view.mSubmit.setBackgroundResource(background);
-        if(form.getButtonColor()!=0) holder.view.mSubmit.setTextColor(activity.getResources().getColor(form.getButtonColor()));
+        if(form.getButtonColor()!=0) holder.view.mSubmitText.setTextColor(activity.getResources().getColor(form.getButtonColor()));
     }
 
     private void ViewDelete(final ViewHolder holder, ArisanFieldModel data, int color) {
@@ -929,7 +941,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         });
 
         if(background!=0) holder.view.mSubmit.setBackgroundResource(background);
-        if(form.getButtonColor()!=0) holder.view.mSubmit.setTextColor(activity.getResources().getColor(form.getButtonColor()));
+        if(form.getButtonColor()!=0) holder.view.mSubmitText.setTextColor(activity.getResources().getColor(form.getButtonColor()));
     }
 
     private void ViewTitle(ViewHolder holder, ArisanFieldModel data, int color) {
@@ -1000,5 +1012,18 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     public void setParent_field(String parent_field) {
         this.parent_field = parent_field;
+    }
+
+    public interface ProgressListener{
+        public boolean showProgress();
+    }
+
+    public ProgressListener getProgressListener() {
+        return progressListener;
+    }
+
+    public void setProgressListener(ProgressListener progressListener) {
+        this.progressListener = progressListener;
+        progressListener.showProgress();
     }
 }

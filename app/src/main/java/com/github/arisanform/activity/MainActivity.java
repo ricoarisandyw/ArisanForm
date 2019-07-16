@@ -3,6 +3,7 @@ package com.github.arisanform.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +19,6 @@ import com.github.arisan.ArisanForm;
 import com.github.arisan.ArisanListener;
 import com.github.arisan.ArisanPreparation;
 import com.github.arisan.adapter.ArisanAdapter;
-import com.github.arisan.adapter.ArisanListAdapter;
 import com.github.arisan.helper.DummyCreator;
 import com.github.arisan.helper.ImagePickerUtils;
 import com.github.arisan.helper.Logger;
@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
     PreferenceHelper preference;
 
     ArisanAdapter arisanAdapter;
-    ArisanListAdapter arisanListAdapter;
     ArisanForm  form;
     FormC c;
     ConditionFormC cond;
@@ -133,7 +132,15 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
                 form.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
                     @Override
                     public void onSubmit(String response) {
+                        final AllField model = new Gson().fromJson(response,AllField.class);
                         Log.d("__Arisan","Data "+response);
+                        arisanAdapter.showSubmitProgress(true);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                arisanAdapter.showSubmitProgress(false);
+                            }
+                        },3000);
                     }
                 });
                 arisanAdapter = form.buildAdapter();
