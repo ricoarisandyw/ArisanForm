@@ -9,14 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/arisan_button_blank"
-            android:text="Cannot blank!!!"
-            android:visibility="gone"
-            android:layout_marginBottom="8dp"
-            android:textColor="@color/colorDanger"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/arisan_delete"
@@ -24,11 +20,19 @@
             android:tint="#fff"
             android:padding="5dp"
             android:textColor="#FFF"
-            android:elevation="8dp"
-            android:translationZ="6dp"
             android:background="@drawable/btn_danger"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+            <TextView
+                android:paddingLeft="10dp"
+                android:gravity="center"
+                android:text="DELETE"
+                android:textColor="@color/colorDanger"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

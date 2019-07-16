@@ -14,6 +14,14 @@ public class FieldUtils {
         for(ArisanFieldModel model:models){
             if(model.getValue()==null && model.isRequire()){
                 blank_field.add(model.getLabel());
+            }else if(model.getChildFieldModel()!=null){
+                for(List<ArisanFieldModel> childList:model.getChildFieldModel()){
+                    for(ArisanFieldModel child:childList){
+                        if(child.getValue()==null && child.isRequire()){
+                            blank_field.add(child.getLabel()+"["+model.getChildFieldModel().indexOf(childList)+"]");
+                        }
+                    }
+                }
             }
         }
         return blank_field;

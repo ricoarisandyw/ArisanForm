@@ -19,17 +19,12 @@
         <TextView
             android:padding="20px"
             android:id="@+id/dummy_text"
-            android:text="Dummy Text"
+            android:text="Arisan Form"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/data_form"
-            android:visibility="gone"
             android:background="#ededed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,12 +33,11 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp" />
 
-        </ScrollView>
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/data_list"
+            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:padding="10dp"
             android:theme="@style/AppTheme.Arisan"
             android:layout_marginBottom="8dp"
@@ -52,6 +46,7 @@
             android:layout_marginTop="8dp" />
 
         <ImageView
+            android:visibility="gone"
             android:id="@+id/data_image"
             android:layout_margin="10dp"
             android:padding="10dp"

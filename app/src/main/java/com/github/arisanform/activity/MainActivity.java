@@ -45,6 +45,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -114,6 +116,19 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
             public void onClick(View v) {
                 ArisanForm form = new ArisanForm(MainActivity.this);
                 form.setFieldData(DummyCreator.fillDummyArray(ObjectReader.getField(new AllField())));
+                form.addListener("search", new ArisanListener.Condition() {
+                    @Override
+                    public ListenerModel onValue(String value, ArisanAdapter adapter) {
+                        if(value.equals("1234")){
+                            ListenerModel listener = new ListenerModel();
+                            listener.setCondition(false);
+                            listener.setMessage("Salah");
+                            return listener;
+                        }else{
+                            return null;
+                        }
+                    }
+                });
                 form.setOnSubmitListener(new ArisanAdapter.OnSubmitListener() {
                     @Override
                     public void onSubmit(String response) {
@@ -249,7 +264,10 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
             // MultipartBody.Part is used to send also the actual file name
             MultipartBody.Part file_body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 
-            new Controller().getInstance().create(API.class).upload(file_body).enqueue(new Callback<MyResponse<Url>>() {
+            List<MultipartBody.Part> partList = new ArrayList<>();
+            partList.add(file_body);
+
+            new Controller().getInstance().create(API.class).upload(partList).enqueue(new Callback<MyResponse<Url>>() {
                 @Override
                 public void onResponse(Call<MyResponse<Url>> call, Response<MyResponse<Url>> response) {
                     if(response.isSuccessful()) Logger.d(response.body());

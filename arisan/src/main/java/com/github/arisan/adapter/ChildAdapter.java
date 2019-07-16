@@ -19,9 +19,11 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder> 
     List<List<ArisanFieldModel>> mList;
     private Activity activity;
     private ArisanForm form;
+    private ArisanFieldModel parent;
 
-    ChildAdapter(List<List<ArisanFieldModel>> mList, Activity activity, ArisanForm form) {
-        this.mList = mList;
+    ChildAdapter(ArisanFieldModel parent, Activity activity, ArisanForm form) {
+        this.parent = parent;
+        this.mList = parent.getChildFieldModel();
         this.activity = activity;
         this.form = form;
     }
@@ -64,9 +66,12 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder> 
                 }
             }
         });
+
         ArisanAdapter arisanAdapter = arisanForm.buildAdapter();
         arisanAdapter.setChild(true);
         arisanAdapter.setIndex_child(position);
+        arisanAdapter.setParent_field(parent.getName());
+
         holder.vChild.setAdapter(arisanAdapter);
     }
 
@@ -77,5 +82,11 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder> 
         return 0;
     }
 
+    public ArisanFieldModel getParent() {
+        return parent;
+    }
 
+    public void setParent(ArisanFieldModel parent) {
+        this.parent = parent;
+    }
 }

@@ -68,6 +68,8 @@ public class MyView {
     //AUTOCOMPLETE
     AppCompatAutoCompleteTextView mAutocomplete;
     TextView mAutocompleteLabel;
+    //DELETE
+    ImageView mDelete;
 
     MyView(View v) {
         this.view = v;
@@ -111,5 +113,6 @@ public class MyView {
         mOneLineText = v.findViewById(R.id.arisan_oneline_text);
         mEditText2 = v.findViewById(R.id.arisan_text2_text);
         mEditText2Layout = v.findViewById(R.id.arisan_text2_text_layout);
+        mDelete = v.findViewById(R.id.arisan_delete);
     }
 }

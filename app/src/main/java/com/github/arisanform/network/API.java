@@ -3,6 +3,9 @@ package com.github.arisanform.network;
 import com.github.arisanform.model.MyResponse;
 import com.github.arisanform.model.Url;
 
+import java.util.List;
+import java.util.Map;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -22,5 +25,5 @@ public interface API {
 
     @Multipart
     @POST("upload")
-    Call<MyResponse<Url>> upload(@Part MultipartBody.Part file);
+    Call<MyResponse<Url>> upload(@Part List<MultipartBody.Part> file);
 }

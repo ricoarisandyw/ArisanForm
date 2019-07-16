@@ -11,13 +11,16 @@ import com.github.arisan.annotation.Model;
 import static com.github.arisan.annotation.Form.BOOLEAN;
 
 public class MyInflater {
-    public static View inflate(ViewGroup parent, int viewType){
+    public static View inflate(ViewGroup parent, int viewType,boolean isChild){
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v;
         if(viewType==0){
             v = inflater.inflate(com.github.arisan.R.layout.item_text, parent, false);
         }else if(viewType== Model.BUTTON){
-            v = inflater.inflate(com.github.arisan.R.layout.item_button, parent, false);
+            if(isChild)
+                v = inflater.inflate(R.layout.item_delete, parent, false);
+            else
+                v = inflater.inflate(com.github.arisan.R.layout.item_button, parent, false);
         }else if(viewType==BOOLEAN){
             v = inflater.inflate(com.github.arisan.R.layout.item_switch, parent, false);
         }else if(viewType==Form.DATE){

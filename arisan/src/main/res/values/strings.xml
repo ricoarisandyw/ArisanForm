@@ -462,5 +462,5 @@
     <string name="pertanyaan_c_601_1">Lama bekerja ? (Bulan)</string>
     <string name="pertanyaan_c_602_1">Berapa lama anda bekerja ? (Minggu)</string>
     <string name="pick">PICK</string>
-    <string name="filename_with_ex">filename_with_ex</string>
+    <string name="filename">filename</string>
 </resources>

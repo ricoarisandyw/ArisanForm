@@ -38,13 +38,19 @@ public class ImagePickerUtils {
     private String fieldName;
     private Intent data;
     private PreferenceHelper db;
-    private int child_position;
 
+    private int child_position = -1;
+    private boolean child = false;
+    private String parent_name;
+
+    //FOR EXTRACT
     public ImagePickerUtils(Activity activity, Intent data) {
         this.activity = activity;
         this.data = data;
         db = new PreferenceHelper(activity);
         fieldName = db.load("field_name");
+        parent_name = db.load("parent");
+        child_position = Integer.parseInt(db.load("index"));
         if (db.load("pick_image").equals(String.valueOf(Form.GALLERY))) {
             extractFromGallery();
         } else {
@@ -52,6 +58,7 @@ public class ImagePickerUtils {
         }
     }
 
+    //FOR PICK
     public ImagePickerUtils(Activity activity, ArisanFieldModel model) {
         this.activity = activity;
         db = new PreferenceHelper(activity);
@@ -310,5 +317,23 @@ public class ImagePickerUtils {
 
     public void setChild_position(int child_position) {
         this.child_position = child_position;
+        db.save("index", String.valueOf(child_position));
+    }
+
+    public boolean isChild() {
+        return child;
+    }
+
+    public void setChild(boolean child) {
+        this.child = child;
+    }
+
+    public String getParent_name() {
+        return parent_name;
+    }
+
+    public void setParent_name(String parent_name) {
+        this.parent_name = parent_name;
+        db.save("parent",parent_name);
     }
 }

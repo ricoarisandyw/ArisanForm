@@ -20,6 +20,7 @@ public class UriUtils {
         this.context = context;
 
         path = uri.toString();
+        path = path.replace("%2F","/");
 
         filename_with_ex = path.substring(path.lastIndexOf("/")+1);
         if (filename_with_ex.indexOf(".") > 0) {
@@ -27,10 +28,7 @@ public class UriUtils {
         } else {
             filename = filename_with_ex;
         }
-//        String TAG = "__URI";
-//        Log.d(TAG, "Real Path: " + path);
-//        Log.d(TAG, "Filename With Extension: " + filename_with_ex);
-//        Log.d(TAG, "File Without Extension: " + filename);
+
     }
 
     public Uri getUri() {
@@ -50,7 +48,7 @@ public class UriUtils {
     }
 
     public String getFilename_with_ex() {
-        return filename_with_ex;
+        return filename_with_ex.replace("%2f","\"");
     }
 
     public void setFilename_with_ex(String filename_with_ex) {

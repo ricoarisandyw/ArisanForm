@@ -68,6 +68,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     private boolean useSubmit;
     private boolean isChild = false;
     private int index_child = -1;
+    private String parent_field;
 
     public ArisanAdapter(Activity activity, ArisanForm form) {
         this.activity = activity;
@@ -109,7 +110,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     @Override
     public ArisanAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         System.out.println("Arisan : OnCreateViewHolder Adapter");
-        return new ViewHolder(MyInflater.inflate(parent,viewType),new MyTextWatcher());
+        return new ViewHolder(MyInflater.inflate(parent,viewType,isChild),new MyTextWatcher());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -144,11 +145,11 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         if(position==0&&useTitle){
             ViewTitle(holder, data, color);
         }else if(position== fieldList.size()-1&&useSubmit){
-            ViewSubmit(holder, data, color);
+            if(isChild)
+                ViewDelete(holder,data,color);
+            else
+                ViewSubmit(holder, data, color);
         }else {
-//            if(data.getViewType()== Form.TEXT){
-//                ViewEditText(holder, data, color);
-//            }else
                 switch (data.getViewType()){
                     case Form.BOOLEAN:ViewBoolean(holder, data, color);break;
                     case Form.SLIDER:ViewSlider(holder, data);break;
@@ -211,25 +212,38 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         UriUtils uriTools = new UriUtils(activity,uri);
         String pick_type = preference.load("pick_image");
 
-//        File f1 = new File(uri.getPath());
-//        if(!f1.exists()) Log.d("__F1","NOT FOUND");
-//        File f2 = new File(uri.getEncodedPath());
-//        if(!f2.exists()) Log.d("__F2","NOT FOUND");
-//        File f3 = new File(uriTools.getRealPath());
-//        if(!f3.exists()) Log.d("__F3","NOT FOUND");
-
         if(pick_type.equals(String.valueOf(Form.IMAGE))) uriTools = new UriUtils(activity, uri);
 
-        for(ArisanFieldModel a: fieldList) {
-            if(a.getName()!=null)
-                if(a.getName().equals(imagePickerUtils.getFieldName())){
-                    a.setData(uriTools.getFilename_with_ex());
-                    a.setThumbnail(imagePickerUtils.getBitmap());
-                    a.setValue(uriTools.getRealPath());
+        if(imagePickerUtils.getChild_position()!=-1){
+            //UPDATE DATA
+            for(ArisanFieldModel parent: fieldList) {
+                if(parent.getName().equals(imagePickerUtils.getParent_name())) {
+                    for(ArisanFieldModel a:parent.getChildFieldModel().get(imagePickerUtils.getChild_position()))
+                        if (a.getName() != null && a.getName().equals(imagePickerUtils.getFieldName())) {
+                            a.setData(uriTools.getFilename_with_ex());
+                            a.setThumbnail(imagePickerUtils.getBitmap());
+                            a.setValue(uriTools.getRealPath());
 
-                    notifyDataSetChanged();
-                    break;
+                            notifyDataSetChanged();
+                            break;
+                        }else{
+                            Log.e("__Arisan","Update image not found, index : "+imagePickerUtils.getChild_position());
+                        }
                 }
+            }
+        }else{
+            //UPDATE DATA
+            for(ArisanFieldModel a: fieldList) {
+                if(a.getName()!=null)
+                    if(a.getName().equals(imagePickerUtils.getFieldName())){
+                        a.setData(uriTools.getFilename_with_ex());
+                        a.setThumbnail(imagePickerUtils.getBitmap());
+                        a.setValue(uriTools.getRealPath());
+
+                        notifyDataSetChanged();
+                        break;
+                    }
+            }
         }
     }
 
@@ -267,7 +281,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     private String checkBlankCondition(){
         StringBuilder blank = new StringBuilder();
-        List<ArisanFieldModel> models = getListField();
+        List<ArisanFieldModel> models = getListField();//Parent
         List<String> arr_string = FieldUtils.countBlank(models);
         no_blank = arr_string.size() == 0;
         blank.append(new KotlinTextUtils().join(arr_string));
@@ -486,8 +500,15 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 ImageDialog.build(activity, new ImageDialog.OnImageDialog() {
                     @Override
                     public void selected(boolean gallery) {
-                        if(gallery) new ImagePickerUtils(activity,data).pickFromGallery();
-                        else new ImagePickerUtils(activity,data).pickFromCamera();
+                        ImagePickerUtils utils = new ImagePickerUtils(activity,data);
+                        if(isChild) {
+                            utils.setChild(isChild);
+                            utils.setChild_position(index_child);
+                            utils.setParent_name(parent_field);
+                        }
+
+                        if(gallery) utils.pickFromGallery();
+                        else utils.pickFromCamera();
                     }
                 });
             }
@@ -511,7 +532,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     String value = holder.view.mEditTextSearch.getText().toString();
                     ListenerModel listenerModel = data.doListener(value,ArisanAdapter.this);;
                     if(!listenerModel.isCondition()){
-                        holder.view.mEditTextSearch.setError(listenerModel.message);
+                        holder.view.mEditTextSearch.setError(listenerModel.message,activity.getResources().getDrawable(R.drawable.ic_clear));
                     }
                 }catch (Exception ignored){ }
             }
@@ -530,7 +551,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     private void ViewOneToMany(ViewHolder holder, ArisanFieldModel data) {
         holder.view.mOnetoManyLabel.setText(data.getLabel());
 
-        final ChildAdapter childAdapter = new ChildAdapter(data.getChildFieldModel(), activity, form);
+        final ChildAdapter childAdapter = new ChildAdapter(data, activity, form);
         holder.view.mOnetoManyList.setLayoutManager(new LinearLayoutManager(activity));
         holder.view.mOnetoManyList.setAdapter(childAdapter);
         holder.view.mOnetoManyAdd.setOnClickListener(new View.OnClickListener() {
@@ -628,7 +649,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         holder.view.mSpinnerLabel.setText(data.getLabel());
         //ArrayAdapter mAdapter = new ArrayAdapter(activity,android.R.layout.simple_spinner_item,(List)data.getData());
         final List<String> dataArray = FieldUtils.convertArrayToList(data.getData());
-        ArrayAdapter<String> mAdapter = new ArrayAdapter<>(activity,android.R.layout.simple_spinner_item,dataArray);
+        ArrayAdapter<String> mAdapter = new ArrayAdapter<>(activity,android.R.layout.simple_spinner_dropdown_item,dataArray);
         holder.view.mSpinner.setAdapter(mAdapter);
         holder.view.mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -897,6 +918,20 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         if(form.getButtonColor()!=0) holder.view.mSubmit.setTextColor(activity.getResources().getColor(form.getButtonColor()));
     }
 
+    private void ViewDelete(final ViewHolder holder, ArisanFieldModel data, int color) {
+        //SUBMIT BUTTON
+
+        holder.view.mDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSubmitListener.onSubmit("submit");
+            }
+        });
+
+        if(background!=0) holder.view.mSubmit.setBackgroundResource(background);
+        if(form.getButtonColor()!=0) holder.view.mSubmit.setTextColor(activity.getResources().getColor(form.getButtonColor()));
+    }
+
     private void ViewTitle(ViewHolder holder, ArisanFieldModel data, int color) {
         //TITLE
         holder.view.mTitle.setText(data.getLabel());
@@ -957,5 +992,13 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     public void setIndex_child(int index_child) {
         this.index_child = index_child;
+    }
+
+    public String getParent_field() {
+        return parent_field;
+    }
+
+    public void setParent_field(String parent_field) {
+        this.parent_field = parent_field;
     }
 }

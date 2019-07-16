@@ -50,8 +50,8 @@ public class AllField extends RealmObject {
     @Form(type = Form.CHECKBOX)
     RealmList<String> checkbox;
 
-    @Form(type = Form.ONETOMANY,relation = KK.class)
-    RealmList<KK> one_to_many;
+    @Form(type = Form.ONETOMANY,relation = ChildModel.class)
+    RealmList<ChildModel> one_to_many;
 
     @Form(type = Form.ONELINETEXT)
     String oneline_text;
@@ -142,15 +142,13 @@ public class AllField extends RealmObject {
         this.checkbox = checkbox;
     }
 
-    public void setOne_to_many(RealmList<KK> one_to_many) {
-        this.one_to_many = one_to_many;
-    }
-
-    public RealmList<KK> getOne_to_many() {
+    public RealmList<ChildModel> getOne_to_many() {
         return one_to_many;
     }
 
-
+    public void setOne_to_many(RealmList<ChildModel> one_to_many) {
+        this.one_to_many = one_to_many;
+    }
 
     public String getSpinner() {
         return spinner;
