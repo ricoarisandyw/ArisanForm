@@ -15,21 +15,22 @@ import java.util.Map;
 
 public class PreferenceHelper {
     private Context context;
-    private String MY_DB = "ARISAN_FORM";
+    private String DATABASE_NAME = "ARISAN_FORM";
 
     public PreferenceHelper(Context context){
         this.context = context;
+        DATABASE_NAME = context.getPackageName();
     }
 
     public void save(String key, String value){
-        SharedPreferences sharedPref = context.getSharedPreferences(MY_DB, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(DATABASE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key, value);
         editor.apply();
     }
 
     public void saveObj(String key, Object object){
-        SharedPreferences sharedPref = context.getSharedPreferences(MY_DB, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(DATABASE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         Gson gson = new Gson();
         String value = gson.toJson(object);
@@ -38,28 +39,28 @@ public class PreferenceHelper {
     }
 
     public List<Object> loadObjList(String key, Type type){
-        SharedPreferences sharedPref = context.getSharedPreferences(MY_DB, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(DATABASE_NAME, Context.MODE_PRIVATE);
         String result = sharedPref.getString(key, "");
         Gson gson = new Gson();
         return gson.fromJson(result, type);
     }
 
     public Map<Object,Object> loadMap(String key, Type type){
-        SharedPreferences sharedPref = context.getSharedPreferences(MY_DB, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(DATABASE_NAME, Context.MODE_PRIVATE);
         String result = sharedPref.getString(key, "");
         Gson gson = new Gson();
         return gson.fromJson(result, type);
     }
 
     public Object loadObj(String key, Class c){
-        SharedPreferences sharedPref = context.getSharedPreferences(MY_DB, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(DATABASE_NAME, Context.MODE_PRIVATE);
         String result = sharedPref.getString(key, "");
         Gson gson = new Gson();
         return gson.fromJson(result,c);
     }
 
     public String load(String key){
-        SharedPreferences sharedPref = context.getSharedPreferences(MY_DB, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(DATABASE_NAME, Context.MODE_PRIVATE);
         return sharedPref.getString(key, "");
     }
 }

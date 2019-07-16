@@ -220,17 +220,19 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             //UPDATE DATA
             for(ArisanFieldModel parent: fieldList) {
                 if(parent.getName().equals(imagePickerUtils.getParent_name())) {
-                    for(ArisanFieldModel a:parent.getChildFieldModel().get(imagePickerUtils.getChild_position()))
+                    for(ArisanFieldModel a:parent.getChildFieldModel().get(imagePickerUtils.getChild_position())) {
                         if (a.getName() != null && a.getName().equals(imagePickerUtils.getFieldName())) {
                             a.setData(uriTools.getFilename_with_ex());
                             a.setThumbnail(imagePickerUtils.getBitmap());
                             a.setValue(uriTools.getRealPath());
 
                             notifyDataSetChanged();
+                            Log.e("__Arisan", "Update image FOUND, index : " + imagePickerUtils.getChild_position());
                             break;
-                        }else{
-                            Log.e("__Arisan","Update image not found, index : "+imagePickerUtils.getChild_position());
+                        } else {
+                            Log.e("__Arisan", "Update image NOT FOUND, index : " + imagePickerUtils.getChild_position());
                         }
+                    }
                 }
             }
         }else{
