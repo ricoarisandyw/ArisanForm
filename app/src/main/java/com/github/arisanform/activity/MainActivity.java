@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,9 +18,8 @@ import com.github.arisan.ArisanForm;
 import com.github.arisan.ArisanListener;
 import com.github.arisan.ArisanPreparation;
 import com.github.arisan.adapter.ArisanAdapter;
-import com.github.arisan.annotation.Model;
+import com.github.arisan.adapter.ArisanListAdapter;
 import com.github.arisan.helper.DummyCreator;
-import com.github.arisan.helper.GsonUtils;
 import com.github.arisan.helper.ImagePickerUtils;
 import com.github.arisan.helper.Logger;
 import com.github.arisan.helper.ObjectReader;
@@ -46,9 +46,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.realm.RealmList;
 import okhttp3.MediaType;
@@ -66,12 +64,14 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
 
     RecyclerView vList;
     RecyclerView vForm;
+    ListView vListForm;
     TextView vDummyText;
     ImageView vImage;
 
     PreferenceHelper preference;
 
     ArisanAdapter arisanAdapter;
+    ArisanListAdapter arisanListAdapter;
     ArisanForm  form;
     FormC c;
     ConditionFormC cond;
@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements FormRebuilder{
 
         vList = findViewById(R.id.data_list);
         vForm = findViewById(R.id.data_form);
+        vListForm = findViewById(R.id.main_list);
         vDummyText = findViewById(R.id.dummy_text);
         vImage = findViewById(R.id.data_image);
 
