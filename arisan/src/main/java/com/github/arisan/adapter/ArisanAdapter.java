@@ -1,62 +1,13 @@
 package com.github.arisan.adapter;
 
-import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.net.Uri;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
-import android.text.format.DateFormat;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.SeekBar;
-import android.widget.TimePicker;
-
-import com.github.arisan.ArisanForm;
-import com.github.arisan.ImageDialog;
-import com.github.arisan.R;
-import com.github.arisan.annotation.ArisanCode;
-import com.github.arisan.annotation.Form;
-import com.github.arisan.annotation.Model;
-import com.github.arisan.helper.ChildUtils;
-import com.github.arisan.helper.DateConverter;
-import com.github.arisan.helper.FieldAssembler;
-import com.github.arisan.helper.FieldUtils;
-import com.github.arisan.helper.ImagePickerUtils;
-import com.github.arisan.helper.KotlinTextUtils;
-import com.github.arisan.helper.NumberUtils;
-import com.github.arisan.helper.PreferenceHelper;
-import com.github.arisan.helper.SortField;
-import com.github.arisan.helper.UriUtils;
-import com.github.arisan.model.ArisanFieldModel;
-import com.github.arisan.model.ListenerModel;
-import com.github.arisan.model.RadioModel;
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by wijaya on 3/27/2018.
  */
 
-public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder> {
-    private List<ArisanFieldModel> fieldList = new ArrayList<>();
+public class ArisanAdapter {
+    /*private static List<ArisanFieldModel> fieldList = new ArrayList<>();
     private Activity activity;
     private ArisanForm form;
     private OnSubmitListener onSubmitListener;
@@ -112,37 +63,34 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     @Override
     public ArisanAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         System.out.println("Arisan : OnCreateViewHolder Adapter");
-        return new ViewHolder(MyInflater.inflate(parent,viewType,isChild),new MyTextWatcher());
+        ViewHolder holder =new ViewHolder(MyInflater.inflate(parent,viewType,isChild,new FormConfig()));
+        return holder;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         MyView view;
-        MyTextWatcher textListener;
+        MyTextWatcher textWatcher;
 
-        ViewHolder(View v,MyTextWatcher textListener) {
+        ViewHolder(View v) {
             super(v);
             view = new MyView(v);
-            this.textListener = textListener;
+            textWatcher = new MyTextWatcher(this);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(position==0&&useTitle){
-            return 0;
-        }else if(position== fieldList.size()-1&&useSubmit) {
-            return Model.BUTTON;
-        }else{
-            return fieldList.get(position).getViewType();
-        }
+        if(position==0&&useTitle) return 0;
+        else if(position== fieldList.size()-1&&useSubmit) return Model.BUTTON;
+        else return fieldList.get(position).getViewType();
     }
 
     @Override
     public void onBindViewHolder(ArisanAdapter.ViewHolder holder, int position) {
-        final ArisanFieldModel data = fieldList.get(position);
+        ArisanFieldModel data = fieldList.get(position);
         int color = data.getColor();
         System.out.println("Arisan : onBind Adapter");
-        holder.textListener.updatePostition(holder.getAdapterPosition());
+        holder.textWatcher.updatePostition(position);
         System.out.printf("__TYPE : %s",data.getViewType());
         if(position==0&&useTitle){
             ViewTitle(holder, data, color);
@@ -168,7 +116,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                     case Form.AUTOCOMPLETE:ViewAutocomplete(holder, data);break;
                     case Form.PASSWORD:ViewPassword(holder, data);break;
                     case Form.ONELINETEXT :ViewOneLineText(holder,data,color);break;
-                    case Form.TEXT2 :ViewEditText2(holder,data,color);break;
+                    case Form.FLOWTEXT:ViewEditText2(holder,data,color);break;
                     default:ViewEditText(holder, data, color);
                 }
         }
@@ -176,16 +124,11 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        if(fieldList !=null)
-            return fieldList.size();
-        else if(useTitle && useSubmit)
-            return fieldList.size()+2;
-        else if(useSubmit)
-            return fieldList.size()+1;
-        else if(useTitle)
-            return fieldList.size()+1;
-        else
-            return 0;
+        if(fieldList !=null) return fieldList.size();
+        else if(useTitle && useSubmit) return fieldList.size()+2;
+        else if(useSubmit) return fieldList.size()+1;
+        else if(useTitle) return fieldList.size()+1;
+        else return 0;
     }
 
     public void setOnSubmitListener(OnSubmitListener onSubmitListener){
@@ -288,12 +231,12 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         List<ArisanFieldModel> models = getListField();//Parent
         List<String> arr_string = FieldUtils.countBlank(models);
         no_blank = arr_string.size() == 0;
-        blank.append(new KotlinTextUtils().join(arr_string));
+        blank.append(TextUtils.join(arr_string));
         blank.append(" ").append(blank_message);
         return blank.toString();
     }
 
-    /*SETTER GETTER*/
+    *//*SETTER GETTER*//*
 
     public String getResult(){
         return FieldAssembler.toJson(fieldList);
@@ -313,11 +256,12 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         return models;
     }
 
-    /*=================VIEW CONDITION=====================*/
+    *//*=================VIEW CONDITION=====================*//*
 
-    private void ViewEditText(final ViewHolder holder, final ArisanFieldModel data, int color) {
+    private void ViewEditText(final ViewHolder holder,ArisanFieldModel data, int color) {
         holder.view.mEditTextLabel.setText(data.getLabel());
         Log.d("__TYPE", String.valueOf(data.getViewType()));
+        holder.view.mEditText.addTextChangedListener(holder.textWatcher);
         switch (data.getViewType()) {
             case Form.NUMBER: {
 //                Log.d("__TYPE","NUMBER");
@@ -352,8 +296,6 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             }break;
         }
 
-        holder.view.mEditText.addTextChangedListener(holder.textListener);
-
         if(label_color!=0) holder.view.mEditTextLabel.setTextColor(activity.getResources().getColor(label_color));
     }
 
@@ -370,7 +312,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             holder.view.mEditText2.setError(data.getError_message());
         }
 
-        holder.view.mEditText2.addTextChangedListener(holder.textListener);
+        holder.view.mEditText2.addTextChangedListener(holder.textWatcher);
 
         if(label_color!=0) holder.view.mEditText2.setHintTextColor(activity.getResources().getColor(label_color));
     }
@@ -388,13 +330,18 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             holder.view.mOneLineText.setError(data.getError_message());
         }
 
-        holder.view.mOneLineText.addTextChangedListener(holder.textListener);
+        holder.view.mOneLineText.addTextChangedListener(holder.textWatcher);
 
 //        if(label_color!=0) holder.view.mOneLineText.setHintTextColor(activity.getResources().getColor(label_color));
     }
 
     private class MyTextWatcher implements TextWatcher{
         int position;
+        ViewHolder vh;
+
+        public MyTextWatcher(ViewHolder _vh){
+            this.vh = _vh;
+        }
 
         void updatePostition(int position) {
             this.position = position;
@@ -402,7 +349,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            Log.d("__beforeChange",fieldList.get(position).getName()+":"+s.toString());
         }
 
         @Override
@@ -413,6 +360,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
                 fieldList.get(position).setValue(null);
             } else {
                 fieldList.get(position).setValue(value);
+                Log.d("__OnTextChange",fieldList.get(position).getName()+":"+value);
             }
 
             try{
@@ -424,13 +372,13 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
 
         @Override
         public void afterTextChanged(Editable s) {
-
+            Log.d("__afterChange",fieldList.get(position).getName()+":"+s.toString());
         }
     }
 
     private void ViewPassword(final ViewHolder holder, final ArisanFieldModel data) {
         holder.view.mPasswordLabel.setText(data.getLabel());
-        holder.view.mPassword.addTextChangedListener(holder.textListener);
+        holder.view.mPassword.addTextChangedListener(holder.textWatcher);
         holder.view.mPassword.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -478,7 +426,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         AutocompleteAdapter adapter = new AutocompleteAdapter(activity, android.R.layout.select_dialog_item, datas);
         holder.view.mAutocomplete.setThreshold(1); //will start working from first character
         holder.view.mAutocomplete.setAdapter(adapter);
-        holder.view.mAutocomplete.addTextChangedListener(holder.textListener);
+        holder.view.mAutocomplete.addTextChangedListener(holder.textWatcher);
 
         holder.view.mAutocomplete.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -545,7 +493,7 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
             holder.view.mEditTextSearch = (EditText) data.doViewMod(holder.view.mEditTextSearch);
         }catch (Exception ignored){ }
 
-        //holder.view.mEditTextSearch.addTextChangedListener(holder.textListener);
+        //holder.view.mEditTextSearch.addTextChangedListener(holder.textWatcher);
 
         if(data.getValue()!=null) holder.view.mEditTextSearch.setText(data.getValue().toString());
         if(label_color!=0) holder.view.mSearchLabel.setTextColor(activity.getResources().getColor(label_color));
@@ -948,6 +896,8 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
         if(label_color!=0) holder.view.mTitle.setTextColor(activity.getResources().getColor(label_color));
     }
 
+//    =============END OF VIEW===================
+
     public int getBackground() {
         return background;
     }
@@ -1023,5 +973,5 @@ public class ArisanAdapter extends RecyclerView.Adapter<ArisanAdapter.ViewHolder
     public void setProgressListener(ProgressListener progressListener) {
         this.progressListener = progressListener;
         progressListener.showProgress();
-    }
+    }*/
 }

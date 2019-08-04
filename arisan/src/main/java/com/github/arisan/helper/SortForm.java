@@ -4,7 +4,7 @@ import com.github.arisan.model.FormModel;
 
 import java.util.Comparator;
 
-public class SortField implements Comparator<FormModel>
+public class SortForm implements Comparator<FormModel>
 {
     // Used for sorting in ascending order of
     // roll number
@@ -13,7 +13,7 @@ public class SortField implements Comparator<FormModel>
         return o1.getPosition() - o2.getPosition();
     }
 
-    public static SortField getInstance(){
-        return new SortField();
+    public static SortForm getInstance(){
+        return new SortForm();
     }
 }

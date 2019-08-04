@@ -9,7 +9,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.github.arisan.R;
-import com.github.arisan.model.ArisanFieldModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +20,7 @@ public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.ViewHo
     List<String> checkedData;
     OnCheckedListener onCheckedListener;
 
-    CheckboxAdapter(List<String> mDataset, List<String> checkedData) {
+    public CheckboxAdapter(List<String> mDataset, List<String> checkedData) {
         this.mDataset = mDataset;
         this.checkedData = checkedData;
         if(this.checkedData==null){
@@ -29,7 +28,7 @@ public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.ViewHo
         }
     }
 
-    void setOnCheckedListener(OnCheckedListener onCheckedListener) {
+    public void setOnCheckedListener(OnCheckedListener onCheckedListener) {
         this.onCheckedListener = onCheckedListener;
     }
 
@@ -79,7 +78,7 @@ public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.ViewHo
         }
     }
 
-    interface OnCheckedListener{
+    public interface OnCheckedListener{
         void onChecked(String checked, List<String> already_checked);
     }
 }

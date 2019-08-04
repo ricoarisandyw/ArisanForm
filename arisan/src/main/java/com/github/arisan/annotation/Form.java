@@ -41,5 +41,7 @@ public @interface Form {
     int CAMERA = 198;
     int GALLERY = 199;
     int ONELINETEXT = 200;
-    int TEXT2 = 201;
+    int FLOWTEXT = 201;
+    int BUTTON = 202;
+    int TITLE = 203;
 }

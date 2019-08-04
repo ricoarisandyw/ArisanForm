@@ -52,7 +52,7 @@
             android:src="@drawable/picture"
             android:padding="15dp"
             android:layout_gravity="center"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="180dp"
             android:contentDescription="TODO" />
     </LinearLayout>

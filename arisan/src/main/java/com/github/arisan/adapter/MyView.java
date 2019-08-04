@@ -21,62 +21,66 @@ import com.github.arisan.R;
 public class MyView {
     View view;
 
-    TextView mTitle,mBlankText;
+    public TextView mTitle,mBlankText;
     //BUTTON
-    LinearLayout mSubmit;
-    ProgressBar mProgress;
-    TextView mSubmitText;
+    public LinearLayout mSubmit;
+    public ProgressBar mProgress;
+    public TextView mSubmitText;
     //TEXT
-    TextView mEditTextLabel,mDateLabel,mSpinnerLabel;
-    EditText mEditText;
+    public TextView mEditTextLabel,mDateLabel,mSpinnerLabel;
+    public EditText mEditText;
     //ONELINE
-    TextView mOneLineText;
-    //TEXT2
-    TextInputLayout mEditText2Layout;
-    TextView mEditText2;
+    public TextView mOneLineText;
+    //FLOWTEXT
+    public TextInputLayout mEditText2Layout;
+    public TextView mEditText2;
     //PASSOWRD
-    TextView mPasswordLabel;
-    EditText mPassword;
+    public TextView mPasswordLabel;
+    public EditText mPassword;
     //SEARCH
-    EditText mEditTextSearch;
-    TextView mSearchLabel;
-    ImageView mSearchButton;
+    public EditText mEditTextSearch;
+    public TextView mSearchLabel;
+    public ImageView mSearchButton;
     //BOOLEAN
-    Switch aSwitch;
+    public Switch aSwitch;
     //SPINNER
-    AppCompatSpinner mSpinner;
+    public AppCompatSpinner mSpinner;
     //FILE
-    Button mFile;
-    TextView mFileName,mFileLabel;
+    public Button mFile;
+    public TextView mFileName,mFileLabel;
     //DATETIME
-    TextView mDate;
+    public TextView mDate;
     //CHECKBOX
-    RecyclerView mCheckboxParent;
-    TextView mCheckboxLabel;
-    EditText mCheckboxText;
+    public RecyclerView mCheckboxParent;
+    public TextView mCheckboxLabel;
+    public EditText mCheckboxText;
     //ONETOMANY
-    RecyclerView mOnetoManyList;
-    TextView mOnetoManyLabel;
-    Button mOnetoManyAdd;
+    public RecyclerView mOnetoManyList;
+    public TextView mOnetoManyLabel;
+    public Button mOnetoManyAdd;
     //RADIO BUTTON
-    RadioGroup mRadioGroup;
-    TextView mRadioLabel;
-    EditText mRadioText;
+    public RadioGroup mRadioGroup;
+    public TextView mRadioLabel;
+    public EditText mRadioText;
     //SLIDER
-    TextView mSlideLabel;
-    TextView mSlideValue;
-    SeekBar mSlide;
+    public TextView mSlideLabel;
+    public TextView mSlideValue;
+    public SeekBar mSlide;
     //IMAGE
-    TextView mImageLabel,mImageName;
-    ImageView mImage;
-    Button mImagePick;
+    public TextView mImageLabel,mImageName;
+    public ImageView mImage;
+    public Button mImagePick;
     //AUTOCOMPLETE
-    AppCompatAutoCompleteTextView mAutocomplete;
-    TextView mAutocompleteLabel;
+    public AppCompatAutoCompleteTextView mAutocomplete;
+    public TextView mAutocompleteLabel;
     //DELETE
-    ImageView mDelete;
+    public ImageView mDelete;
+    //MANY
+    public LinearLayout vManyContainer;
+    public TextView vManyLabel;
+    public Button vManyAdd;
 
-    MyView(View v) {
+    public MyView(View v) {
         this.view = v;
 
         mPasswordLabel = v.findViewById(R.id.arisan_password_label);
@@ -121,5 +125,8 @@ public class MyView {
         mDelete = v.findViewById(R.id.arisan_delete);
         mProgress = v.findViewById(R.id.arisan_button_progress);
         mSubmitText = v.findViewById(R.id.arisan_button_text);
+        vManyAdd = v.findViewById(R.id.arisan_many_add);
+        vManyContainer = v.findViewById(R.id.arisan_many_list);
+        vManyLabel = v.findViewById(R.id.arisan_many_label);
     }
 }

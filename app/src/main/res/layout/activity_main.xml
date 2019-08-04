@@ -57,11 +57,10 @@
             android:layout_marginTop="8dp" />
 
         <ImageView
-            android:visibility="gone"
             android:id="@+id/data_image"
             android:layout_margin="10dp"
             android:padding="10dp"
-            android:src="@drawable/ic_camera"
+            android:src="@drawable/picture"
             android:layout_width="match_parent"
             android:layout_height="200dp" />
 

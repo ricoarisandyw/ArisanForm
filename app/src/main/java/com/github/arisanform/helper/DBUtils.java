@@ -3,8 +3,6 @@ package com.github.arisanform.helper;
 import android.content.Context;
 
 import com.github.arisan.helper.PreferenceHelper;
-import com.github.arisan.model.ArisanFieldModel;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;

@@ -1,9 +1,6 @@
 package com.github.arisanform.model;
 
-import android.net.Uri;
-
 import com.github.arisan.annotation.Form;
-import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -56,7 +53,7 @@ public class AllField extends RealmObject {
     @Form(type = Form.ONELINETEXT)
     String oneline_text;
 
-    @Form(type = Form.TEXT2)
+    @Form(type = Form.FLOWTEXT)
     String text2;
 
     public AllField() {

@@ -36,6 +36,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     //PERMISSION
     implementation 'com.karumi:dexter:5.0.0'
+    //GLIDE
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

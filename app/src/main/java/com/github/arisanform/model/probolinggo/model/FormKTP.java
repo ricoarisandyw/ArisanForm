@@ -1,63 +1,43 @@
 package com.github.arisanform.model.probolinggo.model;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import com.github.arisan.annotation.Form;
+import com.google.gson.Gson;
 
-public class KTP extends RealmObject{
-    @PrimaryKey
-    int id_local;
-
-    int id;
+public class FormKTP {
+    @Form(position = 0,label="NIK",type = Form.SEARCH)
     String nik;
-    String desa_pengantar;
+    @Form(position = 1,label="Tipe Pengajuan",type = Form.SPINNER,required = true)
     String tipe_pengajuan;
+    @Form(position = 2,label = "Desa Pengantar",type = Form.AUTOCOMPLETE, required = true)
+    String desa_pengantar;
+    @Form(position = 2,label="Nama",required = true)
     String nik_nama;
+    @Form(position = 4,label="No KK",required = true)
     String nik_no_kk;
+    @Form(position = 5,label="Status Pernikahan",type = Form.RADIO,required = true)
     String nik_status_pernikahan;
+    @Form(position = 6,label="Pekerjaan Desc",required = true)
     String nik_pekerjaan_desc;
+    @Form(position = 7,label="Alamat Lengkap",required = true)
     String nik_alamat_lengkap;
+    @Form(type = Form.DATE,position = 9,label="Tanggal Lahir",required = true,format = "yyyy-MM-dd")
     String nik_tanggal_lahir;
+    @Form(position = 10,label="Tempat Lahir",required = true)
     String nik_tempat_lahir;
+    @Form(position = 11,label="Jenis Kelamin",type = Form.RADIO,required = true)
     String nik_jenis_kelamin;
+    @Form(position = 12,label="Agama", type = Form.SPINNER,required = true)
     String nik_agama;
+    @Form(position = 13,label="Gol Darah",required = true)
     String nik_gol_darah;
+    @Form(position = 14,label="No Telp",required = true)
     String nik_no_telp;
+    @Form(position = 15,label="Lampiran Foto",type = Form.IMAGE,required = true)
     String lampiran_foto;
+    @Form(position = 16,label="Lampiran FormKK",type = Form.IMAGE,required = true)
     String lampiran_kk;
 
-    String kode;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId_local() {
-        return id_local;
-    }
-
-    public void setId_local(int id_local) {
-        this.id_local = id_local;
-    }
-
-    public String getNik() {
-        return nik;
-    }
-
-    public void setNik(String nik) {
-        this.nik = nik;
-    }
-
-    public String getDesa_pengantar() {
-        return desa_pengantar;
-    }
-
-    public void setDesa_pengantar(String desa_pengantar) {
-        this.desa_pengantar = desa_pengantar;
-    }
+    public FormKTP() { }
 
     public String getTipe_pengajuan() {
         return tipe_pengajuan;
@@ -73,6 +53,14 @@ public class KTP extends RealmObject{
 
     public void setNik_nama(String nik_nama) {
         this.nik_nama = nik_nama;
+    }
+
+    public String getNik_tanggal_lahir() {
+        return nik_tanggal_lahir;
+    }
+
+    public void setNik_tanggal_lahir(String nik_tanggal_lahir) {
+        this.nik_tanggal_lahir = nik_tanggal_lahir;
     }
 
     public String getNik_no_kk() {
@@ -107,12 +95,12 @@ public class KTP extends RealmObject{
         this.nik_alamat_lengkap = nik_alamat_lengkap;
     }
 
-    public String getNik_tanggal_lahir() {
-        return nik_tanggal_lahir;
+    public String getNik() {
+        return nik;
     }
 
-    public void setNik_tanggal_lahir(String nik_tanggal_lahir) {
-        this.nik_tanggal_lahir = nik_tanggal_lahir;
+    public void setNik(String nik) {
+        this.nik = nik;
     }
 
     public String getNik_tempat_lahir() {
@@ -171,11 +159,11 @@ public class KTP extends RealmObject{
         this.lampiran_kk = lampiran_kk;
     }
 
-    public String getKode() {
-        return kode;
+    public String getDesa_pengantar() {
+        return desa_pengantar;
     }
 
-    public void setKode(String kode) {
-        this.kode = kode;
+    public void setDesa_pengantar(String desa_pengantar) {
+        this.desa_pengantar = desa_pengantar;
     }
 }

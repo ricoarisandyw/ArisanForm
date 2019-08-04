@@ -1,8 +1,6 @@
 package com.github.arisan.model;
 
 import android.graphics.Bitmap;
-import android.view.View;
-import android.widget.TextView;
 
 import com.github.arisan.ArisanListener;
 import com.github.arisan.adapter.ArisanAdapter;
@@ -12,7 +10,7 @@ import java.util.List;
 /**
  * Created by wijaya on 3/26/2018.
  */
-public class ArisanFieldModel {
+public class FormModel {
     private String fieldType;
     private String label;
     private String name;
@@ -24,20 +22,23 @@ public class ArisanFieldModel {
     private String dateFormat;
     private String fileType;
     private boolean require;
+    //Config
     private int background;
     private int submit_color;
     private int color;
-    private List<List<ArisanFieldModel>> childFieldModel;
-    private ArisanListener.Condition arisanListener;
+
+    private List<List<FormModel>> childFieldModel;
+    private ArisanListener.OnCondition arisanListener;
     private ArisanListener.CheckboxCondition checkboxListener;
     private ArisanListener.ViewMod viewMod;
+
     Bitmap thumbnail;
 
-    public ArisanListener.Condition getArisanListener() {
+    public ArisanListener.OnCondition getArisanListener() {
         return arisanListener;
     }
 
-    public void setArisanListener(ArisanListener.Condition arisanListener) {
+    public void setArisanListener(ArisanListener.OnCondition arisanListener) {
         this.arisanListener = arisanListener;
     }
 
@@ -61,7 +62,7 @@ public class ArisanFieldModel {
         this.viewMod = viewMod;
     }
 
-    public List<List<ArisanFieldModel>> getChildFieldModel() {
+    public List<List<FormModel>> getChildFieldModel() {
         return childFieldModel;
     }
 
@@ -73,11 +74,11 @@ public class ArisanFieldModel {
         this.submit_color = submit_color;
     }
 
-    public void setChildFieldModel(List<List<ArisanFieldModel>> childFieldModel) {
+    public void setChildFieldModel(List<List<FormModel>> childFieldModel) {
         this.childFieldModel = childFieldModel;
     }
 
-    public void addCondition(ArisanListener.Condition arisanListener) {
+    public void addCondition(ArisanListener.OnCondition arisanListener) {
         this.arisanListener = arisanListener;
     }
 
@@ -90,7 +91,11 @@ public class ArisanFieldModel {
     }
 
     public ListenerModel doListener(String value, ArisanAdapter adapter){
-        return arisanListener.onValue(value,adapter);
+        return arisanListener.onValue(value);
+    }
+
+    public ListenerModel doListener(String value){
+        return arisanListener.onValue(value);
     }
 
     public int getColor() {
@@ -101,7 +106,7 @@ public class ArisanFieldModel {
         this.color = color;
     }
 
-    public ArisanFieldModel() {
+    public FormModel() {
     }
 
     public int getBackground() {
@@ -206,8 +211,8 @@ public class ArisanFieldModel {
         this.thumbnail = thumbnail;
     }
 
-    public ArisanFieldModel renew(){
-        ArisanFieldModel new_model = new ArisanFieldModel();
+    public FormModel renew(){
+        FormModel new_model = new FormModel();
         new_model.setValue(value);
         new_model.setChildFieldModel(childFieldModel);
         new_model.setBackground(background);

@@ -2,7 +2,7 @@ package com.github.arisan.helper;
 
 import android.util.Log;
 
-import com.github.arisan.model.ArisanFieldModel;
+import com.github.arisan.model.FormModel;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -14,11 +14,12 @@ import java.util.Map;
  */
 
 public class FieldAssembler {
-    public static String toJson(List<ArisanFieldModel> data) {
+
+    public static String toFormJson(List<FormModel> data) {
         StringBuilder result = new StringBuilder("{");
         List<String> json_list = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
-            ArisanFieldModel model = data.get(i).renew();
+            FormModel model = data.get(i).renew();
 
             //For model type List
             if (model.getChildFieldModel() != null) {
@@ -40,7 +41,7 @@ public class FieldAssembler {
         return result.toString();
     }
 
-    public static String convertModelToJson(ArisanFieldModel model) {
+    public static String convertModelToJson(FormModel model) {
         Gson gson = new Gson();
         StringBuilder result = new StringBuilder();
         if (model.getValue() != null) {
@@ -50,21 +51,22 @@ public class FieldAssembler {
         return result.toString();
     }
 
-    public static String convertListToJson(ArisanFieldModel model) {
-        List<List<ArisanFieldModel>> data = model.getChildFieldModel();
+    public static String convertListToJson(FormModel model) {
+        List<List<FormModel>> data = model.getChildFieldModel();
         if (data != null && data.size() > 0) {
             StringBuilder result = new StringBuilder();
             result.append("\"").append(model.getName()).append("\":");
+            //Begin array definition
             result.append("[");
-            for (int i = 0; i < data.size(); i++) {
-                String json = toJson(data.get(i));
-                if (!json.equals("{}")) {
-                    result.append(toJson(data.get(i)));
-                    if (i < data.size() - 1) {
-                        result.append(",");
-                    }
-                }
+            List<String> json_list = new ArrayList<>();
+            for (List<FormModel> m:data) {
+                String json = toFormJson(m);
+                json_list.add(json);
             }
+
+            String combine = new KotlinFilter().combineJson(json_list);
+            result.append(combine);
+
             result.append("]");
             return result.toString();
         }

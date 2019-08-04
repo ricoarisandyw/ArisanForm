@@ -14,7 +14,7 @@ public class AutocompleteAdapter extends ArrayAdapter {
     List<String> originalCodes;
     StringFilter filter;
 
-    AutocompleteAdapter(Context context, int resource, List<String> keys){
+    public AutocompleteAdapter(Context context, int resource, List<String> keys){
         super(context,resource,keys);
         allCodes=keys;
         originalCodes=keys;
