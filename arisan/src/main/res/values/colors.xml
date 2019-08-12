@@ -4,4 +4,5 @@
     <color name="font">#737373</color>
     <color name="pale_gray">#CDCDCD</color>
     <color name="label">#101010</color>
+    <color name="orange">@android:color/holo_orange_light</color>
 </resources>

@@ -2,23 +2,24 @@ package com.github.arisanform.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.github.arisan.ArisanListener;
-import com.github.arisan.FormView;
+import com.github.arisan.FormConfig;
+import com.github.arisan.ArisanForm;
 import com.github.arisan.helper.DummyCreator;
 import com.github.arisan.helper.ImagePickerUtils;
 import com.github.arisan.helper.Logger;
 import com.github.arisan.helper.ObjectReader;
-import com.github.arisan.model.ListenerModel;
 import com.github.arisanform.R;
 import com.github.arisanform.model.AllField;
 import com.github.arisanform.model.MyResponse;
 import com.github.arisanform.model.Url;
 import com.github.arisanform.network.API;
 import com.github.arisanform.network.Controller;
+import com.github.arisanform.probolinggo.FormActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,12 +35,16 @@ import retrofit2.Response;
 
 public class SecondActivity extends AppCompatActivity {
 
-    FormView myLayout;
+    ArisanForm myLayout;
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
+
+        //PROBOLINGGO
+        startActivity(new Intent(this, FormActivity.class));
+        finish();
 
         myLayout = findViewById(R.id.inflater_view);
 
@@ -50,10 +55,22 @@ public class SecondActivity extends AppCompatActivity {
         myLayout.addListener("radio", value -> {
             myLayout.updateValue("search",value);
             myLayout.updateData("radio",arr);
-
+            myLayout.showSubmitProgress(true);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    myLayout.showSubmitProgress(false);
+                }
+            },3000);
             return null;
         });
 
+        FormConfig config = new FormConfig();
+        config.background = R.drawable.btn_success;
+        config.labelColor = R.color.orange;
+        config.buttonColor = R.color.colorDanger;
+
+        myLayout.setConfig(config);
         myLayout.addListener("image",value -> {
             File file = new File(value);
 

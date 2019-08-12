@@ -1,6 +1,8 @@
-package com.github.arisanform.model.probolinggo.model;
+package com.github.arisanform.probolinggo.form;
 
 import com.github.arisan.annotation.Form;
+import com.github.arisanform.probolinggo.model.KTP;
+import com.github.arisanform.probolinggo.model.MasterData;
 import com.google.gson.Gson;
 
 public class FormKTP {
@@ -32,9 +34,9 @@ public class FormKTP {
     String nik_gol_darah;
     @Form(position = 14,label="No Telp",required = true)
     String nik_no_telp;
-    @Form(position = 15,label="Lampiran Foto",type = Form.IMAGE,required = true)
+    @Form(position = 15,label="Lampiran Foto",type = Form.IMAGE,required = false)
     String lampiran_foto;
-    @Form(position = 16,label="Lampiran FormKK",type = Form.IMAGE,required = true)
+    @Form(position = 16,label="Lampiran FormKK",type = Form.IMAGE,required = false)
     String lampiran_kk;
 
     public FormKTP() { }
@@ -165,5 +167,26 @@ public class FormKTP {
 
     public void setDesa_pengantar(String desa_pengantar) {
         this.desa_pengantar = desa_pengantar;
+    }
+
+    public KTP toKTP(){
+        KTP ktp = new Gson().fromJson(new Gson().toJson(this),KTP.class);
+        ktp.setNik_agama(""+(MasterData.find(MasterData.Array.AGAMA,this.nik_agama)));
+        ktp.setNik_status_pernikahan(""+(MasterData.find(MasterData.Array.STATUS_PERNIKAHAN,this.nik_status_pernikahan)+1));
+        ktp.setNik_jenis_kelamin(""+(MasterData.find(MasterData.Array.JENIS_KELAMIN,this.nik_jenis_kelamin)+1));
+        ktp.setNik_gol_darah(""+(MasterData.find(MasterData.Array.GOLONGAN_DARAH,this.nik_gol_darah)+1));
+        ktp.setTipe_pengajuan(""+(MasterData.find(MasterData.Array.TIPE_PENGAJUAN,this.tipe_pengajuan)+1));
+        ktp.setDesa_pengantar(MasterData.DAFTAR_DESA_ID[MasterData.find(MasterData.DAFTAR_DESA,this.desa_pengantar)]);
+        return ktp;
+    }
+
+    public static FormKTP fromKTP(KTP ktp){
+        FormKTP formKTP = new Gson().fromJson(new Gson().toJson(ktp),FormKTP.class);
+        formKTP.nik_alamat_lengkap = ktp.getNik_alamat_lengkap();
+        if(ktp.getNik_agama()!=null) formKTP.nik_agama = MasterData.Array.AGAMA[Integer.parseInt(ktp.getNik_agama())];
+        if(ktp.getNik_status_pernikahan()!=null)formKTP.nik_status_pernikahan = MasterData.Array.STATUS_PERNIKAHAN[Integer.parseInt(ktp.getNik_status_pernikahan())];
+        if(ktp.getDesa_pengantar()!=null) formKTP.nik_alamat_lengkap = MasterData.DAFTAR_DESA[MasterData.find(MasterData.DAFTAR_DESA_ID,ktp.getDesa_pengantar())];
+        if(ktp.getNik_jenis_kelamin()!=null) formKTP.nik_jenis_kelamin = MasterData.Array.JENIS_KELAMIN[Integer.parseInt(ktp.getNik_jenis_kelamin())];
+        return formKTP;
     }
 }

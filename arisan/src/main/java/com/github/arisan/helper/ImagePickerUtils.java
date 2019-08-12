@@ -119,11 +119,41 @@ public class ImagePickerUtils {
     private void extractFromCamera() {
         Bundle extras = data.getExtras();
         Bitmap bitmap = (Bitmap) extras.get("data");
-        Uri uri = saveBitmap(bitmap);
-        if(uri!=null){
+        if(bitmap!=null) {
             setBitmap(bitmap);
-            setUri(uri);
-            setFile(new File(uri.getPath()));
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            byte[] bitmapdata = bos.toByteArray();
+
+            /*SAVE IMAGE TO EXTERNAL STORAGE*/
+            String path = android.os.Environment.getExternalStorageDirectory()
+                    + File.separator
+                    + context.getApplicationContext().getPackageName();
+
+            File folder = new File(path);
+            if (!folder.exists()) folder.mkdir();
+
+            OutputStream outFile;
+            String file_name = System.currentTimeMillis() + ".jpg";
+            File file = new File(path, file_name);
+            try {
+                outFile = new FileOutputStream(file);
+                outFile.write(bitmapdata);
+                outFile.flush();
+                outFile.close();
+
+                setUri(Uri.fromFile(file));
+                setFile(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else{
+            Toast.makeText(context, "No image captured", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -152,6 +182,7 @@ public class ImagePickerUtils {
                 outFile.write(bitmapdata);
                 outFile.flush();
                 outFile.close();
+                return Uri.fromFile(file);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -159,7 +190,7 @@ public class ImagePickerUtils {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return Uri.fromFile(file);
+            return null;
         }else{
             Toast.makeText(context, "No image captured", Toast.LENGTH_SHORT).show();
             return null;

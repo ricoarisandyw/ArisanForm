@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.github.arisan.adapter.ArisanAdapter;
 import com.github.arisan.adapter.FormAdapter;
@@ -15,12 +16,13 @@ import com.github.arisan.helper.KotlinFilter;
 import com.github.arisan.helper.ObjectReader;
 import com.github.arisan.helper.PreferenceHelper;
 import com.github.arisan.model.FormModel;
+import com.github.arisan.model.ListenerModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class FormView extends ScrollView {
+public class ArisanForm extends ScrollView {
     private List<FormModel> fieldModels = new ArrayList<>();
     private FormConfig config = new FormConfig();
     private FormAdapter.OnSubmitListener onSubmitListener;
@@ -29,7 +31,6 @@ public class FormView extends ScrollView {
     private boolean no_blank = false;
     private boolean isChild = false;
     private int index_child = -1;
-    private String parent_field;
     private ArisanListener.ProgressListener progressListener;
 
     private FormAdapter formAdapter;
@@ -55,6 +56,7 @@ public class FormView extends ScrollView {
     }
 
     public void buildForm(){
+        child.removeAllViews();
         formAdapter = new FormAdapter(getContext());
         formAdapter.setOnSubmitListener(onSubmitListener);
         if(config!=null) formAdapter.setConfig(config);
@@ -63,37 +65,52 @@ public class FormView extends ScrollView {
         formAdapter.processData();
     }
 
+    public void notifyValue(){
+        for(FormModel model:this.fieldModels){
+            formAdapter.updateValue(model.getName(),model.getValue());
+        }
+    }
+
     public void updateImage(ImagePickerUtils utils){
         formAdapter.updateImage(utils);
     }
 
     //========CONTEXT INIT============//
 
-    public FormView(Context context) {
+    public ArisanForm(Context context) {
         super(context);
         Log.d("INIT A","");
         init();
     }
 
-    public FormView(Context context, @Nullable AttributeSet attrs) {
+    public ArisanForm(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         Log.d("INIT","B");
         init();
     }
 
-    public FormView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ArisanForm(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         Log.d("INIT","C");
         init();
     }
 
-    public FormView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ArisanForm(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         Log.d("INIT","D");
         init();
     }
 
     //============SET GET=============/
+
+
+    public FormAdapter getFormAdapter() {
+        return formAdapter;
+    }
+
+    public void setFormAdapter(FormAdapter formAdapter) {
+        this.formAdapter = formAdapter;
+    }
 
     //Before processed
     public void addListener(String field_name, ArisanListener.OnCondition condition){
@@ -128,6 +145,8 @@ public class FormView extends ScrollView {
         this.onSubmitListener = onSubmitListener;
     }
 
+    //=========UPDATER==========//
+
     public void updateValue(String field_name,Object data){
         this.formAdapter.updateValue(field_name,data);
     }
@@ -138,5 +157,27 @@ public class FormView extends ScrollView {
 
     public void updateData(String field_name,Object data){
         this.formAdapter.updateData(field_name,data);
+    }
+
+    public void fillData(String field_name,Object data){
+        FormModel model = new KotlinFilter().findFieldByName(field_name,this.fieldModels);
+        if(model!=null) model.setData(data);
+    }
+
+    public void notifyValueSetChanged(){
+        for(FormModel new_model : this.fieldModels){
+            FormModel old_model = new KotlinFilter().findFieldByName(new_model.getName(),formAdapter.getFieldModels());
+            if(old_model!=null&&old_model.getValue()!=new_model.getValue()){
+                updateValue(new_model.getName(),new_model.getValue());
+            }
+        }
+    }
+
+    public void showSubmitProgress(boolean show){
+        formAdapter.showSubmitProgress(show);
+    }
+
+    public void updateConfig(FormConfig config){
+        formAdapter.setConfig(config);
     }
 }

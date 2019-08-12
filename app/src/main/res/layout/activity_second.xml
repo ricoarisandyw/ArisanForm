@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.github.arisan.FormView
+    <com.github.arisan.ArisanForm
         android:id="@+id/inflater_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

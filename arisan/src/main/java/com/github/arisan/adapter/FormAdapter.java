@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.github.arisan.ArisanListener;
 import com.github.arisan.FormConfig;
@@ -224,6 +226,7 @@ public class FormAdapter extends LinearLayout {
 
     private void ViewEditText2(final FormViewHolder holder, final FormModel data, int color) {
         holder.view.mEditText2Layout.setHint(data.getLabel());
+
         Log.d("__TYPE", String.valueOf(data.getViewType()));
         //Input Type Text
         if (data.getValue() != null) {
@@ -622,7 +625,12 @@ public class FormAdapter extends LinearLayout {
 
     private void ViewRadio(final FormViewHolder holder, final int position, final FormModel data) {
         String value = (String) data.getValue();
-        List<RadioModel> dataList = FieldUtils.convertDataToRadio(data.getData());
+        List<RadioModel> dataList = null;
+        try {
+            dataList = FieldUtils.convertDataToRadio(data.getData());
+        }catch (Exception e){
+            Log.e("ARISAN FORM",data.getName()+" data not match with requirement. Radio need Array or List data.");
+        }
         holder.view.mRadioGroup.removeAllViews();
         for(RadioModel mData:dataList){
             RadioButton btn = new RadioButton(getContext());
@@ -735,9 +743,12 @@ public class FormAdapter extends LinearLayout {
     }
 
     public void showSubmitProgress(boolean roll){
-        /*if(isUseSubmit())
-            fieldModels.get(fieldModels.size()-1).setData(roll);
-        notifyDataSetChanged();*/
+        FormViewHolder holder = this.holderList.get(holderList.size()-1);
+        if(config.useSubmit&&roll) {
+            holder.view.mProgress.setVisibility(VISIBLE);
+        }else {
+            holder.view.mProgress.setVisibility(GONE);
+        }
     }
 
     private void ViewSubmit(final FormViewHolder holder, FormModel data, int color) {
@@ -759,7 +770,10 @@ public class FormAdapter extends LinearLayout {
 
                 if(no_blank){
                     holder.view.mBlankText.setVisibility(View.GONE);
-                    onSubmitListener.onSubmit(json);
+                    if(holder.view.mProgress.getVisibility()==VISIBLE)
+                        Toast.makeText(getContext(), "Loading . . .", Toast.LENGTH_SHORT).show();
+                    else
+                        onSubmitListener.onSubmit(json);
                 }else{
                     holder.view.mBlankText.setVisibility(View.VISIBLE);
                     holder.view.mBlankText.setText(checkBlankCondition());
@@ -898,6 +912,11 @@ public class FormAdapter extends LinearLayout {
         this.config = config;
     }
 
+    public void updateConfig(FormConfig config){
+        this.config = config;
+
+    }
+
     public OnSubmitListener getOnSubmitListener() {
         return onSubmitListener;
     }
@@ -954,18 +973,16 @@ public class FormAdapter extends LinearLayout {
         UriUtils uriTools = new UriUtils(getContext(),uri);
         String pick_type = preference.load("pick_image");
 
-        if(pick_type.equals(String.valueOf(Form.IMAGE))) uriTools = new UriUtils(getContext(), uri);
-
         if(imagePickerUtils.isChild()){
             FormViewHolder parent_holder = new KotlinFilter().filterViewHolder(holderList,imagePickerUtils.getParent_name());
             //FIND CHILD
             FormViewHolder holder = new KotlinFilter().filterViewHolder(parent_holder.childForm.get(imagePickerUtils.getChild_position()).holderList,imagePickerUtils.getFieldName());
             holder.view.mImage.setImageBitmap(imagePickerUtils.getBitmap());
             holder.view.mImageName.setText(uriTools.getFilename_with_ex());
-            holder.data.setValue(uriTools.getRealPath());
+            holder.data.setValue(uriTools.getUri().getPath());
             holder.view.mImage.setImageBitmap(imagePickerUtils.getBitmap());
             try{
-                holder.data.doListener(uriTools.getRealPath());
+                holder.data.doListener(uriTools.getUri().getPath());
             }catch(Exception e){Log.d("__Arisan","No Listener IMAGE");}
         }else{
             //UPDATE DATA
