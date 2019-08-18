@@ -40,7 +40,9 @@ public class MyView {
     //SEARCH
     public EditText mEditTextSearch;
     public TextView mSearchLabel;
-    public ImageView mSearchButton;
+    public LinearLayout mSearchButton;
+    public ProgressBar mSearchLoading;
+    public ImageView mSearchIcon;
     //BOOLEAN
     public Switch aSwitch;
     //SPINNER
@@ -104,6 +106,8 @@ public class MyView {
         mEditTextSearch = v.findViewById(R.id.arisan_search_name);
         mSearchButton = v.findViewById(R.id.arisan_search_button);
         mSearchLabel = v.findViewById(R.id.arisan_search_label);
+        mSearchLoading = v.findViewById(R.id.arisan_search_loading);
+        mSearchIcon = v.findViewById(R.id.arisan_search_icon);
         mOnetoManyAdd = v.findViewById(R.id.arisan_onetomany_add);
         mOnetoManyLabel = v.findViewById(R.id.arisan_onetomany_label);
         mOnetoManyList = v.findViewById(R.id.arisan_onetomany_list);

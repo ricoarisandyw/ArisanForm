@@ -1,5 +1,6 @@
 package com.github.arisan.helper;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -119,6 +120,7 @@ public class ImagePickerUtils {
     private void extractFromCamera() {
         Bundle extras = data.getExtras();
         Bitmap bitmap = (Bitmap) extras.get("data");
+        //SAVE BITMAP
         if(bitmap!=null) {
             setBitmap(bitmap);
 
@@ -134,16 +136,17 @@ public class ImagePickerUtils {
             File folder = new File(path);
             if (!folder.exists()) folder.mkdir();
 
-            OutputStream outFile;
             String file_name = System.currentTimeMillis() + ".jpg";
             File file = new File(path, file_name);
+            FileOutputStream outFile = null;
             try {
                 outFile = new FileOutputStream(file);
                 outFile.write(bitmapdata);
                 outFile.flush();
                 outFile.close();
 
-                setUri(Uri.fromFile(file));
+                UriUtils utils = new UriUtils(context,Uri.fromFile(file));
+                setUri(Uri.parse(utils.getRealPath()));
                 setFile(file);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

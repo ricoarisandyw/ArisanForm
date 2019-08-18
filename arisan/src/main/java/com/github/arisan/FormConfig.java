@@ -5,9 +5,10 @@ import com.google.gson.Gson;
 public class FormConfig {
     public boolean useTitle = true;
     public boolean useSubmit = true;
-    public int background = 0;
+    public int buttonBackground = 0;
     public int labelColor = 0;
-    public int buttonColor = 0;
+    public int textColor = 0;
+    public int buttonTextColor = 0;
     public String submitText = "SUBMIT";
     public String title = "TITLE";
     public String blankMessage;

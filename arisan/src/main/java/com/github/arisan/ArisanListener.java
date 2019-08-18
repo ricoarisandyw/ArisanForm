@@ -1,6 +1,7 @@
 package com.github.arisan;
 
 import com.github.arisan.adapter.ArisanAdapter;
+import com.github.arisan.adapter.FormAdapter;
 import com.github.arisan.model.FormModel;
 import com.github.arisan.model.ListenerModel;
 
@@ -8,11 +9,11 @@ import java.util.List;
 
 public class ArisanListener {
     public interface OnCondition {
-        public ListenerModel onValue(String value);
+        void onValue(String value,FormAdapter adapter);
     }
 
     public static interface ChildCondition {
-        ListenerModel onValue(String value, List<FormModel> fieldList);
+        ListenerModel onValue(String value, FormAdapter adapter);
     }
 
     public static interface SearchCondition{

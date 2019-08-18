@@ -12,12 +12,19 @@ import com.github.arisan.ArisanListener;
 import com.github.arisan.FormConfig;
 import com.github.arisan.adapter.FormAdapter;
 import com.github.arisan.helper.ImagePickerUtils;
+import com.github.arisan.helper.KotlinFilter;
 import com.github.arisan.helper.Logger;
 import com.github.arisan.helper.PreferenceHelper;
-import com.github.arisan.helper.RadioUtils;
 import com.github.arisan.helper.UriUtils;
+import com.github.arisan.model.FormModel;
+import com.github.arisan.model.FormViewHolder;
 import com.github.arisan.model.ListenerModel;
 import com.github.arisanform.R;
+import com.github.arisanform.helper.SyncronousTools;
+import com.github.arisanform.model.MyResponse;
+import com.github.arisanform.model.Url;
+import com.github.arisanform.network.API;
+import com.github.arisanform.network.Controller;
 import com.github.arisanform.probolinggo.form.FormKK;
 import com.github.arisanform.probolinggo.form.FormKTP;
 import com.github.arisanform.probolinggo.form.FormSKCK;
@@ -36,8 +43,13 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -62,7 +74,8 @@ public class FormActivity extends AppCompatActivity {
         dbPreference = new PreferenceHelper(this);
 
         mConfig = new FormConfig();
-        mConfig.background = R.drawable.btn_accent;
+        mConfig.buttonBackground = R.drawable.btn_accent;
+        mConfig.buttonTextColor = R.color.colorDanger;
         mConfig.submitText = "SELESAI";
 
         //final String category = dbPreference.load(MasterData.CATEGORY);
@@ -89,8 +102,11 @@ public class FormActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == ImagePickerUtils.ARISAN_REQUEST_IMAGE && resultCode == RESULT_OK){
             ImagePickerUtils imagePickerUtils = new ImagePickerUtils(this,data);
-            UriUtils uri = new UriUtils(this,imagePickerUtils.getUri());
-            File file = new File(uri.getUri().getPath());
+            //uploadFile(imagePickerUtils);
+
+            //UriUtils uri = new UriUtils(this,imagePickerUtils.getUri());
+            File file = new File(imagePickerUtils.getUri().getPath());
+
             if(!file.exists()){
                 Toast.makeText(this, "File tidak ditemukan", Toast.LENGTH_SHORT).show();
             }else{
@@ -98,18 +114,75 @@ public class FormActivity extends AppCompatActivity {
             }
 
             vForm.updateImage(imagePickerUtils);
+            FormModel model = new KotlinFilter().findFieldByName("lampiran_foto",vForm.getFieldModels());
+            uploadFile((String) model.getValue());
+
         }else{
             Logger.d("NO PICK");
         }
     }
 
+    public void uploadFile(String path){
+        File file = new File(path);
+
+        // create RequestBody instance from file
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+
+        // MultipartBody.Part is used to send also the actual file name
+        MultipartBody.Part file_body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+
+        List<MultipartBody.Part> partList = new ArrayList<>();
+        partList.add(file_body);
+
+        new Controller().getInstance().create(API.class).upload(partList).enqueue(new Callback<MyResponse<Url>>() {
+            @Override
+            public void onResponse(Call<MyResponse<Url>> call, Response<MyResponse<Url>> response) {
+                if(response.isSuccessful()) {
+                    Logger.d(response.body());
+                }
+                else {
+                    try {
+                        Logger.d("FAILED TO UPLOAD FILE : "+response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse<Url>> call, Throwable t) {
+                Logger.d("SOMETHING WRONG");
+            }
+        });
+    }
+
+
     void FormBedaIdentitasConfig(){
-        
+        mConfig.title = "Form Beda Identitas";
+        vForm.setOnSubmitListener(new FormAdapter.OnSubmitListener() {
+            @Override
+            public void onSubmit(String result) {
+
+            }
+        });
     }
 
     void FormKKConfig(){
-        vForm.fillData("desa_pengantar", MasterData.DAFTAR_DESA);
         mConfig.title = "FORM FormKK";
+        vForm.fillData("desa_pengantar", MasterData.DAFTAR_DESA);
+        vForm.addChildListener("kk_perorang", "nik", new ArisanListener.OnCondition() {
+            @Override
+            public void onValue(String value,FormAdapter adapter) {
+                Toast.makeText(FormActivity.this, "NIK Listener", Toast.LENGTH_SHORT).show();
+                new FindNIKService().findPendudukByNIK(value, new FindNIKService.Wait() {
+                    @Override
+                    public void onDone(Penduduk penduduk) {
+                        if(penduduk!=null) adapter.updateValueByObject(penduduk.toKTP());
+                        else Toast.makeText(FormActivity.this, "NIK tidak ditemukan", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
         vForm.setOnSubmitListener(new FormAdapter.OnSubmitListener() {
             @Override
             public void onSubmit(String response) {
@@ -140,25 +213,14 @@ public class FormActivity extends AppCompatActivity {
         mConfig.title = "FORM FormSKCK";
         vForm.addListener("penduduk_nik", new ArisanListener.OnCondition() {
             @Override
-            public ListenerModel onValue(String value) {
-                try {
-                    Response<Penduduk> response = new FindNIKService().getInstance().create(FindNIKService.API_FIND.class).findNik(value).execute();
-                    if(response.isSuccessful()&&response.body()!=null){
-                        vForm.setModels(FormSKCK.fromSKCK(response.body().toSKCK()));
-                        FormSKCKConfig();
-                        vForm.buildForm();
-                        return null;
-                    }else{
-                        Toast.makeText(FormActivity.this, "Not Found", Toast.LENGTH_SHORT).show();
-                        ListenerModel listenerModel = new ListenerModel();
-                        listenerModel.setCondition(false);
-                        listenerModel.setMessage("Not Found");
-                        return listenerModel;
+            public void onValue(String value,FormAdapter adapter) {
+                new FindNIKService().findPendudukByNIK(value, new FindNIKService.Wait() {
+                    @Override
+                    public void onDone(Penduduk penduduk) {
+                        if(penduduk!=null) adapter.updateValueByObject(penduduk.toSKCK());
+                        else Toast.makeText(FormActivity.this, "NIK tidak ditemukan", Toast.LENGTH_SHORT).show();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
+                });
             }
         });
         vForm.setOnSubmitListener(new FormAdapter.OnSubmitListener() {
@@ -191,37 +253,31 @@ public class FormActivity extends AppCompatActivity {
         vForm.fillData("nik_jenis_kelamin", MasterData.Array.JENIS_KELAMIN);
         vForm.fillData("nik_status_pernikahan", MasterData.Array.STATUS_PERNIKAHAN);
         vForm.fillData("desa_pengantar",MasterData.DAFTAR_DESA);
+
         vForm.addListener("nik", new ArisanListener.OnCondition() {
         @Override
-            public ListenerModel onValue(final String value) {
+        public void onValue(final String value, FormAdapter adapter) {
             Log.d("__Log","Click NIK Search -> " + value);
-                new FindNIKService().getInstance().create(FindNIKService.API_FIND.class).findNik(value).enqueue(new Callback<Penduduk>() {
-                    @Override
-                    public void onResponse(Call<Penduduk> call, Response<Penduduk> response) {
-                        if(response.isSuccessful()) {
-                            Logger.s("Find Penduduk >>",response.body());
-
-                            FormKTP formKTP = FormKTP.fromKTP(response.body().toKTP());
-                            formKTP.setNik(value);
-
-                            vForm.setModels(formKTP);
-                            //FormKTPConfig();
-                            vForm.notifyValue();
-                            Toast.makeText(FormActivity.this, "Pencarian Selesai.", Toast.LENGTH_SHORT).show();
-                        }else{
-                            Logger.e(response.body());
-                            ListenerModel model = new ListenerModel();
-                            model.setCondition(false);
-                            model.setMessage("NIK tidak ditemukan, Silahkan tambahkan data anda");
-                        }
+            FormViewHolder model = adapter.findViewHolderByName("nik");
+            new FindNIKService().findPendudukByNIK(value, new FindNIKService.Wait() {
+                @Override
+                public void onDone(Penduduk penduduk) {
+                    model.setWait(false);
+                    if(penduduk!=null) {
+                        Toast.makeText(FormActivity.this, "Pencarian Selesai", Toast.LENGTH_SHORT).show();
+                        Logger.s(penduduk.toKTP());
+                        adapter.updateValueByObject(FormKTP.fromKTP(penduduk.toKTP()));
                     }
-
-                    @Override
-                    public void onFailure(Call<Penduduk> call, Throwable t) {
-                        Log.d("__response","Find NIK FAIL");
+                    else {
+                        Toast.makeText(FormActivity.this, "NIK tidak ditemukan", Toast.LENGTH_SHORT).show();
+                        model.data.setError(true);
+                        model.data.setError_message("NIK Tidak dapat ditemukan");
                     }
-                });
-                return new ListenerModel();
+                    adapter.notifyData(model);
+                }
+            });
+            model.setWait(true);
+            adapter.notifyData(model);
             }
         });
         vForm.setOnSubmitListener(new FormAdapter.OnSubmitListener() {
@@ -235,7 +291,8 @@ public class FormActivity extends AppCompatActivity {
                     public void OnResponse(boolean success, Object data) {
                         ktp = (KTP) data;
                         if (success) {
-                            doneActivity();
+                            //doneActivity();
+                            Toast.makeText(FormActivity.this, "Success", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(FormActivity.this, "Failed to create, check your internet connection", Toast.LENGTH_SHORT).show();
                         }

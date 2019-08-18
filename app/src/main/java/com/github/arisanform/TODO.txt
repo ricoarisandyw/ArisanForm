@@ -2,7 +2,7 @@ DONE: Search Column or button to do something
 TODO: Annotation processing for value assignment
 TODO: Make annotation for retrofit map
 TODO: Make annotation for modifier Map
-DONT NEED: Response is json and File (cause file path is enough)
+DONT NEED: Response is json and File (cause file file_path is enough)
 DONE: Permission for file (but show only once, we need to get result)
 TODO: Grouping Field like (GROUP A = village, city & GROUP B = first name, lastname)
 TODO: SHIT!!! Material view from AndroidX make my view from Support-v7 not work well (it cause support-7 view cannot converted to androidx)

@@ -6,13 +6,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Logger {
-    static Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+    static Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static void d(Object object){
         Log.d("__ARISAN LOGGER",gson.toJson(object));
     }
 
     public static void e(Object object){
-        Log.e("__ARISAN F",gson.toJson(object));
+        Log.e("__ARISAN LOGGER",gson.toJson(object));
     }
 
     public static void s(Object... objects) {
@@ -20,6 +20,6 @@ public class Logger {
         for(Object o : objects){
             builder.append(gson.toJson(o));
         }
-        e(builder.toString().replace("\\n",""));
+        e(builder.toString().replace("\n",""));
     }
 }

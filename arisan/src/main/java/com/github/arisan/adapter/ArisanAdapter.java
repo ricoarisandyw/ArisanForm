@@ -14,7 +14,7 @@ public class ArisanAdapter {
     private PreferenceHelper preference;
     private String blank_message = "cannot blank!!!";
     private boolean no_blank = false;
-    private int background;
+    private int buttonBackground;
     private int label_color;
     private boolean useTitle;
     private boolean useSubmit;
@@ -30,7 +30,7 @@ public class ArisanAdapter {
         useTitle = form.isUse_title();
         useSubmit = form.isUse_submit();
         blank_message = form.getBlankMessage()==null ? blank_message:form.getBlankMessage();
-        background = form.getBackground();
+        buttonBackground = form.getBackground();
         label_color = form.getLabelColor();
 
         Collections.sort(form.getFieldData(),SortField.getInstance());
@@ -469,7 +469,7 @@ public class ArisanAdapter {
         if(data.getThumbnail()!=null) holder.view.mImage.setImageBitmap(data.getThumbnail());
         if(data.getData()!=null) holder.view.mImageName.setText(data.getData().toString());
 
-        if(background!=0)holder.view.mImagePick.setBackgroundResource(background);
+        if(buttonBackground!=0)holder.view.mImagePick.setBackgroundResource(buttonBackground);
         if(label_color!=0) holder.view.mImageLabel.setTextColor(activity.getResources().getColor(label_color));
         if(form.getButtonColor()!=0) holder.view.mImagePick.setTextColor(activity.getResources().getColor(form.getButtonColor()));
     }
@@ -497,7 +497,7 @@ public class ArisanAdapter {
 
         if(data.getValue()!=null) holder.view.mEditTextSearch.setText(data.getValue().toString());
         if(label_color!=0) holder.view.mSearchLabel.setTextColor(activity.getResources().getColor(label_color));
-        if(background!=0)holder.view.mSearchButton.setBackgroundResource(background);
+        if(buttonBackground!=0)holder.view.mSearchButton.setBackgroundResource(buttonBackground);
     }
 
     private void ViewOneToMany(ViewHolder holder, ArisanFieldModel data) {
@@ -515,7 +515,7 @@ public class ArisanAdapter {
             }
         });
 
-        if(background!=0)holder.view.mOnetoManyAdd.setBackgroundResource(background);
+        if(buttonBackground!=0)holder.view.mOnetoManyAdd.setBackgroundResource(buttonBackground);
         if(label_color!=0) holder.view.mOnetoManyLabel.setTextColor(activity.getResources().getColor(label_color));
     }
 
@@ -593,7 +593,7 @@ public class ArisanAdapter {
             }
         });
 
-        if(background!=0)holder.view.mFile.setBackgroundResource(background);
+        if(buttonBackground!=0)holder.view.mFile.setBackgroundResource(buttonBackground);
         if(label_color!=0) holder.view.mFileLabel.setTextColor(activity.getResources().getColor(label_color));
     }
 
@@ -659,7 +659,7 @@ public class ArisanAdapter {
             }
         });
 
-        if(background!=0)holder.view.mDate.setBackgroundResource(background);
+        if(buttonBackground!=0)holder.view.mDate.setBackgroundResource(buttonBackground);
         if(form.getButtonColor()!=0) holder.view.mDate.setTextColor(activity.getResources().getColor(form.getButtonColor()));
         if(label_color!=0) holder.view.mDateLabel.setTextColor(activity.getResources().getColor(label_color));
     }
@@ -694,7 +694,7 @@ public class ArisanAdapter {
             }
         });
 
-        if(background!=0)holder.view.mDate.setBackgroundResource(background);
+        if(buttonBackground!=0)holder.view.mDate.setBackgroundResource(buttonBackground);
         if(label_color!=0) holder.view.mDateLabel.setTextColor(activity.getResources().getColor(label_color));
     }
 
@@ -730,7 +730,7 @@ public class ArisanAdapter {
             }
         });
 
-        if(background!=0)holder.view.mDate.setBackgroundResource(background);
+        if(buttonBackground!=0)holder.view.mDate.setBackgroundResource(buttonBackground);
         if(label_color!=0) holder.view.mDateLabel.setTextColor(activity.getResources().getColor(label_color));
     }
 
@@ -876,7 +876,7 @@ public class ArisanAdapter {
             }
         });
 
-        if(background!=0) holder.view.mSubmit.setBackgroundResource(background);
+        if(buttonBackground!=0) holder.view.mSubmit.setBackgroundResource(buttonBackground);
         if(form.getButtonColor()!=0) holder.view.mSubmitText.setTextColor(activity.getResources().getColor(form.getButtonColor()));
     }
 
@@ -899,11 +899,11 @@ public class ArisanAdapter {
 //    =============END OF VIEW===================
 
     public int getBackground() {
-        return background;
+        return buttonBackground;
     }
 
-    public void setBackground(int background) {
-        this.background = background;
+    public void setBackground(int buttonBackground) {
+        this.buttonBackground = buttonBackground;
     }
 
     public String getBlank_message() {

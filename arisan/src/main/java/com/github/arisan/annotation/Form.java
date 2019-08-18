@@ -20,6 +20,7 @@ public @interface Form {
     int background() default 0;
     int color() default 0;
     Class relation() default String.class;
+    String hint() default "...";
 
     int TEXT = 181;
     int PASSWORD = 182;

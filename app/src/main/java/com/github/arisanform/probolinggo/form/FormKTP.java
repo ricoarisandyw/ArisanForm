@@ -174,7 +174,6 @@ public class FormKTP {
         ktp.setNik_agama(""+(MasterData.find(MasterData.Array.AGAMA,this.nik_agama)));
         ktp.setNik_status_pernikahan(""+(MasterData.find(MasterData.Array.STATUS_PERNIKAHAN,this.nik_status_pernikahan)+1));
         ktp.setNik_jenis_kelamin(""+(MasterData.find(MasterData.Array.JENIS_KELAMIN,this.nik_jenis_kelamin)+1));
-        ktp.setNik_gol_darah(""+(MasterData.find(MasterData.Array.GOLONGAN_DARAH,this.nik_gol_darah)+1));
         ktp.setTipe_pengajuan(""+(MasterData.find(MasterData.Array.TIPE_PENGAJUAN,this.tipe_pengajuan)+1));
         ktp.setDesa_pengantar(MasterData.DAFTAR_DESA_ID[MasterData.find(MasterData.DAFTAR_DESA,this.desa_pengantar)]);
         return ktp;
@@ -184,9 +183,9 @@ public class FormKTP {
         FormKTP formKTP = new Gson().fromJson(new Gson().toJson(ktp),FormKTP.class);
         formKTP.nik_alamat_lengkap = ktp.getNik_alamat_lengkap();
         if(ktp.getNik_agama()!=null) formKTP.nik_agama = MasterData.Array.AGAMA[Integer.parseInt(ktp.getNik_agama())];
-        if(ktp.getNik_status_pernikahan()!=null)formKTP.nik_status_pernikahan = MasterData.Array.STATUS_PERNIKAHAN[Integer.parseInt(ktp.getNik_status_pernikahan())];
+        if(ktp.getNik_status_pernikahan()!=null)formKTP.nik_status_pernikahan = MasterData.Array.STATUS_PERNIKAHAN[Integer.parseInt(ktp.getNik_status_pernikahan())-1];
         if(ktp.getDesa_pengantar()!=null) formKTP.nik_alamat_lengkap = MasterData.DAFTAR_DESA[MasterData.find(MasterData.DAFTAR_DESA_ID,ktp.getDesa_pengantar())];
-        if(ktp.getNik_jenis_kelamin()!=null) formKTP.nik_jenis_kelamin = MasterData.Array.JENIS_KELAMIN[Integer.parseInt(ktp.getNik_jenis_kelamin())];
+        if(ktp.getNik_jenis_kelamin()!=null) formKTP.nik_jenis_kelamin = MasterData.Array.JENIS_KELAMIN[Integer.parseInt(ktp.getNik_jenis_kelamin())-1];
         return formKTP;
     }
 }

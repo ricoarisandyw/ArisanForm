@@ -29,6 +29,9 @@ public class ObjectReader {
         else
             model.setLabel(f.getName().substring(0,1).toUpperCase() + f.getName().substring(1));
 
+        if(!form.hint().equals("...")) model.setHint(form.hint());
+        else model.setHint(f.getName().replace("_",""));
+
         model.setName(f.getName());
         model.setFieldType(f.getType().getName());
 
@@ -50,7 +53,6 @@ public class ObjectReader {
         Field[] declaredField = o.getClass().getDeclaredFields();
         ObjectGetter objectGetter = new ObjectGetter(o);
         for (Field f : declaredField) {
-            //if (f.isAnnotationPresent(Form.class)) {
             if(f.getAnnotation(Form.class)!=null){
                 Form annotation = f.getAnnotation(Form.class);
 

@@ -16,6 +16,7 @@ import com.github.arisan.helper.KotlinFilter;
 import com.github.arisan.helper.ObjectReader;
 import com.github.arisan.helper.PreferenceHelper;
 import com.github.arisan.model.FormModel;
+import com.github.arisan.model.FormViewHolder;
 import com.github.arisan.model.ListenerModel;
 
 import java.util.ArrayList;
@@ -66,9 +67,8 @@ public class ArisanForm extends ScrollView {
     }
 
     public void notifyValue(){
-        for(FormModel model:this.fieldModels){
-            formAdapter.updateValue(model.getName(),model.getValue());
-        }
+        formAdapter.setFieldModels(this.fieldModels);
+        formAdapter.notifyValue();
     }
 
     public void updateImage(ImagePickerUtils utils){
@@ -119,6 +119,28 @@ public class ArisanForm extends ScrollView {
             if(model!=null) model.addCondition(condition);
         } else
             Log.e("Arisan","No Condition");
+    }
+
+    public void addChildListener(String parent_name, String field_name, ArisanListener.OnCondition condition){
+        if(condition!=null){
+            FormModel model = new KotlinFilter().findFieldByName(parent_name, fieldModels);
+            if(model!=null&&model.getChildFieldModel()!=null)
+                for(List<FormModel> m:model.getChildFieldModel()){
+                    FormModel mm = new KotlinFilter().findFieldByName(field_name, m);
+                    if(mm!=null) mm.setArisanListener(condition);
+                }
+        }
+    }
+
+    public void updateChildListener(String parent_name, String field_name, ArisanListener.OnCondition condition){
+        if(condition!=null){
+            FormModel model = new KotlinFilter().findFieldByName(field_name, fieldModels);
+            FormViewHolder holder = new KotlinFilter().filterViewHolder(parent_name,formAdapter.getHolderList());
+            if(model!=null) {
+                for(FormAdapter adtr:holder.adapter.getListForm())
+                    adtr.updateListener(field_name,condition);
+            }
+        }
     }
     //After processed
     public void updateListener(String field_name,ArisanListener.OnCondition condition){
@@ -173,7 +195,7 @@ public class ArisanForm extends ScrollView {
         }
     }
 
-    public void showSubmitProgress(boolean show){
+    public void showSubmitProgress(boolean show) {
         formAdapter.showSubmitProgress(show);
     }
 

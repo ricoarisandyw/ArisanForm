@@ -1,5 +1,7 @@
 package com.github.arisanform.activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +15,7 @@ import com.github.arisan.helper.DummyCreator;
 import com.github.arisan.helper.ImagePickerUtils;
 import com.github.arisan.helper.Logger;
 import com.github.arisan.helper.ObjectReader;
+import com.github.arisan.helper.PermissionUtils;
 import com.github.arisanform.R;
 import com.github.arisanform.model.AllField;
 import com.github.arisanform.model.MyResponse;
@@ -52,7 +55,7 @@ public class SecondActivity extends AppCompatActivity {
 
         String[] arr = {"Mobil","Motor","Pesawat","Roket"};
 
-        myLayout.addListener("radio", value -> {
+        myLayout.addListener("radio", (value ,adapter) -> {
             myLayout.updateValue("search",value);
             myLayout.updateData("radio",arr);
             myLayout.showSubmitProgress(true);
@@ -62,16 +65,15 @@ public class SecondActivity extends AppCompatActivity {
                     myLayout.showSubmitProgress(false);
                 }
             },3000);
-            return null;
         });
 
         FormConfig config = new FormConfig();
-        config.background = R.drawable.btn_success;
+        config.buttonBackground = R.drawable.btn_success;
         config.labelColor = R.color.orange;
-        config.buttonColor = R.color.colorDanger;
+        config.textColor = R.color.colorDanger;
 
         myLayout.setConfig(config);
-        myLayout.addListener("image",value -> {
+        myLayout.addListener("image",(value,adapter) -> {
             File file = new File(value);
 
             if(file.exists()) {
@@ -79,12 +81,13 @@ public class SecondActivity extends AppCompatActivity {
             }
             else Toast.makeText(this, "File not Found", Toast.LENGTH_SHORT).show();
 
-            return null;
         });
 
 
         myLayout.setOnSubmitListener(result -> Log.d("__RESULT",result));
         myLayout.buildForm();
+
+        PermissionUtils.askPermission(this, Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     @Override
@@ -100,37 +103,38 @@ public class SecondActivity extends AppCompatActivity {
     }
 
     public void uploadFile(ImagePickerUtils imagePickerUtils){
-        File file = imagePickerUtils.getFile();
+        //kalau gini bisa.
+        //File file = imagePickerUtils.getFile();
+        File file = new File(imagePickerUtils.getUri().getPath());
 
-            // create RequestBody instance from file
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+        // create RequestBody instance from file
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
 
-            // MultipartBody.Part is used to send also the actual file name
-            MultipartBody.Part file_body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+        // MultipartBody.Part is used to send also the actual file name
+        MultipartBody.Part file_body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 
-            List<MultipartBody.Part> partList = new ArrayList<>();
-            partList.add(file_body);
+        List<MultipartBody.Part> partList = new ArrayList<>();
+        partList.add(file_body);
 
-            new Controller().getInstance().create(API.class).upload(partList).enqueue(new Callback<MyResponse<Url>>() {
-                @Override
-                public void onResponse(Call<MyResponse<Url>> call, Response<MyResponse<Url>> response) {
-                    if(response.isSuccessful()) {
-                        Logger.d(response.body());
-                    }
-                    else {
-                        try {
-                            Logger.d("FAILED TO UPLOAD FILE : "+response.errorBody().string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+        new Controller().getInstance().create(API.class).upload(partList).enqueue(new Callback<MyResponse<Url>>() {
+            @Override
+            public void onResponse(Call<MyResponse<Url>> call, Response<MyResponse<Url>> response) {
+                if(response.isSuccessful()) {
+                    Logger.d(response.body());
+                }
+                else {
+                    try {
+                        Logger.d("FAILED TO UPLOAD FILE : "+response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
+            }
 
-                @Override
-                public void onFailure(Call<MyResponse<Url>> call, Throwable t) {
-                    Logger.d("SOMETHING WRONG");
-                }
-            });
-
+            @Override
+            public void onFailure(Call<MyResponse<Url>> call, Throwable t) {
+                Logger.d("SOMETHING WRONG");
+            }
+        });
     }
 }

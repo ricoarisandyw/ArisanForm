@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 
 import com.github.arisan.ArisanListener;
 import com.github.arisan.adapter.ArisanAdapter;
+import com.github.arisan.adapter.FormAdapter;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -14,11 +16,13 @@ public class FormModel {
     private String fieldType;
     private String label;
     private String name;
+    private String hint;
     private int viewType;
     private int position;
     private Object data;
     private Object value;
     private String error_message;
+    private boolean error;
     private String dateFormat;
     private String fileType;
     private boolean require;
@@ -90,12 +94,8 @@ public class FormModel {
         return viewMod.modding(view);
     }
 
-    public ListenerModel doListener(String value, ArisanAdapter adapter){
-        return arisanListener.onValue(value);
-    }
-
-    public ListenerModel doListener(String value){
-        return arisanListener.onValue(value);
+    public void doListener(String value, FormAdapter adapter){
+        arisanListener.onValue(value,adapter);
     }
 
     public int getColor() {
@@ -211,6 +211,22 @@ public class FormModel {
         this.thumbnail = thumbnail;
     }
 
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
+    }
+
+    public boolean isError() {
+        return error;
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
+    }
+
     public FormModel renew(){
         FormModel new_model = new FormModel();
         new_model.setValue(value);
@@ -231,6 +247,8 @@ public class FormModel {
         new_model.setCheckboxListener(checkboxListener);
         new_model.addViewMod(viewMod);
         new_model.setThumbnail(thumbnail);
+        new_model.setHint(hint);
+        new_model.setError(error);
 
         return new_model;
     }

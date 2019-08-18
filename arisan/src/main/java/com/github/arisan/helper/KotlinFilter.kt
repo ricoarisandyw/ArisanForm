@@ -4,8 +4,8 @@ import com.github.arisan.model.FormModel
 import com.github.arisan.model.FormViewHolder
 
 class KotlinFilter {
-    fun filterViewHolder(list:MutableList<FormViewHolder>,name:String): FormViewHolder {
-        val holder = list.filter { it.data.name==name}.first()
+    fun filterViewHolder(name:String,list:MutableList<FormViewHolder>): FormViewHolder? {
+        val holder = list.filter { it.data!=null && it.data.name == name }.first()
         return holder
     }
 
