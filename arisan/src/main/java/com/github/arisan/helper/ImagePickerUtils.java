@@ -76,26 +76,20 @@ public class ImagePickerUtils {
         ((Activity)context).startActivityForResult(photoPickerIntent, ARISAN_REQUEST_IMAGE);
     }
 
+    public Bitmap compressBitmap(Bitmap selectedImage,int width,int height){
+        return Bitmap.createScaledBitmap(selectedImage, width,height,false);
+    }
+
     private void extractFromGallery() {
         try {
             Uri imageUri = data.getData();
 
-            String [] proj={MediaStore.Images.Media.DATA};
-            Cursor cursor = context.getContentResolver().query(imageUri,proj,null,null,null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            Uri realPath = Uri.parse(cursor.getString(column_index));
             InputStream imageStream = context.getContentResolver().openInputStream(imageUri);
             Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-            int real_width = selectedImage.getWidth();
-            int next_height = 720;
-            float scale = (float) next_height/selectedImage.getHeight();
-            Logger.d("Scale : "+scale);
-            Logger.d("New Width : "+real_width*scale);
-            selectedImage = Bitmap.createScaledBitmap(selectedImage, (int) (real_width*scale),next_height,false);
+            //Uri uri = saveBitmap(selectedImage);
 
-            File file = new File(realPath.getPath());
-            setUri(realPath);
+            File file = new File(imageUri.getPath());
+            setUri(imageUri);
             setBitmap(selectedImage);
             setFile(file);
         } catch (FileNotFoundException e) {
@@ -120,44 +114,25 @@ public class ImagePickerUtils {
     private void extractFromCamera() {
         Bundle extras = data.getExtras();
         Bitmap bitmap = (Bitmap) extras.get("data");
-        //SAVE BITMAP
-        if(bitmap!=null) {
-            setBitmap(bitmap);
+        Uri uri = saveBitmap(bitmap);
+        setFile(new File(uri.getPath()));
+        setUri(uri);
+    }
 
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            byte[] bitmapdata = bos.toByteArray();
-
-            /*SAVE IMAGE TO EXTERNAL STORAGE*/
-            String path = android.os.Environment.getExternalStorageDirectory()
-                    + File.separator
-                    + context.getApplicationContext().getPackageName();
-
-            File folder = new File(path);
-            if (!folder.exists()) folder.mkdir();
-
-            String file_name = System.currentTimeMillis() + ".jpg";
-            File file = new File(path, file_name);
-            FileOutputStream outFile = null;
-            try {
-                outFile = new FileOutputStream(file);
-                outFile.write(bitmapdata);
-                outFile.flush();
-                outFile.close();
-
-                UriUtils utils = new UriUtils(context,Uri.fromFile(file));
-                setUri(Uri.parse(utils.getRealPath()));
-                setFile(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else{
-            Toast.makeText(context, "No image captured", Toast.LENGTH_SHORT).show();
+    public void updateUri(Uri uri){
+        try {
+            setUri(uri);
+            setFile(new File(uri.getPath()));
+            InputStream imageStream = null;
+            imageStream = context.getContentResolver().openInputStream(uri);
+            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+            setBitmap(selectedImage);
+            Logger.e("Update Uri Success");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Logger.e("Update Uri failed");
         }
+
     }
 
     public Uri saveBitmap(Bitmap bitmap){

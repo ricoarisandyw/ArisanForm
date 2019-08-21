@@ -524,7 +524,10 @@ public class FormAdapter extends LinearLayout {
         holder.view.mDateLabel.setText(holder.data.getLabel());
         final Calendar calendar;
         if (holder.data.getValue() != null) {
-            calendar = new DateConverter(holder.data.getValue().toString()).from("MMMM dd, yyyy").calendar;
+            if(holder.data.getDateFormat() ==null)
+                calendar = new DateConverter(holder.data.getValue().toString()).from("MMMM dd, yyyy").calendar;
+            else
+                calendar = new DateConverter(holder.data.getValue().toString()).from(holder.data.getDateFormat()).calendar;
             holder.view.mDate.setText(new DateConverter(calendar).to(holder.data.getDateFormat()));
         } else {
             calendar = Calendar.getInstance();
@@ -563,7 +566,10 @@ public class FormAdapter extends LinearLayout {
     private void ViewTime(final FormViewHolder holder) {
         final Calendar calendar;
         if (holder.data.getValue() != null) {
-            calendar = new DateConverter(holder.data.getValue().toString()).from("MMMM dd, yyyy HH:mm:ss").calendar;
+            if(holder.data.getDateFormat() ==null)
+                calendar = new DateConverter(holder.data.getValue().toString()).from("MMMM dd, yyyy HH:mm:ss").calendar;
+            else
+                calendar = new DateConverter(holder.data.getValue().toString()).from(holder.data.getDateFormat()).calendar;
             holder.view.mDate.setText(new DateConverter(calendar).to(holder.data.getDateFormat()));
         } else {
             calendar = Calendar.getInstance();
@@ -598,7 +604,10 @@ public class FormAdapter extends LinearLayout {
         holder.view.mDateLabel.setText(holder.data.getLabel());
         final Calendar calendar;
         if (holder.data.getValue() != null) {
-            calendar = new DateConverter(holder.data.getValue().toString()).from("MMMM dd, yyyy").calendar;
+            if(holder.data.getDateFormat() ==null)
+                calendar = new DateConverter(holder.data.getValue().toString()).from("MMMM dd, yyyy").calendar;
+            else
+                calendar = new DateConverter(holder.data.getValue().toString()).from(holder.data.getDateFormat()).calendar;
             holder.view.mDate.setText(new DateConverter(calendar).to(holder.data.getDateFormat()));
         } else {
             calendar = Calendar.getInstance();

@@ -2,6 +2,7 @@ package com.github.arisanform.probolinggo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -103,6 +104,21 @@ public class FormActivity extends AppCompatActivity {
         if(requestCode == ImagePickerUtils.ARISAN_REQUEST_IMAGE && resultCode == RESULT_OK){
             ImagePickerUtils imagePickerUtils = new ImagePickerUtils(this,data);
             //uploadFile(imagePickerUtils);
+            Bitmap old_bitmap = imagePickerUtils.getBitmap();
+            int max_pixel = 1000000;
+            int next_height = (int) Math.sqrt(max_pixel/old_bitmap.getWidth()*old_bitmap.getHeight());
+            float scale = (float) next_height/old_bitmap.getHeight();
+            int new_width = (int) (old_bitmap.getWidth()*scale);
+
+            //b = old_height.old_width
+            //1.000.000 = new_height.(new_height/old_height)*old_width
+            //1.000.000 = new_height2.old_width/old_height
+            //new_height = sqrt(1.000.0000/old_widht*old_height)
+
+            Logger.s("New Width",new_width);
+
+            Bitmap new_bitmap = imagePickerUtils.compressBitmap(imagePickerUtils.getBitmap(),new_width,next_height);
+            imagePickerUtils.updateUri(imagePickerUtils.saveBitmap(new_bitmap));
 
             //UriUtils uri = new UriUtils(this,imagePickerUtils.getUri());
             File file = new File(imagePickerUtils.getUri().getPath());
@@ -116,7 +132,6 @@ public class FormActivity extends AppCompatActivity {
             vForm.updateImage(imagePickerUtils);
             FormModel model = new KotlinFilter().findFieldByName("lampiran_foto",vForm.getFieldModels());
             uploadFile((String) model.getValue());
-
         }else{
             Logger.d("NO PICK");
         }
