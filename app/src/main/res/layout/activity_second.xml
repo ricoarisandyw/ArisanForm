@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/colorAccent"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.github.arisan.ArisanForm
-        android:id="@+id/inflater_view"
+    <LinearLayout
+        android:layout_marginTop="100px"
+        android:padding="20px"
+        android:orientation="vertical"
+        android:background="@drawable/layout_background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_margin="50px"
+            android:src="@drawable/arisan_form_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
+
+        <com.github.arisan.ArisanForm
+            android:id="@+id/arisan_form"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
 
 </LinearLayout>

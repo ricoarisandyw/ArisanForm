@@ -1,7 +1,6 @@
 package com.github.arisanform.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,10 +18,10 @@ import com.github.arisan.helper.PermissionUtils;
 import com.github.arisanform.R;
 import com.github.arisanform.model.AllField;
 import com.github.arisanform.model.MyResponse;
+import com.github.arisanform.model.Nature;
 import com.github.arisanform.model.Url;
 import com.github.arisanform.network.API;
 import com.github.arisanform.network.Controller;
-import com.github.arisanform.probolinggo.FormActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,67 +37,48 @@ import retrofit2.Response;
 
 public class SecondActivity extends AppCompatActivity {
 
-    ArisanForm myLayout;
+    ArisanForm vForm;
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
-        //PROBOLINGGO
-        startActivity(new Intent(this, FormActivity.class));
-        finish();
+        vForm = findViewById(R.id.arisan_form);
 
-        myLayout = findViewById(R.id.inflater_view);
+        //First, you must set model
+        vForm.setModels(new Nature());
 
-        myLayout.setFieldModels(DummyCreator.fillDummyArray(ObjectReader.getField(new AllField())));
+        //Fill array data for checkbox, radio or spinner
+        vForm.fillData("category",Nature.DATA_CATEGORY);
+        vForm.fillData("label",Nature.DATA_LABEL);
 
-        String[] arr = {"Mobil","Motor","Pesawat","Roket"};
-
-        myLayout.addListener("radio", (value ,adapter) -> {
-            myLayout.updateValue("search",value);
-            myLayout.updateData("radio",arr);
-            myLayout.showSubmitProgress(true);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    myLayout.showSubmitProgress(false);
-                }
-            },3000);
+        //Adding listener when value changed
+        vForm.addListener("category", (value , adapter) -> {
+            Toast.makeText(this, "You select "+value, Toast.LENGTH_SHORT).show();
         });
 
+        //Setting Configuration
         FormConfig config = new FormConfig();
-        config.buttonBackground = R.drawable.btn_success;
-        config.labelColor = R.color.orange;
-        config.textColor = R.color.colorDanger;
+        config.title = "Nature Form";
+        config.buttonBackground = R.drawable.btn_accent;
+        config.textColor = R.color.font;
+        config.buttonTextColor = R.color.white;
 
-        myLayout.setConfig(config);
-        myLayout.addListener("image",(value,adapter) -> {
-            File file = new File(value);
+        vForm.setConfig(config);
 
-            if(file.exists()) {
-                Toast.makeText(this, "File Found", Toast.LENGTH_SHORT).show();
-            }
-            else Toast.makeText(this, "File not Found", Toast.LENGTH_SHORT).show();
+        vForm.setOnSubmitListener(result -> {/*Do something with result*/});
+        vForm.buildForm();
 
-        });
-
-
-        myLayout.setOnSubmitListener(result -> Log.d("__RESULT",result));
-        myLayout.buildForm();
-
+        //I have prepare permission for pick image
         PermissionUtils.askPermission(this, Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == ImagePickerUtils.ARISAN_REQUEST_IMAGE && resultCode == RESULT_OK){
             ImagePickerUtils imagePickerUtils = new ImagePickerUtils(this,data);
-            myLayout.updateImage(imagePickerUtils);
-            uploadFile(imagePickerUtils);
-        }else{
-            Logger.d("NO PICK");
+            vForm.updateImage(imagePickerUtils);
         }
     }
 

@@ -30,6 +30,7 @@ public class ObjectReader {
             model.setLabel(f.getName().substring(0,1).toUpperCase() + f.getName().substring(1));
 
         if(!form.hint().equals("...")) model.setHint(form.hint());
+        else if(!form.label().equals("field name")) model.setHint(form.label());
         else model.setHint(f.getName().replace("_",""));
 
         model.setName(f.getName());

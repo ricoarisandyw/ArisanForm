@@ -16,12 +16,9 @@ import com.github.arisan.helper.ImagePickerUtils;
 import com.github.arisan.helper.KotlinFilter;
 import com.github.arisan.helper.Logger;
 import com.github.arisan.helper.PreferenceHelper;
-import com.github.arisan.helper.UriUtils;
 import com.github.arisan.model.FormModel;
 import com.github.arisan.model.FormViewHolder;
-import com.github.arisan.model.ListenerModel;
 import com.github.arisanform.R;
-import com.github.arisanform.helper.SyncronousTools;
 import com.github.arisanform.model.MyResponse;
 import com.github.arisanform.model.Url;
 import com.github.arisanform.network.API;
@@ -70,7 +67,7 @@ public class FormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //TODO: Change to Probolinggo Activity
         setContentView(R.layout.activity_second); //<------This!
-        vForm = findViewById(R.id.inflater_view); //<------This!
+        vForm = findViewById(R.id.arisan_form); //<------This!
 
         dbPreference = new PreferenceHelper(this);
 
