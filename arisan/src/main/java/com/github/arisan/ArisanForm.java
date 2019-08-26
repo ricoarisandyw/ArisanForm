@@ -186,6 +186,14 @@ public class ArisanForm extends ScrollView {
         if(model!=null) model.setData(data);
     }
 
+    public void fillChildData(String parent_name,String field_name,Object data){
+        FormModel model = new KotlinFilter().findFieldByName(parent_name,this.fieldModels);
+        if(model!=null) {
+            FormModel model_child = new KotlinFilter().findFieldByName(field_name,model.getChildFieldModel().get(0));
+            if(model_child!=null) model_child.setData(data);
+        }
+    }
+
     public void notifyValueSetChanged(){
         for(FormModel new_model : this.fieldModels){
             FormModel old_model = new KotlinFilter().findFieldByName(new_model.getName(),formAdapter.getFieldModels());
