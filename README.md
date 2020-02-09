@@ -53,7 +53,7 @@ public class Nature {
 |realation|String.class|change with child class|
 
 
-#### @Form types
+List of @Form types
 
 TEXT, PASSWORD, NUMBER, EMAIL, CHECKBOX, SPINNER, DATE, DATETIME, 
 TIME, BOOLEAN, FILE, SEARCH, ONETOMANY, RADIO, SLIDER, IMAGE,    AUTOCOMPLETE, CAMERA, GALLERY, ONELINETEXT, FLOWTEXT
