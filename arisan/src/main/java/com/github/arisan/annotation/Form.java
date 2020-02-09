@@ -20,6 +20,7 @@ public @interface Form {
     int background() default 0;
     int color() default 0;
     Class relation() default String.class;
+    String hint() default "...";
 
     int TEXT = 181;
     int PASSWORD = 182;
@@ -40,4 +41,8 @@ public @interface Form {
     int AUTOCOMPLETE = 197;
     int CAMERA = 198;
     int GALLERY = 199;
+    int ONELINETEXT = 200;
+    int FLOWTEXT = 201;
+    int BUTTON = 202;
+    int TITLE = 203;
 }

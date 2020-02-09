@@ -22,8 +22,9 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/arisan_checkbox_list"
             android:text="Text"
+            android:scrollbars="none"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
 
         <EditText
             android:id="@+id/arisan_checkbox_text"

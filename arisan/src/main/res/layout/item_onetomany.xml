@@ -19,20 +19,20 @@
             android:text="Label"
             android:textStyle="bold" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/arisan_onetomany_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <Button
             android:id="@+id/arisan_onetomany_add"
             android:background="@drawable/btn_submit"
             android:padding="12dp"
             android:textColor="#FFF"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:text="Add Data +"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/arisan_onetomany_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

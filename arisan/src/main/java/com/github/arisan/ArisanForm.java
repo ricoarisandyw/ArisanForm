@@ -1,190 +1,213 @@
 package com.github.arisan;
 
-import android.app.Activity;
+import android.content.Context;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.github.arisan.adapter.ArisanAdapter;
+import com.github.arisan.adapter.FormAdapter;
+import com.github.arisan.helper.ImagePickerUtils;
+import com.github.arisan.helper.KotlinFilter;
 import com.github.arisan.helper.ObjectReader;
-import com.github.arisan.model.ArisanFieldModel;
+import com.github.arisan.helper.PreferenceHelper;
+import com.github.arisan.model.FormModel;
+import com.github.arisan.model.FormViewHolder;
+import com.github.arisan.model.ListenerModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-/**
- * Created by wijaya on 4/22/2018.
- */
+public class ArisanForm extends ScrollView {
+    private List<FormModel> fieldModels = new ArrayList<>();
+    private FormConfig config = new FormConfig();
+    private FormAdapter.OnSubmitListener onSubmitListener;
+    private PreferenceHelper preference;
+    private String blank_message = "cannot blank!!!";
+    private boolean no_blank = false;
+    private boolean isChild = false;
+    private int index_child = -1;
+    private ArisanListener.ProgressListener progressListener;
 
-public class ArisanForm {
-    private Activity activity;
-    private List<ArisanFieldModel> fieldData;
-    private ArisanPreparation preparation;
-    private ArisanAdapter.OnSubmitListener onSubmitListener;
+    private FormAdapter formAdapter;
+    LinearLayout child;
+    public ViewGroup.LayoutParams LAYOUT_PARAMS = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
-    private boolean use_title = true;
-    private boolean use_submit = true;
-    private int background;
-    private int labelColor;
-    private int buttonColor;
-    private String submitText = "SUBMIT";
-    private String title = "TITLE";
-    private String blankMessage;
-
-    public String getBlankMessage() {
-        return blankMessage;
+    void init(){
+        //WRITE CODE HERE
+        Log.d("_PROCESS","INIT FORM VIEW");
+        child = new LinearLayout(getContext());
+        child.setOrientation(LinearLayout.VERTICAL);
+        child.setLayoutParams(LAYOUT_PARAMS);
+        addView(child);
     }
 
-    public void setBlankMessage(String blankMessage) {
-        this.blankMessage = blankMessage;
+    public List<FormModel> getFieldModels() {
+        //TODO: Special Threatment
+        return fieldModels;
     }
 
-    public String getTitle() {
-        return title;
+    public void setModels(Object object) {
+        this.fieldModels = ObjectReader.getField(object);
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void buildForm(){
+        child.removeAllViews();
+        formAdapter = new FormAdapter(getContext());
+        formAdapter.setOnSubmitListener(onSubmitListener);
+        if(config!=null) formAdapter.setConfig(config);
+        formAdapter.setParent_view(child);
+        formAdapter.setFieldModels(fieldModels);
+        formAdapter.processData();
     }
 
-    public String getSubmitText() {
-        return submitText;
+    public void notifyValue(){
+        formAdapter.setFieldModels(this.fieldModels);
+        formAdapter.notifyValue();
     }
 
-    public void setSubmitText(String submitText) {
-        this.submitText = submitText;
+    public void updateImage(ImagePickerUtils utils){
+        formAdapter.updateImage(utils);
     }
 
-    public int getBackground() {
-        return background;
+    //========CONTEXT INIT============//
+
+    public ArisanForm(Context context) {
+        super(context);
+        Log.d("INIT A","");
+        init();
     }
 
-    public void setBackground(int background) {
-        this.background = background;
+    public ArisanForm(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        Log.d("INIT","B");
+        init();
     }
 
-    public ArisanForm(Activity activity){
-        this.preparation = new ArisanPreparation(activity);
-        this.fieldData = preparation.getModel();
-        this.activity = activity;
+    public ArisanForm(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        Log.d("INIT","C");
+        init();
     }
 
-    public boolean isUse_title() {
-        return use_title;
+    public ArisanForm(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        Log.d("INIT","D");
+        init();
     }
 
-    public void setUse_title(boolean use_title) {
-        this.use_title = use_title;
+    //============SET GET=============/
+
+
+    public FormAdapter getFormAdapter() {
+        return formAdapter;
     }
 
-    public boolean isUse_submit() {
-        return use_submit;
+    public void setFormAdapter(FormAdapter formAdapter) {
+        this.formAdapter = formAdapter;
     }
 
-    public void setUse_submit(boolean use_submit) {
-        this.use_submit = use_submit;
+    //Before processed
+    public void addListener(String field_name, ArisanListener.OnCondition condition){
+        if(condition!=null) {
+            FormModel model = new KotlinFilter().findFieldByName(field_name, fieldModels);
+            if(model!=null) model.addCondition(condition);
+        } else
+            Log.e("Arisan","No Condition");
     }
 
-    public List<ArisanFieldModel> getFieldData() {
-        return fieldData;
-    }
-
-    public void setFieldData(List<ArisanFieldModel> fieldData) {
-        this.fieldData = fieldData;
-    }
-
-    public void setModel(Object object){
-        this.fieldData = ObjectReader.getField(object);
-    }
-
-    public int getLabelColor() {
-        return labelColor;
-    }
-
-    public void setLabelColor(int labelColor) {
-        this.labelColor = labelColor;
-    }
-
-    public ArisanForm addListener(String field_name, ArisanListener.Condition onSomething){
-        for(ArisanFieldModel model : fieldData){
-            if(model.getName().equals(field_name)){
-                model.setArisanListener(onSomething);
-                break;
-            }
-        }
-        return this;
-    }
-
-    public ArisanForm addChildListener(String parent_field,String child_field, ArisanListener.Condition onSomething){
-        for(ArisanFieldModel model : fieldData){
-            if(model.getName().equals(parent_field)){
-                for(ArisanFieldModel childModel :model.getChildFieldModel().get(0)){
-                    if(childModel.getName().equals(child_field)){
-                        childModel.setArisanListener(onSomething);
-                        break;
-                    }
+    public void addChildListener(String parent_name, String field_name, ArisanListener.OnCondition condition){
+        if(condition!=null){
+            FormModel model = new KotlinFilter().findFieldByName(parent_name, fieldModels);
+            if(model!=null&&model.getChildFieldModel()!=null)
+                for(List<FormModel> m:model.getChildFieldModel()){
+                    FormModel mm = new KotlinFilter().findFieldByName(field_name, m);
+                    if(mm!=null) mm.setArisanListener(condition);
                 }
+        }
+    }
+
+    public void updateChildListener(String parent_name, String field_name, ArisanListener.OnCondition condition){
+        if(condition!=null){
+            FormModel model = new KotlinFilter().findFieldByName(field_name, fieldModels);
+            FormViewHolder holder = new KotlinFilter().filterViewHolder(parent_name,formAdapter.getHolderList());
+            if(model!=null) {
+                for(FormAdapter adtr:holder.adapter.getListForm())
+                    adtr.updateListener(field_name,condition);
             }
         }
-        return this;
+    }
+    //After processed
+    public void updateListener(String field_name,ArisanListener.OnCondition condition){
+        this.formAdapter.updateListener(field_name,condition);
     }
 
-    public ArisanForm addCheckboxListener(String field_name, ArisanListener.CheckboxCondition onSomething){
-        for(ArisanFieldModel model : fieldData){
-            if(model.getName().equals(field_name)){
-                model.setCheckboxListener(onSomething);
-                break;
-            }
-        }
-        return this;
+    public void setFieldModels(List<FormModel> fieldModels) {
+        this.fieldModels.addAll(fieldModels);
     }
 
-    public ArisanForm addViewMod(String field_name,ArisanListener.ViewMod onSomething){
-        for(ArisanFieldModel model : fieldData){
-            if(model.getName().equals(field_name)){
-                model.addViewMod(onSomething);
-                break;
-            }
-        }
-        return this;
+    public FormConfig getConfig() {
+        return config;
     }
 
-    public ArisanForm addSearchListener(String field_name,ArisanListener.SearchCondition onSomething){
-
-        return this;
+    public void setConfig(FormConfig config) {
+        this.config = config;
     }
 
-    public ArisanForm setOnSubmitListener(ArisanAdapter.OnSubmitListener onSubmitListener){
+    public FormAdapter.OnSubmitListener getOnSubmitListener() {
+        return onSubmitListener;
+    }
+
+    public void setOnSubmitListener(FormAdapter.OnSubmitListener onSubmitListener) {
         this.onSubmitListener = onSubmitListener;
-        return this;
     }
 
-    public ArisanAdapter buildAdapter(){
-        ArisanAdapter adapter = new ArisanAdapter(activity, this);
-        adapter.setSubmitBackground(preparation.getSubmitBackground());
-        adapter.setOnSubmitListener(this.onSubmitListener);
-        return adapter;
+    //=========UPDATER==========//
+
+    public void updateValue(String field_name,Object data){
+        this.formAdapter.updateValue(field_name,data);
     }
 
-    public void copyFieldFromAdapter(ArisanAdapter arisanAdapter){
-        List<ArisanFieldModel> new_model = new ArrayList<>();
-        for (ArisanFieldModel a:arisanAdapter.getListField()){
-            new_model.add(a.renew());
+    public void updateValue(String parent_field,String field_name,Object data){
+        this.formAdapter.updateValue(field_name,data);
+    }
+
+    public void updateData(String field_name,Object data){
+        this.formAdapter.updateData(field_name,data);
+    }
+
+    public void fillData(String field_name,Object data){
+        FormModel model = new KotlinFilter().findFieldByName(field_name,this.fieldModels);
+        if(model!=null) model.setData(data);
+    }
+
+    public void fillChildData(String parent_name,String field_name,Object data){
+        FormModel model = new KotlinFilter().findFieldByName(parent_name,this.fieldModels);
+        if(model!=null) {
+            FormModel model_child = new KotlinFilter().findFieldByName(field_name,model.getChildFieldModel().get(0));
+            if(model_child!=null) model_child.setData(data);
         }
-        setFieldData(new_model);
     }
 
-    public void fillData(String field_name,Object value){
-        for (ArisanFieldModel fieldModel:fieldData){
-            if(fieldModel.getName().equals(field_name)){
-                fieldModel.setData(value);
-                break;
+    public void notifyValueSetChanged(){
+        for(FormModel new_model : this.fieldModels){
+            FormModel old_model = new KotlinFilter().findFieldByName(new_model.getName(),formAdapter.getFieldModels());
+            if(old_model!=null&&old_model.getValue()!=new_model.getValue()){
+                updateValue(new_model.getName(),new_model.getValue());
             }
         }
     }
 
-    public int getButtonColor() {
-        return buttonColor;
+    public void showSubmitProgress(boolean show) {
+        formAdapter.showSubmitProgress(show);
     }
 
-    public void setButtonColor(int buttonColor) {
-        this.buttonColor = buttonColor;
+    public void updateConfig(FormConfig config){
+        formAdapter.setConfig(config);
     }
 }

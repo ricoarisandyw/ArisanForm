@@ -23,16 +23,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/label_margin"
+            android:layout_marginBottom="15dp"
             android:orientation="horizontal"
             android:weightSum="1">
 
             <TextView
                 android:id="@+id/arisan_image_name"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="0.7"
-                android:text="@string/filename_with_ex" />
+                android:gravity="center|start"
+                android:text="@string/filename" />
 
             <Button
                 android:id="@+id/arisan_image_pick"
@@ -47,11 +48,11 @@
 
         <ImageView
             android:id="@+id/arisan_image_view"
-            android:background="@color/pale_gray"
-            android:src="@drawable/ic_camera"
-            android:padding="10dp"
+            android:background="@drawable/btn_disable"
+            android:src="@drawable/picture"
+            android:padding="15dp"
             android:layout_gravity="center"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="180dp"
             android:contentDescription="TODO" />
     </LinearLayout>

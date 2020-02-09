@@ -1,5 +1,6 @@
 package com.github.arisan.adapter;
 
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -18,52 +21,68 @@ import com.github.arisan.R;
 public class MyView {
     View view;
 
-    TextView mTitle,mBlankText;
-    Button mSubmit;
+    public TextView mTitle,mBlankText;
+    //BUTTON
+    public LinearLayout mSubmit;
+    public ProgressBar mProgress;
+    public TextView mSubmitText;
     //TEXT
-    TextView mEditTextLabel,mDateLabel,mSpinnerLabel;
-    EditText mEditText;
+    public TextView mEditTextLabel,mDateLabel,mSpinnerLabel;
+    public EditText mEditText;
+    //ONELINE
+    public TextView mOneLineText;
+    //FLOWTEXT
+    public TextInputLayout mEditText2Layout;
+    public TextView mEditText2;
     //PASSOWRD
-    TextView mPasswordLabel;
-    EditText mPassword;
+    public TextView mPasswordLabel;
+    public EditText mPassword;
     //SEARCH
-    EditText mEditTextSearch;
-    TextView mSearchLabel;
-    ImageView mSearchButton;
+    public EditText mEditTextSearch;
+    public TextView mSearchLabel;
+    public LinearLayout mSearchButton;
+    public ProgressBar mSearchLoading;
+    public ImageView mSearchIcon;
     //BOOLEAN
-    Switch aSwitch;
+    public Switch aSwitch;
     //SPINNER
-    AppCompatSpinner mSpinner;
+    public AppCompatSpinner mSpinner;
     //FILE
-    Button mFile;
-    TextView mFileName,mFileLabel;
+    public Button mFile;
+    public TextView mFileName,mFileLabel;
     //DATETIME
-    TextView mDate;
+    public TextView mDate;
     //CHECKBOX
-    RecyclerView mCheckboxParent;
-    TextView mCheckboxLabel;
-    EditText mCheckboxText;
+    public RecyclerView mCheckboxParent;
+    public TextView mCheckboxLabel;
+    public EditText mCheckboxText;
     //ONETOMANY
-    RecyclerView mOnetoManyList;
-    TextView mOnetoManyLabel;
-    Button mOnetoManyAdd;
+    public RecyclerView mOnetoManyList;
+    public TextView mOnetoManyLabel;
+    public Button mOnetoManyAdd;
     //RADIO BUTTON
-    RadioGroup mRadioGroup;
-    TextView mRadioLabel;
-    EditText mRadioText;
+    public RadioGroup mRadioGroup;
+    public TextView mRadioLabel;
+    public EditText mRadioText;
     //SLIDER
-    TextView mSlideLabel;
-    TextView mSlideValue;
-    SeekBar mSlide;
+    public TextView mSlideLabel;
+    public TextView mSlideValue;
+    public SeekBar mSlide;
     //IMAGE
-    TextView mImageLabel,mImageName;
-    ImageView mImage;
-    Button mImagePick;
+    public TextView mImageLabel,mImageName;
+    public ImageView mImage;
+    public Button mImagePick;
     //AUTOCOMPLETE
-    AppCompatAutoCompleteTextView mAutocomplete;
-    TextView mAutocompleteLabel;
+    public AppCompatAutoCompleteTextView mAutocomplete;
+    public TextView mAutocompleteLabel;
+    //DELETE
+    public ImageView mDelete;
+    //MANY
+    public LinearLayout vManyContainer;
+    public TextView vManyLabel;
+    public Button vManyAdd;
 
-    MyView(View v) {
+    public MyView(View v) {
         this.view = v;
 
         mPasswordLabel = v.findViewById(R.id.arisan_password_label);
@@ -87,6 +106,8 @@ public class MyView {
         mEditTextSearch = v.findViewById(R.id.arisan_search_name);
         mSearchButton = v.findViewById(R.id.arisan_search_button);
         mSearchLabel = v.findViewById(R.id.arisan_search_label);
+        mSearchLoading = v.findViewById(R.id.arisan_search_loading);
+        mSearchIcon = v.findViewById(R.id.arisan_search_icon);
         mOnetoManyAdd = v.findViewById(R.id.arisan_onetomany_add);
         mOnetoManyLabel = v.findViewById(R.id.arisan_onetomany_label);
         mOnetoManyList = v.findViewById(R.id.arisan_onetomany_list);
@@ -102,5 +123,14 @@ public class MyView {
         mImagePick = v.findViewById(R.id.arisan_image_pick);
         mAutocomplete = v.findViewById(R.id.arisan_autocomplete);
         mAutocompleteLabel = v.findViewById(R.id.arisan_autocomplete_label);
+        mOneLineText = v.findViewById(R.id.arisan_oneline_text);
+        mEditText2 = v.findViewById(R.id.arisan_text2_text);
+        mEditText2Layout = v.findViewById(R.id.arisan_text2_text_layout);
+        mDelete = v.findViewById(R.id.arisan_delete);
+        mProgress = v.findViewById(R.id.arisan_button_progress);
+        mSubmitText = v.findViewById(R.id.arisan_button_text);
+        vManyAdd = v.findViewById(R.id.arisan_many_add);
+        vManyContainer = v.findViewById(R.id.arisan_many_list);
+        vManyLabel = v.findViewById(R.id.arisan_many_label);
     }
 }

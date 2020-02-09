@@ -1,15 +1,15 @@
 package com.github.arisan.helper;
 
-import com.github.arisan.model.ArisanFieldModel;
+import com.github.arisan.model.FormModel;
 
 import java.util.Comparator;
 
-public class SortField implements Comparator<ArisanFieldModel>
+public class SortField implements Comparator<FormModel>
 {
     // Used for sorting in ascending order of
     // roll number
     @Override
-    public int compare(ArisanFieldModel o1, ArisanFieldModel o2) {
+    public int compare(FormModel o1, FormModel o2) {
         return o1.getPosition() - o2.getPosition();
     }
 

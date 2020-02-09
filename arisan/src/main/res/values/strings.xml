@@ -6,7 +6,7 @@
     <dimen name="font_size_subheading">16sp</dimen>
     <dimen name="font_size_title">20sp</dimen>
     <dimen name="icon_size">20dp</dimen>
-    <dimen name="label_margin">5dp</dimen>
+    <dimen name="label_margin">2dp</dimen>
 
     <string name="lembar_data_peserta">Lembar Data Peserta</string>
     <string name="nama_pasien">Nama Pasien</string>
@@ -95,7 +95,7 @@
     <string name="pertanyaan_c_109">Siapa yang membiayai pengobatan anda [selain BPJS Kesehatan] ?</string>
     <string name="sendiri">Anda sendiri dan keluarga dekat</string>
     <string name="kerabat">Kerabat atau teman</string>
-    <string name="pertanyaan_c_201">Pernahkah anda diberitahu bahwa anda menderita kelainan ginjal, penyakit ginjal, atau penyakit lain ?</string>
+    <string name="pertanyaan_c_201">Pernahkah anda diberitahu bahwa anda menderita kelainan ginjal, penyakit ginjal, atau penyakit lain yang terkait gagal ginjal sebelum akhirnya mendapat terapi HD?</string>
     <string name="pertanyaan_c_201_1">Mohon sampaikan apa yang dirasa penting terkait penyakit tersebut ?</string>
     <string name="ya_penyakit_ginjal">Ya, menderita penyakit ginjal</string>
     <string name="ya_penyakit_lain">Ya, menderita penyakit lain</string>
@@ -111,7 +111,7 @@
     <string name="tanggal">Tanggal</string>
     <string name="pertanyaan_c_204">Apakah anda diberitahu penyebab gagal ginjal kronis yang menyebabkan anda harus menjalani terapi HD ?</string>
     <string name="pertanyaan_c_205">Sebelum didiagnosis oleh dokter, apakah anda pernah mengalami atau memiliki hal berikut ?</string>
-    <string name="masalah_ginjal">Masalah ginjal keika bayi/balita</string>
+    <string name="masalah_ginjal">Masalah ginjal ketika bayi/balita</string>
     <string name="rawat_inap">Rawat inap karena gagal ginjal</string>
     <string name="batu_ginjal">Batu ginjal</string>
     <string name="efek_samping">Efek samping pengobatan</string>
@@ -179,14 +179,14 @@
     <string name="pertanyaan_c_210_2">Berapa banyak anda mengonsumsi minuman pada pertanyaan sebelumnya dalam sekali minum ? (Botol/porsi)</string>
     <string name="botol">Botol</string>
     <string name="porsi">Porsi</string>
-    <string name="pertanyaan_c_210_3">Berapa lama anda minum minuman tersebut secara rutin ssebelum akhirnya menjalani terapi ?</string>
-    <string name="pertanyaan_c_210_4">Mengapa ada memutuskan meminum minuman tersebut ?</string>
+    <string name="pertanyaan_c_210_3">Berapa lama anda minum minuman tersebut secara rutin sebelum akhirnya menjalani terapi ?</string>
+    <string name="pertanyaan_c_210_4">Mengapa anda memutuskan meminum minuman tersebut ?</string>
     <string name="merasa_tidak_berefek">Merasa tidak berefek</string>
     <string name="ingin_mendapat_manfaat_lebih">Ingin mendapat manfaat lebih</string>
     <string name="menyukai_rasanya">Menyukai rasanya</string>
     <string name="pertanyaan_c_211">Sebelum menjalani terapi HD, apakah anda sering mengkonsumsi makanan berikut ?</string>
-    <string name="fried_chicken">Friedc hicken[contoh:KFC,McD,Popeye,Olive,dll]</string>
-    <string name="burger">Burger[contoh:McDonald’s,BurgerKing,Monalisa,dll]</string>
+    <string name="fried_chicken">Fried chicken [contoh:KFC,McD,Popeye,Olive,dll]</string>
+    <string name="burger">Burger [contoh:McDonald’s,BurgerKing,Monalisa,dll]</string>
     <string name="mie_intan">Mie instan[contoh:indomie,popmie,dll</string>
     <string name="kecap_atau_makanan">Kecap atau makanan yang banyak mengandung kecap</string>
     <string name="makanan_berlemak">Makanan berlemak tinggi[contoh:makananbersantan,mentega,whippedcream,eskrim,minyakikan,dll</string>
@@ -462,5 +462,5 @@
     <string name="pertanyaan_c_601_1">Lama bekerja ? (Bulan)</string>
     <string name="pertanyaan_c_602_1">Berapa lama anda bekerja ? (Minggu)</string>
     <string name="pick">PICK</string>
-    <string name="filename_with_ex">filename_with_ex</string>
+    <string name="filename">filename</string>
 </resources>

@@ -1,16 +1,12 @@
 package com.github.arisan.helper;
 
 import android.content.Context;
-import android.content.CursorLoader;
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.MediaStore;
-import android.util.Log;
 
 
 public class UriUtils {
     Context context;
-    String path;
+    String file_path;
     String filename_with_ex;
     String filename;
     Uri uri;
@@ -19,24 +15,16 @@ public class UriUtils {
         this.uri = uri;
         this.context = context;
 
-        String[] proj = {MediaStore.Images.Media.DATA};
-        CursorLoader loader = new CursorLoader(context, uri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        path = cursor.getString(column_index);
-        cursor.close();
+        file_path = uri.toString();
+        file_path = file_path.replace("%2F","/");
 
-        filename_with_ex = path.substring(path.lastIndexOf("/")+1);
+        filename_with_ex = file_path.substring(file_path.lastIndexOf("/")+1);
         if (filename_with_ex.indexOf(".") > 0) {
             filename = filename_with_ex.substring(0, filename_with_ex.lastIndexOf("."));
         } else {
             filename = filename_with_ex;
         }
-//        String TAG = "__URI";
-//        Log.d(TAG, "Real Path: " + path);
-//        Log.d(TAG, "Filename With Extension: " + filename_with_ex);
-//        Log.d(TAG, "File Without Extension: " + filename);
+
     }
 
     public Uri getUri() {
@@ -48,15 +36,15 @@ public class UriUtils {
     }
 
     public String getRealPath() {
-        return path;
+        return file_path;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setFile_path(String file_path) {
+        this.file_path = file_path;
     }
 
     public String getFilename_with_ex() {
-        return filename_with_ex;
+        return filename_with_ex.replace("%2f","\"");
     }
 
     public void setFilename_with_ex(String filename_with_ex) {

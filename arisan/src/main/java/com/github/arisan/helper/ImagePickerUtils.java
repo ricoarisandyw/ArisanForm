@@ -1,23 +1,22 @@
 package com.github.arisan.helper;
 
+import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
-import android.util.Base64;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.github.arisan.annotation.Form;
-import com.github.arisan.model.ArisanFieldModel;
+import com.github.arisan.model.FormModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -26,12 +25,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class ImagePickerUtils {
     public static final int ARISAN_REQUEST_IMAGE = 1;
-    private Activity activity;
+    private Context context;
     private Bitmap bitmap;
     private File file;
     private Uri uri;
@@ -39,11 +36,25 @@ public class ImagePickerUtils {
     private Intent data;
     private PreferenceHelper db;
 
-    public ImagePickerUtils(Activity activity, Intent data) {
-        this.activity = activity;
+    private int child_position = -1;
+    private boolean child = false;
+    private String parent_name;
+
+    //FOR EXTRACT
+    public ImagePickerUtils(Context context, Intent data) {
+        this.context = context;
         this.data = data;
-        db = new PreferenceHelper(activity);
+        db = new PreferenceHelper(context);
         fieldName = db.load("field_name");
+        child = Boolean.parseBoolean(db.load("child"));
+        if(child) {
+            parent_name = db.load("parent");
+            child_position = Integer.parseInt(db.load("index"));
+        }
+        //CLEAR CACHE
+        db.save("parent",null);
+        db.save("child",null);
+        db.save("index",null);
         if (db.load("pick_image").equals(String.valueOf(Form.GALLERY))) {
             extractFromGallery();
         } else {
@@ -51,9 +62,10 @@ public class ImagePickerUtils {
         }
     }
 
-    public ImagePickerUtils(Activity activity, ArisanFieldModel model) {
-        this.activity = activity;
-        db = new PreferenceHelper(activity);
+    //FOR PICK
+    public ImagePickerUtils(Context context, FormModel model) {
+        this.context = context;
+        db = new PreferenceHelper(context);
         db.save("field_name", model.getName());
     }
 
@@ -61,21 +73,28 @@ public class ImagePickerUtils {
         db.save("pick_image", String.valueOf(Form.GALLERY));
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
-        activity.startActivityForResult(photoPickerIntent, ARISAN_REQUEST_IMAGE);
+        ((Activity)context).startActivityForResult(photoPickerIntent, ARISAN_REQUEST_IMAGE);
+    }
+
+    public Bitmap compressBitmap(Bitmap selectedImage,int width,int height){
+        return Bitmap.createScaledBitmap(selectedImage, width,height,false);
     }
 
     private void extractFromGallery() {
         try {
             Uri imageUri = data.getData();
-            InputStream imageStream = activity.getContentResolver().openInputStream(imageUri);
-            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
 
+            InputStream imageStream = context.getContentResolver().openInputStream(imageUri);
+            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+            //Uri uri = saveBitmap(selectedImage);
+
+            File file = new File(imageUri.getPath());
             setUri(imageUri);
             setBitmap(selectedImage);
-            setFile(new File(imageUri.getPath()));
+            setFile(file);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            Toast.makeText(activity, "Something went wrong", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -87,14 +106,37 @@ public class ImagePickerUtils {
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
-            activity.startActivityForResult(takePictureIntent, ARISAN_REQUEST_IMAGE);
+        if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
+            ((Activity)context).startActivityForResult(takePictureIntent, ARISAN_REQUEST_IMAGE);
         }
     }
 
     private void extractFromCamera() {
         Bundle extras = data.getExtras();
         Bitmap bitmap = (Bitmap) extras.get("data");
+        Uri uri = saveBitmap(bitmap);
+        setFile(new File(uri.getPath()));
+        setUri(uri);
+    }
+
+    public void updateUri(Uri uri){
+        try {
+            setUri(uri);
+            setFile(new File(uri.getPath()));
+            InputStream imageStream = null;
+            imageStream = context.getContentResolver().openInputStream(uri);
+            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+            setBitmap(selectedImage);
+            Logger.e("Update Uri Success");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Logger.e("Update Uri failed");
+        }
+
+    }
+
+    public Uri saveBitmap(Bitmap bitmap){
+        File file;
         if(bitmap!=null) {
             setBitmap(bitmap);
 
@@ -105,22 +147,20 @@ public class ImagePickerUtils {
             /*SAVE IMAGE TO EXTERNAL STORAGE*/
             String path = android.os.Environment.getExternalStorageDirectory()
                     + File.separator
-                    + activity.getApplicationContext().getPackageName();
+                    + context.getApplicationContext().getPackageName();
 
             File folder = new File(path);
             if (!folder.exists()) folder.mkdir();
 
             OutputStream outFile;
             String file_name = System.currentTimeMillis() + ".jpg";
-            File file = new File(path, file_name);
+            file = new File(path, file_name);
             try {
                 outFile = new FileOutputStream(file);
                 outFile.write(bitmapdata);
                 outFile.flush();
                 outFile.close();
-
-                setUri(Uri.fromFile(file));
-                setFile(file);
+                return Uri.fromFile(file);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -128,148 +168,18 @@ public class ImagePickerUtils {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            return null;
         }else{
-            Toast.makeText(activity, "No image captured", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private File createImageFile(String currentPhotoPath) throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        float bitmapRatio = (float) width / (float) height;
-        if (bitmapRatio > 1) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
-    }
-
-    public String BitMapToString(Bitmap userImage1) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        userImage1.compress(Bitmap.CompressFormat.PNG, 60, baos);
-        byte[] b = baos.toByteArray();
-        return Base64.encodeToString(b, Base64.DEFAULT);
-    }
-
-    public static final String insertImage(ContentResolver cr,
-                                           Bitmap source,
-                                           String title,
-                                           String description) {
-
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, title);
-        values.put(MediaStore.Images.Media.DISPLAY_NAME, title);
-        values.put(MediaStore.Images.Media.DESCRIPTION, description);
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-        // Add the date meta data to ensure the image is added at the front of the gallery
-        values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis());
-        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-
-        Uri url = null;
-        String stringUrl = null;    /* value to be returned */
-
-        try {
-            url = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-            if (source != null) {
-                OutputStream imageOut = cr.openOutputStream(url);
-                try {
-                    source.compress(Bitmap.CompressFormat.JPEG, 50, imageOut);
-                } finally {
-                    imageOut.close();
-                }
-
-                long id = ContentUris.parseId(url);
-                // Wait until MINI_KIND thumbnail is generated.
-                Bitmap miniThumb = MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MINI_KIND, null);
-                // This is for backward compatibility.
-                storeThumbnail(cr, miniThumb, id, 50F, 50F, MediaStore.Images.Thumbnails.MICRO_KIND);
-            } else {
-                cr.delete(url, null, null);
-                url = null;
-            }
-        } catch (Exception e) {
-            if (url != null) {
-                cr.delete(url, null, null);
-                url = null;
-            }
-        }
-
-        if (url != null) {
-            stringUrl = url.toString();
-        }
-
-        return stringUrl;
-    }
-
-    /**
-     * A copy of the Android internals StoreThumbnail method, it used with the insertImage to
-     * populate the android.provider.MediaStore.Images.Media#insertImage with all the correct
-     * meta data. The StoreThumbnail method is private so it must be duplicated here.
-     *
-     * @see android.provider.MediaStore.Images.Media (StoreThumbnail private method)
-     */
-    private static final Bitmap storeThumbnail(
-            ContentResolver cr,
-            Bitmap source,
-            long id,
-            float width,
-            float height,
-            int kind) {
-
-        // create the matrix to scale it
-        Matrix matrix = new Matrix();
-
-        float scaleX = width / source.getWidth();
-        float scaleY = height / source.getHeight();
-
-        matrix.setScale(scaleX, scaleY);
-
-        Bitmap thumb = Bitmap.createBitmap(source, 0, 0,
-                source.getWidth(),
-                source.getHeight(), matrix,
-                true
-        );
-
-        ContentValues values = new ContentValues(4);
-        values.put(MediaStore.Images.Thumbnails.KIND, kind);
-        values.put(MediaStore.Images.Thumbnails.IMAGE_ID, (int) id);
-        values.put(MediaStore.Images.Thumbnails.HEIGHT, thumb.getHeight());
-        values.put(MediaStore.Images.Thumbnails.WIDTH, thumb.getWidth());
-
-        Uri url = cr.insert(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, values);
-
-        try {
-            OutputStream thumbOut = cr.openOutputStream(url);
-            thumb.compress(Bitmap.CompressFormat.JPEG, 100, thumbOut);
-            thumbOut.close();
-            return thumb;
-        } catch (FileNotFoundException ex) {
-            return null;
-        } catch (IOException ex) {
+            Toast.makeText(context, "No image captured", Toast.LENGTH_SHORT).show();
             return null;
         }
     }
+
+    public Bitmap resize(Bitmap bitmap){
+        return Bitmap.createScaledBitmap(bitmap,180,180,false);
+    }
+
+    //============SETGET============//
 
     public String getFieldName() {
         return fieldName;
@@ -301,5 +211,32 @@ public class ImagePickerUtils {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public int getChild_position() {
+        return child_position;
+    }
+
+    public void setChild_position(int child_position) {
+        this.child_position = child_position;
+        db.save("index", String.valueOf(child_position));
+    }
+
+    public boolean isChild() {
+        return child;
+    }
+
+    public void setChild(boolean child) {
+        this.child = child;
+        db.save("child", String.valueOf(child));
+    }
+
+    public String getParent_name() {
+        return parent_name;
+    }
+
+    public void setParent_name(String parent_name) {
+        this.parent_name = parent_name;
+        db.save("parent",parent_name);
     }
 }

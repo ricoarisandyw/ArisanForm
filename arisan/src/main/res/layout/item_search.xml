@@ -31,18 +31,32 @@
             android:hint="Search here . . ."
             android:textSize="@dimen/font_size_body" />
 
-        <ImageView
-            android:background="@drawable/btn_submit"
-            android:padding="10dp"
-            android:gravity="center"
-            android:textColor="#FFF"
+        <LinearLayout
+            android:background="@drawable/btn_primary"
             android:id="@+id/arisan_search_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/arisan_search_label"
-            android:foregroundTint="#FFF"
-            android:src="@drawable/ic_search" />
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/arisan_search_icon"
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search"/>
+
+            <ProgressBar
+                android:visibility="gone"
+                android:id="@+id/arisan_search_loading"
+                android:padding="10dp"
+                android:indeterminateTint="@android:color/white"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

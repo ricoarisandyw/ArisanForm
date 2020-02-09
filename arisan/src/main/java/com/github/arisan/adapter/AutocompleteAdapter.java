@@ -14,14 +14,15 @@ public class AutocompleteAdapter extends ArrayAdapter {
     List<String> originalCodes;
     StringFilter filter;
 
-    AutocompleteAdapter(Context context, int resource, List<String> keys){
+    public AutocompleteAdapter(Context context, int resource, List<String> keys){
         super(context,resource,keys);
         allCodes=keys;
         originalCodes=keys;
     }
 
     public int getCount() {
-        return allCodes.size();
+        if(allCodes !=null) return allCodes.size();
+        else return 0;
     }
 
     public String getItem(int position) {

@@ -10,4 +10,10 @@
         <item name="android:textColorHighlight">#005577</item>
         <item name="android:textColorPrimary">#770055</item>
     </style>
+    <style name="ProgressBar" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColorPrimary">#fff</item>
+        <item name="android:textColor">#557700</item>
+        <item name="android:textColorHighlight">#005577</item>
+        <item name="android:progressTint">#000</item>
+    </style>
 </resources>
