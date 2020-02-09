@@ -6,15 +6,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.github.arisan.FormConfig;
 import com.github.arisan.ArisanForm;
+import com.github.arisan.adapter.ArisanAdapter;
+import com.github.arisan.adapter.CheckboxAdapter;
 import com.github.arisan.helper.DummyCreator;
 import com.github.arisan.helper.ImagePickerUtils;
 import com.github.arisan.helper.Logger;
 import com.github.arisan.helper.ObjectReader;
 import com.github.arisan.helper.PermissionUtils;
+import com.github.arisan.model.FormModel;
 import com.github.arisanform.R;
 import com.github.arisanform.model.AllField;
 import com.github.arisanform.model.MyResponse;
@@ -56,6 +60,9 @@ public class SecondActivity extends AppCompatActivity {
         //Adding listener when value changed
         vForm.addListener("category", (value , adapter) -> {
             Toast.makeText(this, "You select "+value, Toast.LENGTH_SHORT).show();
+//            CheckboxAdapter adapter_of_label = (CheckboxAdapter) adapter.findViewHolderByName("label").view.mCheckboxParent.getAdapter();
+//            adapter_of_label.mDataset.remove(0);
+//            adapter_of_label.notifyDataSetChanged();
         });
 
         //Setting Configuration

@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidStudioProjects-ArisanForm.iml" filepath="$PROJECT_DIR$/AndroidStudioProjects-ArisanForm.iml" />
       <module fileurl="file://$PROJECT_DIR$/ArisanForm.iml" filepath="$PROJECT_DIR$/ArisanForm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/ArisanForm-app.iml" filepath="$PROJECT_DIR$/app/ArisanForm-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/arisan/ArisanForm-arisan.iml" filepath="$PROJECT_DIR$/arisan/ArisanForm-arisan.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/arisan/arisan.iml" filepath="$PROJECT_DIR$/arisan/arisan.iml" />
     </modules>

@@ -1,7 +1,7 @@
 package com.github.arisan;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+//import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -19,11 +19,13 @@ import com.github.arisan.model.FormModel;
 import com.github.arisan.model.FormViewHolder;
 import com.github.arisan.model.ListenerModel;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ArisanForm extends ScrollView {
+public class ArisanForm extends LinearLayout {
     private List<FormModel> fieldModels = new ArrayList<>();
     private FormConfig config = new FormConfig();
     private FormAdapter.OnSubmitListener onSubmitListener;

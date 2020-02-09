@@ -16,8 +16,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.ViewHolder> {
-    List<String> mDataset;
-    List<String> checkedData;
+    public List<String> mDataset;
+    public List<String> checkedData;
     OnCheckedListener onCheckedListener;
 
     public CheckboxAdapter(List<String> mDataset, List<String> checkedData) {

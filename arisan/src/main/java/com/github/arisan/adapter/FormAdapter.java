@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
@@ -71,6 +72,11 @@ public class FormAdapter extends LinearLayout {
     private String parent_field_name;
     private ArisanListener.ProgressListener progressListener;
 
+    //Check wheter buildForm is done
+    boolean is_build_done = false;
+    int builded_form = 0;
+    int spinner_check = 0;
+
     public static ViewGroup.LayoutParams LAYOUT_PARAMS = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     ViewGroup parent_view;
     LinearLayout container_view;
@@ -109,6 +115,11 @@ public class FormAdapter extends LinearLayout {
             holderList.add(holder);
             //notify
             notifyData(holder);
+            builded_form++;
+        }
+        if(builded_form == fieldModels.size()){
+            Log.d(">>>Building","Done");
+            is_build_done = true;
         }
         Log.d("__PROCESS","INFLATE ALL SUCCESS");
     }
@@ -119,7 +130,7 @@ public class FormAdapter extends LinearLayout {
         return FieldAssembler.toFormJson(fieldModels);
     }
 
-    public void notifyData(FormViewHolder holder){
+    public void notifyData(@NonNull FormViewHolder holder){
         FormModel data = holder.getData();
         int position = holder.getPosition();
         if(position==0&&config.useTitle){
@@ -503,9 +514,9 @@ public class FormAdapter extends LinearLayout {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 holder.data.setValue(options.get(pos));
-                try{
+                if(++spinner_check > 1){
                     holder.data.doListener(options.get(pos),FormAdapter.this);
-                }catch (Exception ignored){}
+                }
             }
 
             @Override
