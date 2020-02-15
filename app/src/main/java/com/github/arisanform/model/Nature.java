@@ -1,6 +1,8 @@
 package com.github.arisanform.model;
 
 import com.github.arisan.annotation.Form;
+import com.github.arisanform.activity.MyCustomRange;
+import com.github.arisanform.activity.MyCustomToggleForm;
 
 import java.util.List;
 
@@ -19,6 +21,10 @@ public class Nature {
     private int score;
     @Form(label = "Pick at",type = Form.DATE,position = 7,format = "dd-MMM-yyyy")
     private String pick_at;
+    @Form(type = Form.CUSTOM, label = "Use Assurance", position = 8, custom_class = MyCustomToggleForm.class)
+    private boolean use_assurance;
+    @Form(type = Form.CUSTOM, label = "Budget", position = 9, custom_class = MyCustomRange.class)
+    private int budget;
 
     //PREPARRING ARRAY DATA
     public static String[] DATA_CATEGORY = {"Mountain","Beach","Forest","Museum"};
@@ -81,5 +87,21 @@ public class Nature {
 
     public void setPick_at(String pick_at) {
         this.pick_at = pick_at;
+    }
+
+    public boolean isUse_assurance() {
+        return use_assurance;
+    }
+
+    public void setUse_assurance(boolean use_assurance) {
+        this.use_assurance = use_assurance;
+    }
+
+    public int getBudget() {
+        return budget;
+    }
+
+    public void setBudget(int budget) {
+        this.budget = budget;
     }
 }

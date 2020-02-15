@@ -15,6 +15,7 @@ import com.github.arisan.helper.ImagePickerUtils;
 import com.github.arisan.helper.KotlinFilter;
 import com.github.arisan.helper.ObjectReader;
 import com.github.arisan.helper.PreferenceHelper;
+import com.github.arisan.model.ArisanCustomForm;
 import com.github.arisan.model.FormModel;
 import com.github.arisan.model.FormViewHolder;
 import com.github.arisan.model.ListenerModel;
@@ -211,5 +212,11 @@ public class ArisanForm extends LinearLayout {
 
     public void updateConfig(FormConfig config){
         formAdapter.setConfig(config);
+    }
+
+    //Custom View
+    public boolean registerCustomForm(ArisanCustomForm custom_form){
+
+        return true;
     }
 }

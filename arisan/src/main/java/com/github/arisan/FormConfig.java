@@ -1,6 +1,10 @@
 package com.github.arisan;
 
+import com.github.arisan.model.ArisanCustomForm;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FormConfig {
     public boolean useTitle = true;
@@ -14,6 +18,7 @@ public class FormConfig {
     public String blankMessage;
     public boolean isChild = false;
     public int index_child = -1;
+    public List<ArisanCustomForm> customForms = new ArrayList<>();
 
     public FormConfig renew(){
         String json = new Gson().toJson(this);

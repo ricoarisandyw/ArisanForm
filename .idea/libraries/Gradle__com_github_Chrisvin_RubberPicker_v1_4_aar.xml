@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.Chrisvin:RubberPicker:v1.4@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/137f2ea2a637ead2bce0892d2e37a2e3/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/137f2ea2a637ead2bce0892d2e37a2e3/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.Chrisvin/RubberPicker/v1.4/9cea8d6a878cee8776f6b040f2defc276c9f28c6/RubberPicker-v1.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

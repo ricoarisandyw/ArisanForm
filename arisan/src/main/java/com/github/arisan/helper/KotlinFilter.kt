@@ -15,6 +15,7 @@ class KotlinFilter {
     }
 
     fun findFieldByName(name:String,list:MutableList<FormModel>): FormModel?{
+        if(list == null || list.size == 0) return null
         return list.filter { it.name.equals(name)}.firstOrNull()
     }
 

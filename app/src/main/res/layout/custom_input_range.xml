@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/custom_range_label"
+        android:text="Label"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.jem.rubberpicker.RubberSeekBar
+        app:minValue="20"
+        app:maxValue="80"
+        app:elasticBehavior="cubic"
+        app:dampingRatio="0.3"
+        app:stiffness="300"
+        app:stretchRange="24dp"
+        app:defaultThumbRadius="16dp"
+        app:normalTrackWidth="4dp"
+        app:highlightTrackWidth="8dp"
+        app:normalTrackColor="#AAAAAA"
+        app:highlightTrackColor="#BA1F33"
+        app:defaultThumbInsideColor="#FFF"
+        app:highlightDefaultThumbOnTouchColor="#CD5D67"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

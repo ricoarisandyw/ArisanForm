@@ -2,9 +2,7 @@ package com.github.arisan.helper;
 
 import com.github.arisan.annotation.Form;
 import com.github.arisan.model.FormModel;
-import com.github.arisan.model.FormModel;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +21,7 @@ public class ObjectReader {
         model.setFileType(form.fileType());
         model.setBackground(form.background());
         model.setColor(form.color());
+        model.setCustomForm(form.custom_class());
 
         if(!form.label().equals("field name"))
             model.setLabel(form.label());

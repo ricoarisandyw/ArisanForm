@@ -49,6 +49,7 @@ import com.github.arisan.helper.PreferenceHelper;
 import com.github.arisan.helper.SortForm;
 import com.github.arisan.helper.TextUtils;
 import com.github.arisan.helper.UriUtils;
+import com.github.arisan.model.ArisanCustomForm;
 import com.github.arisan.model.FormModel;
 import com.github.arisan.model.FormViewHolder;
 import com.github.arisan.model.RadioModel;
@@ -63,6 +64,8 @@ public class FormAdapter extends LinearLayout {
     //MAIN DATA
     private List<FormModel> fieldModels = new ArrayList<>();
     private List<FormViewHolder> holderList = new ArrayList<>();
+
+    private List<ArisanCustomForm> customForms = new ArrayList<>();
 
     private OnSubmitListener onSubmitListener;
     private PreferenceHelper preference;
@@ -105,7 +108,10 @@ public class FormAdapter extends LinearLayout {
         for(FormModel data:fieldModels){
             int position = fieldModels.indexOf(data);
             //inflate
-            final View view = MyInflater.inflate(container_view,data.getViewType(),config.isChild,config);
+            final View view;
+
+            view = MyInflater.inflate(container_view,data,config);
+
             container_view.addView(view);
             //final Animation anim =
             //Save all data
@@ -158,6 +164,7 @@ public class FormAdapter extends LinearLayout {
                 case Form.PASSWORD: ViewPassword(holder);break;
                 case Form.ONELINETEXT: ViewOneLineText(holder);break;
                 case Form.FLOWTEXT: ViewEditText2(holder);break;
+                case Form.CUSTOM: holder.data.getCustomForm().onCreated(holder,this);break; //TODO: onCreted here
                 default: ViewEditText(holder);break;
             }
         }
@@ -1084,5 +1091,11 @@ public class FormAdapter extends LinearLayout {
     public FormViewHolder findViewHolderByName(String name){
         FormViewHolder holder = new KotlinFilter().filterViewHolder(name,holderList);
         return holder;
+    }
+
+    //==============CUSTOM VIEW=============
+
+    public void addCustomForm(ArisanCustomForm custom_form){
+        customForms.add(custom_form);
     }
 }

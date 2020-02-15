@@ -2,6 +2,7 @@ package com.github.arisan.helper;
 
 import android.util.Log;
 
+import com.github.arisan.annotation.Form;
 import com.github.arisan.model.FormModel;
 import com.google.gson.Gson;
 
